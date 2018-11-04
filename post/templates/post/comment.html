@@ -1,0 +1,36 @@
+<table class='comment card '>
+    <td class='vote-up-and-down'>
+        <i class="fas fa-angle-up"></i>
+        <p>0</p>
+        <i class="fas fa-angle-down"></i>
+    </td>
+    <td class='name-and-photo-card'>
+        {% include "post/nameAndPhotoCard.html" with writerName=comment.commentBy %}
+        {% comment %} <table class='name-and-photo-text'>
+            <td><i class="fas fa-user-circle my-avatar"></i></td>
+            <td style='font-weight: bold'>{{comment.commentBy}}</td>
+        </table>
+        
+        <table style='width:100%; color:gray'>
+            <tr>
+                <td align='center'>0 <i class="far fa-edit"></i></td>
+                <td align='center'>0 <i class="far fa-thumbs-up"></i></td>
+            </tr>
+            <tr>
+                <td  align='center'>Posts</td>
+                <td align='center'>Likes</td>
+            </tr>
+        </table> {% endcomment %}
+    </td>
+    <td class='post-content'>
+        <p>{{comment.commentContent}}</p>
+        <div class='buttons-and-date-fixed-bottom'>
+            <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentNumberOfLikes}} Likes</p>
+            <hr/>
+            <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+            <button class='button blue'>Reply <i class="fas fa-reply"></i></button>
+            <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+            <p>{{comment.commentDate}}</p>
+        </div>
+    </td>
+</table>

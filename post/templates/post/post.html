@@ -1,0 +1,21 @@
+<table class='post card'>
+    <td class='vote-up-and-down'>
+        <i class="fas fa-angle-up"></i>
+        <p>0</p>
+        <i class="fas fa-angle-down"></i>
+    </td>
+    <td class='name-and-photo-card'>
+        {% include "post/nameAndPhotoCard.html" with writerName=post.postedBy %}
+    </td>
+    <td class='post-content'>
+        <p>{{post.postContent}}</p>
+        <div class='buttons-and-date-fixed-bottom'>
+            <p style='margin-bottom: -5px; padding: 0;'>{{post.postNumberOfLikes}} Likes</p>
+            <hr/>
+            <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+            <button class='button blue'>Comment <i class="far fa-comment"></i></button>
+            <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+            <p>{{date}}</p>
+        </div>
+    </td>
+</table>

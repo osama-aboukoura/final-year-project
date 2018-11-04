@@ -1,0 +1,15 @@
+<table class='reply card '>
+    <td class='name-and-photo-card'>
+        {% include "post/nameAndPhotoCard.html" with writerName=reply.replyBy %}
+    </td>
+    <td class='post-content'>
+        <p>{{reply.replyContent}}</p>
+        <div class='buttons-and-date-fixed-bottom'>
+            <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyNumberOfLikes}} Likes</p>
+            <hr/>
+            <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+            <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+            <p>{{reply.replyDate}}</p>
+        </div>
+    </td>
+</table>
