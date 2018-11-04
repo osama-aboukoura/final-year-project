@@ -1,0 +1,36 @@
+body {
+    background-image: linear-gradient(to bottom right, #D5F5E3, #FADBD8);
+    font-family: Helvetica, sans-serif;
+}
+
+#postsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#postsTable td, #postsTable th {
+    border: 1px solid lightgray;
+    padding: 10px;
+}
+
+#postsTable tr:nth-child(even){background-color: rgb(230, 230, 230);}
+
+#postsTable tr:nth-child(odd){background-color: white;}
+
+#postsTable tr:hover {background-color: lightgray;}
+
+#postsTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #0F84E8;
+    color: white;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

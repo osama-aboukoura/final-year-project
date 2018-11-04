@@ -1,0 +1,129 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'singlePost/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+
+<div class='post-topic'>
+    <h3>{{post.postTopic}}</h3>
+</div>
+
+<div class='wrapper'>
+    <div class='post-title'>
+        <h1>{{post.postTitle}}</h1>
+        <p class='discussion-postedBy-and-date'>Discussion started by: {{post.postedBy}} on {{date}}</p>
+    </div>
+    <hr />
+
+    <table class='post card'>
+        <td class='vote-up-and-down'>
+            <i class="fas fa-angle-up"></i>
+            <p>0</p>
+            <i class="fas fa-angle-down"></i>
+        </td>
+        <td class='name-and-photo-card'>
+            <table class='name-and-photo-text'>
+                <td><i class="fas fa-user-circle my-avatar"></i></td>
+                <td style='font-weight: bold'>{{post.postedBy}}</td>
+            </table>
+            
+            <table style='width:100%; color:gray'>
+                <tr>
+                    <td align='center'>0 <i class="far fa-edit"></i></td>
+                    <td align='center'>0 <i class="far fa-thumbs-up"></i></td>
+                </tr>
+                <tr>
+                    <td  align='center'>Posts</td>
+                    <td align='center'>Likes</td>
+                </tr>
+            </table>
+        </td>
+        <td class='post-content'>
+            <p>{{post.postContent}}</p>
+            <div class='buttons-and-date-fixed-bottom'>
+                <p style='margin-bottom: -5px; padding: 0;'>{{post.postNumberOfLikes}} Likes</p>
+                <hr/>
+                <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                <button class='button blue'>Comment <i class="far fa-comment"></i></button>
+                <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+                <p>{{date}}</p>
+            </div>
+        </td>
+    </table>
+
+
+    {% if post.comment_set.all %}
+        {% for comment in post.comment_set.all %}
+            <table class='comment card '>
+                <td class='vote-up-and-down'>
+                    <i class="fas fa-angle-up"></i>
+                    <p>0</p>
+                    <i class="fas fa-angle-down"></i>
+                </td>
+                <td class='name-and-photo-card'>
+                    <table class='name-and-photo-text'>
+                        <td><i class="fas fa-user-circle my-avatar"></i></td>
+                        <td style='font-weight: bold'>{{comment.commentBy}}</td>
+                    </table>
+                    
+                    <table style='width:100%; color:gray'>
+                        <tr>
+                            <td align='center'>0 <i class="far fa-edit"></i></td>
+                            <td align='center'>0 <i class="far fa-thumbs-up"></i></td>
+                        </tr>
+                        <tr>
+                            <td  align='center'>Posts</td>
+                            <td align='center'>Likes</td>
+                        </tr>
+                    </table>
+                </td>
+                <td class='post-content'>
+                    <p>{{comment.commentContent}}</p>
+                    <div class='buttons-and-date-fixed-bottom'>
+                        <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentNumberOfLikes}} Likes</p>
+                        <hr/>
+                        <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                        <button class='button blue'>Reply <i class="fas fa-reply"></i></button>
+                        <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+                        <p>{{comment.commentDate}}</p>
+                    </div>
+                </td>
+            </table>
+            {% for reply in comment.reply_set.all %}
+                <table class='reply card '>
+                    <td class='name-and-photo-card'>
+                        <table class='name-and-photo-text'>
+                            <td><i class="fas fa-user-circle my-avatar"></i></td>
+                            <td style='font-weight: bold'>{{reply.replyBy}}</td>
+                        </table>
+                        
+                        <table style='width:100%; color:gray'>
+                            <tr>
+                                <td align='center'>0 <i class="far fa-edit"></i></td>
+                                <td align='center'>0 <i class="far fa-thumbs-up"></i></td>
+                            </tr>
+                            <tr>
+                                <td  align='center'>Posts</td>
+                                <td align='center'>Likes</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class='post-content'>
+                        <p>{{reply.replyContent}}</p>
+                        <div class='buttons-and-date-fixed-bottom'>
+                            <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyNumberOfLikes}} Likes</p>
+                            <hr/>
+                            <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                            {% comment %} <button class='button blue'>Comment <i class="far fa-comment"></i></button> {% endcomment %}
+                            <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+                            <p>{{reply.replyDate}}</p>
+                        </div>
+                    </td>
+                </table>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        <div class='reply-card'>
+            <p>No Comments yet.</p>
+        </div>
+    {% endif %}
+</div>

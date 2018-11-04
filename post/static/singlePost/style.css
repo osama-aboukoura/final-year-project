@@ -1,0 +1,118 @@
+body {
+    margin: 0; padding: 0;
+    font-family: Helvetica, sans-serif;
+    background-color: #F9FBFB;
+}
+
+.wrapper {
+    background-image: linear-gradient(to right, #D5F5E3, #FADBD8);
+    width: 80%;
+    min-height: 100%; 
+    margin: 0 auto;
+    border: 1px solid black;
+    padding: 0 10px;
+}
+
+.post-topic {
+    margin: 0 auto;
+    background-color: #85C1E9;
+    border: 1px solid #2E86C1;
+    width: 80%;
+    padding: 0 10px;
+}
+.post-topic h3 {
+    margin: 8px 0;
+    color: #21618C;
+}
+
+.post-title {
+    width: 100%;
+    padding-left: 20px;
+}
+
+.discussion-postedBy-and-date {
+    color: gray;
+    margin-top: -10px;
+}
+
+.card {
+    border-bottom: 1px solid #21618C;
+    /* border: 1px solid black; */
+    margin: 15px 0px;
+    padding: 5px 0;
+}
+.post { width: 100%; }
+.comment { width: 95%; margin-left: 5%;}
+.reply { width: 85%; margin-left: 15%;}
+
+.vote-up-and-down {
+    width: 50px;
+    color: #21618C;
+    text-align: center;
+    font-size: 40px;
+}
+.vote-up-and-down p{
+    padding: 0; 
+    margin: 10px 0; 
+}
+.vote-up-and-down i:hover{
+    cursor: pointer;
+    color: #85C1E9;
+}
+
+.name-and-photo-card {
+    background-color:lightgrey;
+    border-radius: 6px;
+    width: 180px;
+    text-align: center;
+    padding: 0;
+}
+.name-and-photo-text {
+    color: #2E86C1; 
+    margin: 5px;
+}
+
+.my-avatar {
+    font-size: 3.5em;
+}
+
+.post-content {
+    position: relative;
+    vertical-align: top;
+    padding: 10px 10px 110px 10px;
+}
+
+.buttons-and-date-fixed-bottom {
+    position: absolute;
+    color: gray;
+    bottom: -10;
+    left: 10;
+}
+
+
+
+
+.button {
+    cursor: pointer;
+    padding: 5px 10px;
+    /* text-align: center; */
+    outline: none;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px rgb(150,150,150);
+}
+  
+.blue:hover {background-color: #85C1E9}
+.danger:hover {background-color: #F1948A}
+  
+.button:active {
+    box-shadow: 0 2px rgb(100,100,100);
+    transform: translateY(1px);
+}
+.blue {
+    background-color: #21618C;
+}
+.danger {
+    background-color: #CB4335
+}
