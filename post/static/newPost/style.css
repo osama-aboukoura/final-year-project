@@ -1,0 +1,42 @@
+.new-post-form {
+    width: 70%;
+    background-color: #85C1E9;
+    border: 1px dashed gray;
+    border-radius: 8px;
+    padding: 50px 30px;
+    margin: 50px auto;
+}
+
+.new-post-label {
+    width: 30%;
+    padding: 2% 3%;
+    text-align: right;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.new-post-field input, textarea{
+    font-size: 15px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.submit-button {
+    margin: 14px;
+    width: 100px;
+    float: right;
+    border-radius: 4px;
+    padding: 3px 10px;
+    /* color: white; */
+    /* background-color:#21618C; */
+    box-shadow: 0 2px rgb(150,150,150);
+}
+
+.submit-button:active {
+    box-shadow: 0 2px rgb(100,100,100);
+    transform: translateY(1px);
+}
+
+.submit-button:hover {
+    cursor: pointer;
+}

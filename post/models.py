@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 class Post(models.Model):
@@ -6,11 +7,15 @@ class Post(models.Model):
     postTitle = models.CharField(max_length=80)
     postTopic = models.CharField(max_length=30)
     postContent = models.TextField()
-    postDate = models.DateTimeField()
-    postNumberOfLikes = models.IntegerField()
-    postNumberOfVotes = models.IntegerField()
-    postNumberOfFlags = models.IntegerField()
-    postNumberOfComments = models.IntegerField()
+    postDate = models.DateTimeField(auto_now=True)
+    postNumberOfLikes = models.IntegerField(default=0)
+    postNumberOfVotes = models.IntegerField(default=0)
+    postNumberOfFlags = models.IntegerField(default=0)
+    postNumberOfComments = models.IntegerField(default=0)
+
+    def get_absolute_url(self):
+        return reverse("post:showPost", kwargs={"pk": self.pk})
+    
 
     def __str__(self):
         return "Post " + str(self.pk) 
@@ -19,10 +24,10 @@ class Comment(models.Model):
     commentOnPost = models.ForeignKey(Post, on_delete=models.CASCADE)
     commentContent = models.TextField()
     commentBy = models.CharField(max_length=30)
-    commentDate = models.DateTimeField()
-    commentNumberOfLikes = models.IntegerField()
-    commentNumberOfVotes = models.IntegerField()
-    commentNumberOfFlags = models.IntegerField()
+    commentDate = models.DateTimeField(auto_now=True)
+    commentNumberOfLikes = models.IntegerField(default=0)
+    commentNumberOfVotes = models.IntegerField(default=0)
+    commentNumberOfFlags = models.IntegerField(default=0)
 
     def __str__(self):
         return "Comment " + str(self.pk) + " on " + str(self.commentOnPost)
@@ -31,9 +36,9 @@ class Reply(models.Model):
     replytoComment = models.ForeignKey(Comment ,on_delete=models.CASCADE)
     replyContent = models.TextField()
     replyBy = models.CharField(max_length=30)
-    replyDate = models.DateTimeField()
-    replyNumberOfLikes = models.IntegerField()
-    replyNumberOfFlags = models.IntegerField()
+    replyDate = models.DateTimeField(auto_now=True)
+    replyNumberOfLikes = models.IntegerField(default=0)
+    replyNumberOfFlags = models.IntegerField(default=0)
 
     def __str__(self):
         return "Reply " + str(self.pk) + " to " + str(self.replytoComment)
