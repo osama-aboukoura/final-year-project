@@ -2,6 +2,7 @@ from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Post, Comment, Reply
 from django.urls import reverse
+from django.urls import reverse_lazy
 
 class IndexView(generic.ListView):
     template_name = 'post/index.html'
@@ -18,6 +19,15 @@ class ShowPostView(generic.DetailView):
 class PostCreate(CreateView):
     model = Post 
     fields = ['postedBy', 'postTitle', 'postTopic', 'postContent']
+
+class PostUpdate(UpdateView):
+    model = Post 
+    fields = ['postedBy', 'postTitle', 'postTopic', 'postContent']
+
+class PostDelete(DeleteView):
+    model = Post 
+    success_url = reverse_lazy('post:index')
+
 
 class CommentCreate(CreateView):
     model = Comment 

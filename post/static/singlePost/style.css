@@ -36,10 +36,11 @@ body {
 }
 
 .card {
+    position: relative;
     border-bottom: 1px solid #21618C;
-    /* border: 1px solid black; */
+    border: 1px solid black;
     margin: 15px 0px;
-    padding: 5px 0;
+    padding: 5px 50px 5px 0px;
 }
 .post { width: 100%; }
 .comment { width: 95%; margin-left: 5%;}
@@ -82,14 +83,57 @@ body {
     padding: 10px 10px 110px 10px;
 }
 
+.ellipsis-top-right {
+    position: absolute;
+    top: -10px;
+    right: -30px;
+}
+
+.drop-down:hover .drop-down-top-right-corner {
+    display: block;
+}
+
+.drop-down-top-right-corner {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: -30px;
+    background-color: white;
+    width: 120px;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.3);
+}
+
+.drop-down-top-right-corner a {
+    text-decoration: none;
+    display: block;
+    color: #2E86C1; 
+    padding: 12px 16px;
+    font-size: 16px;
+    background: #F9FBFB
+}
+
+.delete-button {
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    text-align: left;
+    background: #F9FBFB;
+    color: #2E86C1; 
+    padding: 12px 16px;
+    border: none;
+}
+
+.drop-down-top-right-corner a:hover, .delete-button:hover {
+    background: #D5F5E3;
+    cursor: pointer;
+}
+
 .buttons-and-date-fixed-bottom {
     position: absolute;
     color: gray;
     bottom: -10;
     left: 10;
 }
-
-
 
 
 .button {
@@ -116,3 +160,4 @@ body {
 .danger {
     background-color: #CB4335
 }
+

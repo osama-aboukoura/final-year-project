@@ -9,11 +9,25 @@
     </td>
     <td class='post-content'>
         <p>{{post.postContent}}</p>
+        <div class='drop-down'>
+            <p class='ellipsis-top-right'><i class="fas fa-ellipsis-h"></i></p>
+            <div class='drop-down-top-right-corner'>
+                <a href="{% url 'post:edit-post' post.pk %}">Edit <i class="fas fa-edit" style='float:right'></i></a>
+                {% comment %} <a href="{% url 'post:delete-post' post.pk %}">Delete <i class="fas fa-trash-alt" style='float:right'></i></a> {% endcomment %}
+                <form action='{% url 'post:delete-post' post.pk %}' method='post' style='padding:0; margin:0'>
+                    {% csrf_token %}
+                    <input type='hidden' name='post_id' value='{{post.pk}}'/>
+                    <button class='delete-button' type='submit'>
+                        Delete <i class="fas fa-trash-alt" style='float:right'></i>
+                    </button>
+                </form>
+            </div>
+        </div>
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{post.postNumberOfLikes}} Likes</p>
             <hr/>
             <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
-            <a class='button blue' href='addcomment/'>Comment <i class="far fa-comment"></i></a>
+            <a class='button blue' href='add-comment/'>Comment <i class="far fa-comment"></i></a>
             <button class='button danger'>Report <i class="fas fa-ban"></i></button>
             <p>{{post.postDate}}</p>
         </div>
