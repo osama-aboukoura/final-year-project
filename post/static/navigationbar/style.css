@@ -1,0 +1,36 @@
+.navigationbar {
+    width: 80%;
+    margin: 0 auto;
+    padding: 0;
+    border: 1px solid gray;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #345678;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover{
+    background-color: #111;
+}
+
+.active {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: 0.9em;
+    padding: 9px 16px;
+}
