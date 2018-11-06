@@ -9,6 +9,21 @@
     </td>
     <td class='post-content'>
         <p>{{comment.commentContent}}</p>
+
+        <div class='drop-down'>
+            <p class='ellipsis-top-right'><i class="fas fa-ellipsis-h"></i></p>
+            <div class='drop-down-top-right-corner'>
+                <a href="{% url 'post:edit-comment' post.pk comment.pk %}">Edit <i class="fas fa-edit" style='float:right'></i></a>
+                <form action="{% url 'post:delete-comment' post.pk comment.pk %}" method='post' style='padding:0; margin:0'>
+                    {% csrf_token %}
+                    <input type='hidden' name='comment_id' value='{{comment.pk}}'/>
+                    <button class='delete-button' type='submit'>
+                        Delete <i class="fas fa-trash-alt" style='float:right'></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentNumberOfLikes}} Likes</p>
             <hr/>

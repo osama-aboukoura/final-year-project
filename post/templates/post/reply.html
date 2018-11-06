@@ -4,6 +4,21 @@
     </td>
     <td class='post-content'>
         <p>{{reply.replyContent}}</p>
+
+        <div class='drop-down'>
+            <p class='ellipsis-top-right'><i class="fas fa-ellipsis-h"></i></p>
+            <div class='drop-down-top-right-corner'>
+                <a href="{% url 'post:edit-reply' post.pk reply.pk %}">Edit <i class="fas fa-edit" style='float:right'></i></a>
+                <form action="{% url 'post:delete-reply' post.pk reply.pk %}" method='post' style='padding:0; margin:0'>
+                    {% csrf_token %}
+                    <input type='hidden' name='reply_id' value='{{reply.pk}}'/>
+                    <button class='delete-button' type='submit'>
+                        Delete <i class="fas fa-trash-alt" style='float:right'></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyNumberOfLikes}} Likes</p>
             <hr/>

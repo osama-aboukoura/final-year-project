@@ -9,7 +9,7 @@ body {
     width: 80%;
     min-height: 100%; 
     margin: 0 auto;
-    border: 1px solid black;
+    border: 1px solid gray;
     padding: 0 10px;
 }
 
@@ -38,7 +38,7 @@ body {
 .card {
     position: relative;
     border-bottom: 1px solid #21618C;
-    border: 1px solid black;
+    border: 1px solid gray;
     margin: 15px 0px;
     padding: 5px 50px 5px 0px;
 }

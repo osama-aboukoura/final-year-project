@@ -22,6 +22,7 @@ class PostCreate(CreateView):
 
 class PostUpdate(UpdateView):
     model = Post 
+    template_name = 'post/post_edit_form.html'
     fields = ['postedBy', 'postTitle', 'postTopic', 'postContent']
 
 class PostDelete(DeleteView):
@@ -40,8 +41,23 @@ class CommentCreate(CreateView):
         return super(CommentCreate, self).form_valid(form)
     
     def get_success_url(self):
-        post = Post.objects.get(id=self.kwargs['pk'])
-        return '/posts/' + str(post.pk)
+        return '/posts/' + str(self.kwargs['pk'])
+
+class CommentUpdate(UpdateView):
+    slug_field = 'pk'
+    slug_url_kwarg = 'pk'
+    model = Comment
+    template_name = 'post/comment_edit_form.html'
+    fields = ['commentBy','commentContent']
+
+    def get_success_url(self):
+        return '/posts/' + str(self.kwargs['post_pk'])
+
+class CommentDelete(DeleteView):
+    model = Comment 
+
+    def get_success_url(self):
+        return '/posts/' + str(self.kwargs['post_pk'])
 
 class ReplyCreate(CreateView):
     model = Reply 
@@ -57,20 +73,18 @@ class ReplyCreate(CreateView):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         return '/posts/' + str(post.pk)
 
+class ReplyUpdate(UpdateView):
+    slug_field = 'pk'
+    slug_url_kwarg = 'pk'
+    model = Reply
+    template_name = 'post/reply_edit_form.html'
+    fields = ['replyBy','replyContent']
+
+    def get_success_url(self):
+        return '/posts/' + str(self.kwargs['post_pk'])
     
-
-# def index (request):
-#     all_posts = Post.objects.all()
-#     return render(request, 'post/index.html', { 'all_posts': all_posts })
-
-# def showPost (request, post_id):
-#     #post = Post.objects.get(pk=post_id)
-#     post = get_object_or_404(Post, pk=post_id)
-#     date = getFormattedDateAndTime(post.postDate) 
-#     return render(request, 'post/singlePost.html', { 'post': post, 'date': date })
-
-
-# def getFormattedDateAndTime(date):
-#     formattedDate = date.strftime("%B") + " " + str(date.strftime("%d")) + ", " + date.strftime("%Y")
-#     formattedDate += ' at ' + date.strftime("%H:%M")
-#     return formattedDate
+class ReplyDelete(DeleteView):
+    model = Reply 
+    
+    def get_success_url(self):
+        return '/posts/' + str(self.kwargs['post_pk'])
