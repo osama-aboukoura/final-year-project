@@ -4,25 +4,16 @@
         <p>0</p>
         <i class="fas fa-angle-down"></i>
     </td>
-    <td class='name-and-photo-card'>
-        {% include "post/nameAndPhotoCard.html" with writerName=post.postedBy %}
-    </td>
+    
+    {% include "post/widgets/name-photo-card.html" with writerName=post.postedBy %}
+
     <td class='post-content'>
         <p>{{post.postContent}}</p>
-        <div class='drop-down'>
-            <p class='ellipsis-top-right'><i class="fas fa-ellipsis-h"></i></p>
-            <div class='drop-down-top-right-corner'>
-                <a href="{% url 'post:edit-post' post.pk %}">Edit <i class="fas fa-edit" style='float:right'></i></a>
-                {% comment %} <a href="{% url 'post:delete-post' post.pk %}">Delete <i class="fas fa-trash-alt" style='float:right'></i></a> {% endcomment %}
-                <form action='{% url 'post:delete-post' post.pk %}' method='post' style='padding:0; margin:0'>
-                    {% csrf_token %}
-                    <input type='hidden' name='post_id' value='{{post.pk}}'/>
-                    <button class='delete-button' type='submit'>
-                        Delete <i class="fas fa-trash-alt" style='float:right'></i>
-                    </button>
-                </form>
-            </div>
-        </div>
+
+        {% url 'post:edit-post' post.pk as the_edit_url %}
+        {% url 'post:delete-post' post.pk as the_delete_url %}
+        {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
+
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{post.postNumberOfLikes}} Likes</p>
             <hr/>

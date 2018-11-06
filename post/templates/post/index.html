@@ -1,26 +1,28 @@
 {% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'allPosts/style.css' %}" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
-
-{% if all_posts %}
-    <h1>All Posts:</h1>
-    <table id="postsTable">
-        <tr>
-            <th>Post</th>
-            <th>Topic</th>
-            <th>Discussion Started By</th>
-            <th>Comments</th>
-        </tr>
-        {% for post in all_posts %}
+<div class='wrapper'>
+    {% if all_posts %}
+        <h1>All Posts:</h1>
+        <table id="postsTable">
             <tr>
-                <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
-                <td>{{post.postTopic}}</td>
-                <td>{{post.postedBy}}</td>
-                <td>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
+                <th>Post</th>
+                <th>Topic</th>
+                <th>Discussion Started By</th>
+                <th>Comments</th>
             </tr>
-        {% endfor %}
-    </table>
-{% else %}
-    <h1>No Posts Available</h1>
-{% endif %}
+            {% for post in all_posts %}
+                <tr>
+                    <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
+                    <td>{{post.postTopic}}</td>
+                    <td>{{post.postedBy}}</td>
+                    <td>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h1>No Posts Available</h1>
+    {% endif %}
+</div>

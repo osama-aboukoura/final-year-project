@@ -1,0 +1,13 @@
+<div class='drop-down'>
+    <p class='ellipsis-top-right'><i class="fas fa-ellipsis-h"></i></p>
+    <div class='drop-down-top-right-corner'>
+        <a href="{{edit_url}}">Edit <i class="fas fa-edit" style='float:right'></i></a>
+        <form action="{{delete_url}}" method='post' style='padding:0; margin:0'>
+            {% csrf_token %}
+            <input type='hidden' name='post_id' value='{{post.pk}}'/>
+            <button class='delete-button' type='submit'>
+                Delete <i class="fas fa-trash-alt" style='float:right'></i>
+            </button>
+        </form>
+    </div>
+</div>

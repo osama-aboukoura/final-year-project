@@ -13,7 +13,7 @@ class IndexView(generic.ListView):
 
 class ShowPostView(generic.DetailView):
     model = Post 
-    template_name = 'post/singlePost.html'
+    template_name = 'post/post-comment-reply.html'
 
 
 class PostCreate(CreateView):
