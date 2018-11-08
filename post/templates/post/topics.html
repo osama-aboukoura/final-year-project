@@ -1,0 +1,22 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'allPosts/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+{% include "post/navigationbar.html" %}
+
+<div class='wrapper'>
+    <h1 style='margin-left:20px'>All Posts:</h1>
+    <table id="postsTable">
+        <tr>
+            <th>Topic</th>
+            <th>Number of Posts</th>
+        </tr>
+    {% for key, value in all_topics.items %}
+        <tr>
+            <td>{{key}}</td>
+            <td>{{value}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
