@@ -1,8 +1,30 @@
 from django.views import generic
+from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Post, Comment, Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# to be changed to a class view later
+# def topicsView(request): 
+#     return render(request, 'post/topics.html')
+
+class TopicsView(generic.ListView):
+    template_name = 'post/topics.html'
+    context_object_name = 'all_topics'
+
+    def get_queryset(self):
+        allposts = Post.objects.all()
+        allTopics = {}
+        for post in allposts:
+            topic = post.postTopic
+            if topic in allTopics: 
+                allTopics[topic] += 1 
+            else: 
+                allTopics[topic] = 1 
+        print ("allTopics")
+        print (allTopics)
+        return allTopics
 
 class IndexView(generic.ListView):
     template_name = 'post/index.html'

@@ -5,10 +5,10 @@
 
 <div class='navigationbar'>
     <ul>
-        <li><a href="#home" class="active" >Intelligent Q&#38;A Forums</a></li>
-        <li><a href="posts/">All Posts</a></li>
-        <li><a href="#news">Topics</a></li>
-        <li style="float:right"><a href="#contact"><i class="fas fa-user"></i>&nbsp; My Profile</a></li>
-        <li style="float:right"><a href="add-post/"><i class="fas fa-plus"></i>&nbsp; Add New Post</a></li>
+        <li><a href="#" class="logo" >Intelligent Q&#38;A Forums</a></li>
+        <li><a href="{% url 'post:index'%}">All Posts</a></li>
+        <li><a href="{% url 'post:topics'%}">Topics</a></li>
+        <li style="float:right"><a href="#profile"><i class="fas fa-user"></i>&nbsp; My Profile</a></li>
+        <li style="float:right"><a href="{% url 'post:add-post'%}"><i class="fas fa-plus"></i>&nbsp; Add New Post</a></li>
     </ul>
 </div>

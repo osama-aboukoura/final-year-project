@@ -4,8 +4,11 @@ from . import views
 app_name = 'post'
 
 urlpatterns = [
-    # url: /posts/ 
-    url(r'^$', views.IndexView.as_view(), name='index'),
+    # url: /posts/
+    url(r'^allposts/$', views.IndexView.as_view(), name='index'),
+    # url: /posts/topics/
+    url(r'^topics/$', views.TopicsView.as_view(), name='topics'),
+
     # url: /posts/4/
     url(r'^(?P<pk>[0-9]+)/$', views.ShowPostView.as_view(), name='showPost'),
 
