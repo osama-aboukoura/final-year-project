@@ -6,19 +6,17 @@
 {% include "post/navigationbar.html" %}
 
 <div class='wrapper'>
-    {% if all_posts %}
-        <h1 style='margin-left:20px'>All Posts:</h1>
+    {% if all_posts.posts %}
+        <h1 style='margin-left:20px'>{{all_posts.topic}}:</h1>
         <table class="postsTable">
             <tr>
                 <th>Post</th>
-                <th>Topic</th>
                 <th>Discussion Started By</th>
                 <th>Comments</th>
             </tr>
-            {% for post in all_posts %}
+            {% for post in all_posts.posts %}
                 <tr>
                     <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
-                    <td><a href="{% url 'post:topic' post.postTopic %}">{{post.postTopic}}</a></td>
                     <td>{{post.postedBy}}</td>
                     <td>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
                 </tr>

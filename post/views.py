@@ -5,10 +5,6 @@ from .models import Post, Comment, Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
 
-# to be changed to a class view later
-# def topicsView(request): 
-#     return render(request, 'post/topics.html')
-
 class TopicsView(generic.ListView):
     template_name = 'post/topics.html'
     context_object_name = 'all_topics'
@@ -22,9 +18,20 @@ class TopicsView(generic.ListView):
                 allTopics[topic] += 1 
             else: 
                 allTopics[topic] = 1 
-        print ("allTopics")
-        print (allTopics)
         return allTopics
+
+class PostsWithSameTopicView(generic.ListView):
+    template_name = 'post/topic.html'
+    context_object_name = 'all_posts'
+    
+    def get_queryset(self):
+        topic = self.kwargs['topic']
+        allPosts = Post.objects.all()
+        allPostsOfSameTopic = []
+        for post in allPosts:
+            if post.postTopic == topic:
+                allPostsOfSameTopic.append(post)
+        return { 'topic': topic, 'posts': allPostsOfSameTopic }
 
 class IndexView(generic.ListView):
     template_name = 'post/index.html'

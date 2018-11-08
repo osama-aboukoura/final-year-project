@@ -6,7 +6,14 @@
 }
 .post-topic h3 {
     margin: 8px 12px;
+}
+.post-topic a{
     color: #21618C;
+    text-decoration: none;
+}
+.post-topic a:hover{
+    color: #21618C;
+    text-decoration: underline;
 }
 
 .post-title {

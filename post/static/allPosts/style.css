@@ -1,21 +1,21 @@
-#postsTable {
+.postsTable {
     width: 96%;
     margin: 20px 2%;
     border-collapse: collapse;
 }
 
-#postsTable td, #postsTable th {
+.postsTable td, .postsTable th {
     border: 1px solid lightgray;
     padding: 10px;
 }
 
-#postsTable tr:nth-child(even){background-color: rgb(230, 230, 230);}
+.postsTable tr:nth-child(even){background-color: rgb(230, 230, 230);}
 
-#postsTable tr:nth-child(odd){background-color: white;}
+.postsTable tr:nth-child(odd){background-color: white;}
 
-#postsTable tr:hover {background-color: lightgray;}
+.postsTable tr:hover {background-color: lightgray;}
 
-#postsTable th {
+.postsTable th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
@@ -32,6 +32,6 @@ a:hover {
     text-decoration: underline;
 }
 
-a:visited {
+.postsTable a:visited {
     color: #2D86C1
 }

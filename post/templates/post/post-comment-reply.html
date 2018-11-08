@@ -6,7 +6,7 @@
 {% include "post/navigationbar.html" %}
 
 <div class='post-topic'>
-    <h3>{{post.postTopic}}</h3>
+    <h3><a href="{% url 'post:topic' post.postTopic %}">{{post.postTopic}}</a></h3>
 </div>
 <div class='wrapper'>
 

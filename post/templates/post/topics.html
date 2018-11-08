@@ -7,14 +7,14 @@
 
 <div class='wrapper'>
     <h1 style='margin-left:20px'>All Posts:</h1>
-    <table id="postsTable">
+    <table class="postsTable">
         <tr>
             <th>Topic</th>
             <th>Number of Posts</th>
         </tr>
     {% for key, value in all_topics.items %}
         <tr>
-            <td>{{key}}</td>
+            <td><a href="{{key}}">{{key}}</a></td>
             <td>{{value}}</td>
         </tr>
     {% endfor %}
