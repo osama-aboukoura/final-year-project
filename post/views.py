@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Post, Comment, Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 class TopicsView(generic.ListView):
     template_name = 'post/topics.html'
@@ -70,6 +71,9 @@ class CommentCreate(CreateView):
         return super(CommentCreate, self).form_valid(form)
     
     def get_success_url(self):
+        post = Post.objects.get(id=self.kwargs['pk'])
+        post.postNumberOfComments += 1
+        post.save()
         return '/posts/' + str(self.kwargs['pk'])
 
 class CommentUpdate(UpdateView):
@@ -85,8 +89,23 @@ class CommentUpdate(UpdateView):
 class CommentDelete(DeleteView):
     model = Comment 
 
+    def delete(self, request, *args, **kwargs):
+        comment = self.get_object()
+        allreplies = Reply.objects.all()
+        post = Post.objects.get(id=self.kwargs['post_pk'])
+
+        for reply in allreplies:
+            if reply.replytoComment.pk == comment.pk:
+                post.postNumberOfComments -= 1 # decrement 1 for every reply to this comment
+        
+        post.postNumberOfComments -= 1 # decrement 1 for this comment
+        post.save()
+        comment.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         return '/posts/' + str(self.kwargs['post_pk'])
+
 
 class ReplyCreate(CreateView):
     model = Reply 
@@ -100,6 +119,8 @@ class ReplyCreate(CreateView):
     
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['post_pk'])
+        post.postNumberOfComments += 1
+        post.save()
         return '/posts/' + str(post.pk)
 
 class ReplyUpdate(UpdateView):
@@ -116,4 +137,7 @@ class ReplyDelete(DeleteView):
     model = Reply 
     
     def get_success_url(self):
+        post = Post.objects.get(id=self.kwargs['post_pk'])
+        post.postNumberOfComments -= 1
+        post.save()
         return '/posts/' + str(self.kwargs['post_pk'])
