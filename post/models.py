@@ -20,7 +20,7 @@ class Post(models.Model):
         return "Post " + str(self.pk) 
     
     class Meta:
-        ordering=["-postNumberOfVotes"]
+        ordering=["-postNumberOfVotes", "-postDate"]
 
 
 class Comment(models.Model):

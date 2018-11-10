@@ -37,6 +37,7 @@ class PostsWithSameTopicView(generic.ListView):
 class IndexView(generic.ListView):
     template_name = 'post/index.html'
     context_object_name = 'all_posts'
+    paginate_by = 10
 
     def get_queryset(self):
         return Post.objects.all()

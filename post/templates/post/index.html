@@ -18,7 +18,7 @@
             </tr>
             {% for post in all_posts %}
                 <tr>
-                    <td><i class="fas fa-angle-double-up"></i> <strong>{{post.postNumberOfVotes}}</strong></td>
+                    <td>{% if post.postNumberOfVotes < 0 %}<i class="fas fa-angle-double-down"></i>{% else %}<i class="fas fa-angle-double-up"></i>{% endif %} <strong>{{post.postNumberOfVotes}}</strong></td>
                     <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
                     <td><a href="{% url 'post:topic' post.postTopic %}">{{post.postTopic}}</a></td>
                     <td>{{post.postedBy}}</td>
@@ -26,6 +26,23 @@
                 </tr>
             {% endfor %}
         </table>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    {% comment %} <a href="?page=1">&laquo; first</a> {% endcomment %}
+                    <a href="?page={{ page_obj.previous_page_number }}"><i class="far fa-arrow-alt-circle-left"></i></a>
+                {% endif %}
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}"><i class="far fa-arrow-alt-circle-right"></i></a>
+                    {% comment %} <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> {% endcomment %}
+                {% endif %}
+            </span>
+        </div>
+
     {% else %}
         <h1 style='margin-left:20px;'>Sorry, No Posts Available!</h1>
     {% endif %}
