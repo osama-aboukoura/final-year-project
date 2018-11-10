@@ -16,10 +16,13 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse("post:showPost", kwargs={"pk": self.pk})
     
-
     def __str__(self):
         return "Post " + str(self.pk) 
     
+    class Meta:
+        ordering=["-postNumberOfVotes"]
+
+
 class Comment(models.Model):
     commentOnPost = models.ForeignKey(Post, on_delete=models.CASCADE)
     commentContent = models.TextField()
@@ -31,6 +34,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return "Comment " + str(self.pk) + " on " + str(self.commentOnPost)
+
+    class Meta:
+        ordering=["-commentNumberOfVotes"]
     
 class Reply(models.Model):
     replytoComment = models.ForeignKey(Comment ,on_delete=models.CASCADE)

@@ -10,12 +10,14 @@
         <h1 style='margin-left:20px'>{{all_posts.topic}}:</h1>
         <table class="postsTable">
             <tr>
+                <th></th>
                 <th>Post</th>
                 <th>Discussion Started By</th>
                 <th>Comments</th>
             </tr>
             {% for post in all_posts.posts %}
                 <tr>
+                    <td><i class="fas fa-angle-double-up"></i> <strong>{{post.postNumberOfVotes}}</strong></td>
                     <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
                     <td>{{post.postedBy}}</td>
                     <td>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
