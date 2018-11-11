@@ -1,0 +1,60 @@
+.background{
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.login-box{
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 45%;
+    height: 300px;
+    background-image: linear-gradient(to right, #D5F5E3, #FADBD8);
+    border: 2px dashed gray;
+    border-radius: 10px;
+    padding: 0 2%;
+}
+
+.register-box {
+    position: absolute;
+    top: 5%;
+    left: 25%;
+    width: 45%;
+    height: 565px;
+    background-image: linear-gradient(to right, #D5F5E3, #FADBD8);
+    border: 2px dashed gray;
+    border-radius: 10px;
+    padding: 0 2%;
+}
+
+label {
+    padding: 14px;
+    width: 20%;
+    display: inline-block;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    width: 65%;
+    padding: 10px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+input[type=submit] {
+    border: none;
+    background-color: #3E7A9B;
+    color: white;
+    font-size: 14px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+input[type=submit]:hover {
+    background-color: #85C1E9
+}

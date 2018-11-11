@@ -1,42 +1,70 @@
 .navigationbar {
     width: 80%;
+    overflow: hidden;
     margin: 0 auto;
     padding: 0;
     border: 1px solid gray;
-}
-
-ul {
-    overflow: hidden;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
     background-color: #345678;
 }
 
-li {
+.navigationbar a {
     float: left;
-}
-
-li a {
-    display: block;
-    text-align: center;
+    font-size: 16px;
     color: white;
-    padding: 14px 18px;
+    text-align: center;
+    padding: 12px 16px;
     text-decoration: none;
 }
 
-li a:visited {
-    color: white;
+.dropdown {
+    float: left;
+    overflow: hidden;
 }
 
-li a:hover{
+.dropdown .dropbtn {
+    font-size: 16px;
+    padding: 12px 16px;
+    border: none;
+    color: white;
+    background-color: inherit;
+    margin: 0;
+}
+
+.navigationbar a:hover, .dropdown:hover .dropbtn {
     background-color: black;
     text-decoration: none;
+}
 
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: gray;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a:hover {
+    background-color: green;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 .logo {
+    cursor: pointer;
+    float: left;
     font-family: 'Gloria Hallelujah', cursive;
-    font-size: 0.9em;
-    padding: 9px 16px;
+    font-size: 15px;
+    padding: 6px 20px;
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: white
+}
+
+.logo:hover {
+    background: black;
+
 }
