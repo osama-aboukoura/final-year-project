@@ -4,8 +4,13 @@ from . import views
 app_name = 'post'
 
 urlpatterns = [
+
+    url(r'^register/$', views.register, name='register'),
+    url(r'^login/$', views.user_login, name='user_login'),
+    url(r'^logout/$', views.user_logout, name='logout'),
+
     # url: /posts/
-    url(r'^allposts/$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.IndexView.as_view(), name='index'),
     # url: /posts/topics/
     url(r'^topics/$', views.TopicsView.as_view(), name='topics'),
     # url: /posts/topics/Education

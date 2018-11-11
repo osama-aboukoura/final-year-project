@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment, Reply
+from .models import Post, Comment, Reply, UserProfile
 
 class PostModelAdmin(admin.ModelAdmin):
     list_display = ["pk", "postTitle", "postTopic", "postedBy", "postDate"]
@@ -28,3 +28,6 @@ class ReplyModelAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostModelAdmin)
 admin.site.register(Comment, CommentModelAdmin)
 admin.site.register(Reply, ReplyModelAdmin)
+
+admin.site.register(UserProfile)
+
