@@ -131,12 +131,13 @@
     cursor: pointer;
     text-decoration: none;
     padding: 5px 10px;
+    font-size: 12px;
     color: white;
     border: none;
     border-radius: 5px;
     box-shadow: 0 2px rgb(150,150,150);
 }
-  
+
 .blue:hover {background-color: #85C1E9}
 .danger:hover {background-color: #F1948A}
   
@@ -151,3 +152,17 @@
     background-color: #CB4335
 }
 
+.comment-link {
+    cursor: pointer;
+    text-decoration: none;
+    padding: 5px 10px;
+    font-size: 13px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px rgb(150,150,150);
+    background-color: #21618C;
+}
+.comment-link:hover { 
+    background-color: #85C1E9
+}

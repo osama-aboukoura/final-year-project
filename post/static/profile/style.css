@@ -1,0 +1,7 @@
+.profile-container {
+    margin: 40px;
+    padding: 20px;
+    border: 2px dashed gray;
+    border-radius: 10px;
+    background-color: #D6EAF8;
+}

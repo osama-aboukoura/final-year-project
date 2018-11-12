@@ -1,7 +1,7 @@
 from django.views import generic
 from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Post, Comment, Reply
+from .models import Post, Comment, Reply, UserProfile, User
 from django.urls import reverse
 from django.urls import reverse_lazy
 from .forms import UserForm, UserProfileForm
@@ -217,3 +217,11 @@ class ReplyDelete(DeleteView):
         post.postNumberOfComments -= 1
         post.save()
         return '/' + str(self.kwargs['post_pk'])
+
+
+def profileInfo(request, user):
+    user_ = User.objects.get(username=user)
+    userProfile = UserProfile.objects.get(user=user_)
+    print('userProfile ' , userProfile.pk)
+    # print('profile ', profile)
+    return render(request, 'post/profile.html', {'visited_user':user_, 'visited_userProfile':userProfile})

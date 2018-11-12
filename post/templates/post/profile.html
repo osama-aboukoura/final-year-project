@@ -1,0 +1,19 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'profile/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+{% include "post/navigationbar.html" %}
+
+<div class='wrapper'>
+    <div class='profile-container'>
+        <h1>Profile:</h1>
+        <hr/>
+        <i style='font-size:100px;' class="fas fa-user-circle my-avatar"></i>
+        <h2>Username: {{visited_user.username}}</h2>
+        <h2>userProfile: {{visited_userProfile}}</h2>
+        <h2>First Name: {{visited_user.first_name}}</h2>
+        <h2>Last Name: {{visited_user.last_name}}</h2>
+        <h2>Email Address: {{visited_user.email}}</h2>
+    </div>
+</div>

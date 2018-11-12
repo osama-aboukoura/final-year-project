@@ -25,9 +25,15 @@ class ReplyModelAdmin(admin.ModelAdmin):
     class Meta:
         model = Reply 
 
+class UserProfileModelAdmin(admin.ModelAdmin):
+    list_display = ["pk", "__str__"]
+    list_display_links = ["__str__"]
+    class Meta:
+        model = UserProfile 
+
 admin.site.register(Post, PostModelAdmin)
 admin.site.register(Comment, CommentModelAdmin)
 admin.site.register(Reply, ReplyModelAdmin)
 
-admin.site.register(UserProfile)
+admin.site.register(UserProfile, UserProfileModelAdmin)
 

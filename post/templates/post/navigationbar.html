@@ -22,7 +22,7 @@
             {% endif %}
             <i class="fa fa-caret-down"></i></button>
             <div class="dropdown-content">
-                <a href="#profile"><i class="fas fa-user"></i>&nbsp; My Profile</a>
+                <a href="{% url 'post:profile' user %}"><i class="fas fa-user"></i>&nbsp; My Profile</a>
                 <a href="{% url 'post:logout' %}"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
             </div>
         </div> 
