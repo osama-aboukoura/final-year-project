@@ -129,9 +129,8 @@
 
 .button {
     cursor: pointer;
+    text-decoration: none;
     padding: 5px 10px;
-    /* text-align: center; */
-    /* outline: none; */
     color: white;
     border: none;
     border-radius: 5px;

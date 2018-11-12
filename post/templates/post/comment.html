@@ -17,9 +17,13 @@
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentNumberOfLikes}} Likes</p>
             <hr/>
-            <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
-            <a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a>
-            <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+            {% if user.is_authenticated %}
+                <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                <a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a>
+                <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+            {% else %}
+                <p>To reply to a comment, you must be logged in. <a class='button blue' href="{% url 'post:user_login' %}">Click here to Login</a></p>
+            {% endif %}
             <p>{{comment.commentDate}}</p>
         </div>
     </td>

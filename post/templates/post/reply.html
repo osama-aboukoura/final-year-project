@@ -12,8 +12,10 @@
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyNumberOfLikes}} Likes</p>
             <hr/>
-            <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
-            <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+            {% if user.is_authenticated %}
+                <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+            {% endif %}
             <p>{{reply.replyDate}}</p>
         </div>
     </td>

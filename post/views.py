@@ -4,7 +4,6 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Post, Comment, Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
 from .forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -105,6 +104,13 @@ class ShowPostView(generic.DetailView):
     model = Post 
     template_name = 'post/post-comment-reply.html'
 
+
+# def addPostIfLoggedIn(request):
+#     user = request.user
+#     if user.is_authenticated:
+#         return PostCreate.as_view()(request)
+#     else:
+#         return HttpResponseRedirect(reverse('post:user_login'))
 
 class PostCreate(CreateView):
     model = Post 
