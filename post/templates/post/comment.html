@@ -10,9 +10,13 @@
     <td class='post-content'>
         <p>{{comment.commentContent}}</p>
 
-        {% url 'post:edit-comment' post.pk comment.pk as the_edit_url %}
-        {% url 'post:delete-comment' post.pk comment.pk as the_delete_url %}
-        {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
+        {% if user.is_authenticated %}
+            {% if user.username == comment.commentBy.username or user.is_superuser %}
+                {% url 'post:edit-comment' post.pk comment.pk as the_edit_url %}
+                {% url 'post:delete-comment' post.pk comment.pk as the_delete_url %}
+                {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
+            {% endif %}
+        {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentNumberOfLikes}} Likes</p>
