@@ -12,7 +12,8 @@ class UserProfile(models.Model):
 
 
 class Post(models.Model):
-    postedBy = models.CharField(max_length=30)
+    postedBy = models.ForeignKey(User, on_delete=models.CASCADE)
+    # postedBy = models.CharField(max_length=30)
     postTitle = models.CharField(max_length=80)
     postTopic = models.CharField(max_length=30)
     postContent = models.TextField()
@@ -36,7 +37,8 @@ class Post(models.Model):
 class Comment(models.Model):
     commentOnPost = models.ForeignKey(Post, on_delete=models.CASCADE)
     commentContent = models.TextField()
-    commentBy = models.CharField(max_length=30)
+    commentBy = models.ForeignKey(User, on_delete=models.CASCADE)
+    # commentBy = models.CharField(max_length=30)
     commentImage = models.ImageField(null=True, blank=True)
     commentDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     commentNumberOfLikes = models.IntegerField(default=0)
@@ -52,7 +54,8 @@ class Comment(models.Model):
 class Reply(models.Model):
     replytoComment = models.ForeignKey(Comment ,on_delete=models.CASCADE)
     replyContent = models.TextField()
-    replyBy = models.CharField(max_length=30)
+    replyBy = models.ForeignKey(User, on_delete=models.CASCADE)
+    # replyBy = models.CharField(max_length=30)
     replyDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     replyNumberOfLikes = models.IntegerField(default=0)
     replyNumberOfFlags = models.IntegerField(default=0)

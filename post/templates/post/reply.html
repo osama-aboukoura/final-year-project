@@ -1,6 +1,6 @@
 <table class='reply card '>
 
-    {% include "post/widgets/name-photo-card.html" with writerName=reply.replyBy %}
+    {% include "post/widgets/name-photo-card.html" with author=reply.replyBy %}
 
     <td class='post-content'>
         <p>{{reply.replyContent}}</p>

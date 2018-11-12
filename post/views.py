@@ -108,12 +108,18 @@ class ShowPostView(generic.DetailView):
 
 class PostCreate(CreateView):
     model = Post 
-    fields = ['postedBy', 'postTitle', 'postTopic', 'postContent']
+    fields = ['postTitle', 'postTopic', 'postContent']
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        logged_in_user = self.request.user
+        post.postedBy = logged_in_user
+        return super(PostCreate, self).form_valid(form)
 
 class PostUpdate(UpdateView):
     model = Post 
     template_name = 'post/post_edit_form.html'
-    fields = ['postedBy', 'postTitle', 'postTopic', 'postContent']
+    fields = ['postTitle', 'postTopic', 'postContent']
 
 class PostDelete(DeleteView):
     model = Post 
@@ -122,29 +128,31 @@ class PostDelete(DeleteView):
 
 class CommentCreate(CreateView):
     model = Comment 
-    fields = ['commentBy', 'commentContent']
+    fields = ['commentContent']
     
     def form_valid(self, form):
         comment = form.save(commit=False)
         post = Post.objects.get(id=self.kwargs['pk'])
         comment.commentOnPost = post
+        logged_in_user = self.request.user
+        comment.commentBy = logged_in_user
         return super(CommentCreate, self).form_valid(form)
     
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['pk'])
         post.postNumberOfComments += 1
         post.save()
-        return '/posts/' + str(self.kwargs['pk'])
+        return '/' + str(self.kwargs['pk'])
 
 class CommentUpdate(UpdateView):
     slug_field = 'pk'
     slug_url_kwarg = 'pk'
     model = Comment
     template_name = 'post/comment_edit_form.html'
-    fields = ['commentBy','commentContent']
+    fields = ['commentContent']
 
     def get_success_url(self):
-        return '/posts/' + str(self.kwargs['post_pk'])
+        return '/' + str(self.kwargs['post_pk'])
 
 class CommentDelete(DeleteView):
     model = Comment 
@@ -164,34 +172,36 @@ class CommentDelete(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return '/posts/' + str(self.kwargs['post_pk'])
+        return '/' + str(self.kwargs['post_pk'])
 
 
 class ReplyCreate(CreateView):
     model = Reply 
-    fields = ['replyBy', 'replyContent']
+    fields = ['replyContent']
     
     def form_valid(self, form):
         reply = form.save(commit=False)
         comment = Comment.objects.get(id=self.kwargs['comment_pk'])
         reply.replytoComment = comment
+        logged_in_user = self.request.user
+        reply.replyBy = logged_in_user
         return super(ReplyCreate, self).form_valid(form)
     
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         post.postNumberOfComments += 1
         post.save()
-        return '/posts/' + str(post.pk)
+        return '/' + str(post.pk)
 
 class ReplyUpdate(UpdateView):
     slug_field = 'pk'
     slug_url_kwarg = 'pk'
     model = Reply
     template_name = 'post/reply_edit_form.html'
-    fields = ['replyBy','replyContent']
+    fields = ['replyContent']
 
     def get_success_url(self):
-        return '/posts/' + str(self.kwargs['post_pk'])
+        return '/' + str(self.kwargs['post_pk'])
     
 class ReplyDelete(DeleteView):
     model = Reply 
@@ -200,4 +210,4 @@ class ReplyDelete(DeleteView):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         post.postNumberOfComments -= 1
         post.save()
-        return '/posts/' + str(self.kwargs['post_pk'])
+        return '/' + str(self.kwargs['post_pk'])

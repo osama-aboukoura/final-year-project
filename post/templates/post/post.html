@@ -5,7 +5,7 @@
         <i class="fas fa-angle-down"></i>
     </td>
     
-    {% include "post/widgets/name-photo-card.html" with writerName=post.postedBy %}
+    {% include "post/widgets/name-photo-card.html" with author=post.postedBy %}
 
     <td class='post-content'>
         <p>{{post.postContent}}</p>
