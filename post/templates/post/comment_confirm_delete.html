@@ -1,0 +1,20 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'post-comment-reply/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+{% include "post/navigationbar.html" %}
+
+<div class='wrapper'>
+    <h1>Are you sure you want to delete?</h1>
+    <p>You're about to delete the following comment:</p>
+    <div class='post-title'>
+        <p>{{comment.commentContent}}</p>
+        <p class='discussion-postedBy-and-date'>Comment By: {{comment.commentBy.first_name}} {{comment.commentBy.last_name}} on {{comment.commentDate}}</p>
+    </div>
+    <form method='POST' style='margin-top:30px;'>
+        {% csrf_token %}
+        <a class='button blue' href="{% url 'post:showPost' post_pk %}">Go Back</a>
+        <input class='button danger' type='submit' value='Delete Now' />
+    </form>
+</div>

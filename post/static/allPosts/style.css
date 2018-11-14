@@ -1,6 +1,5 @@
 .postsTable {
-    width: 96%;
-    margin: 20px 2%;
+    width: 100%;
     border-collapse: collapse;
 }
 
@@ -43,5 +42,5 @@ a:hover {
 .pagination {
     border: 1px dotted gray;
     padding: 10px;
-    margin: 20px;
+    margin: 20px 0;
 }

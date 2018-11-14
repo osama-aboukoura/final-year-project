@@ -7,7 +7,7 @@
 
 <div class='wrapper'>
     {% if all_posts.posts %}
-        <h1 style='margin-left:20px'>{{all_posts.topic}}:</h1>
+        <h1>{{all_posts.topic}}:</h1>
         <table class="postsTable">
             <tr>
                 <th></th>
@@ -26,6 +26,6 @@
         </table>
 
     {% else %}
-        <h1 style='margin-left:20px;'>Sorry, No Posts Available!</h1>
+        <h1>Sorry, No Posts Available!</h1>
     {% endif %}
 </div>

@@ -162,6 +162,7 @@ class CommentUpdate(UpdateView):
 
 class CommentDelete(DeleteView):
     model = Comment 
+    success_url = reverse_lazy('post:index')
 
     def delete(self, request, *args, **kwargs):
         comment = self.get_object()
@@ -177,9 +178,13 @@ class CommentDelete(DeleteView):
         comment.delete()
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        comment = Comment.objects.get(id=self.kwargs['pk'])
+        return {'post_pk': self.kwargs['post_pk'], 'comment': comment}
+
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
-
+    
 
 class ReplyCreate(CreateView):
     model = Reply 
@@ -211,6 +216,10 @@ class ReplyUpdate(UpdateView):
     
 class ReplyDelete(DeleteView):
     model = Reply 
+
+    def get_context_data(self, **kwargs):
+        reply = Reply.objects.get(id=self.kwargs['pk'])
+        return {'post_pk': self.kwargs['post_pk'], 'reply': reply}
     
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['post_pk'])
