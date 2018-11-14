@@ -234,3 +234,28 @@ def profileInfo(request, user):
     print('userProfile ' , userProfile.pk)
     # print('profile ', profile)
     return render(request, 'post/profile.html', {'visited_user':user_, 'visited_userProfile':userProfile})
+
+
+class FlaggedPostsView(generic.ListView):
+    template_name = 'post/flagged-posts.html'
+    context_object_name = 'flagged'
+
+    def get_queryset(self):
+        flagged = {'posts':[] , 'comments':[] , 'replies':[]} 
+
+        allposts = Post.objects.all()
+        for post in allposts:
+            if post.postNumberOfFlags > 0:
+                flagged['posts'].append(post)
+
+        allcomments = Comment.objects.all()
+        for comment in allcomments:
+            if comment.commentNumberOfFlags > 0:
+                flagged['comments'].append(comment)
+        
+        allreplies = Reply.objects.all()
+        for reply in allreplies:
+            if reply.replyNumberOfFlags > 0:
+                flagged['replies'].append(reply)
+
+        return flagged

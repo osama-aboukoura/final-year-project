@@ -1,0 +1,64 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'allPosts/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+{% include "post/navigationbar.html" %}
+
+<div class='wrapper'>
+    {% if flagged.posts %}
+        <h1>Flagged Posts:</h1>
+        <table class="postsTable">
+            <tr>
+                <th>Post</th>
+                <th>Discussion Started By</th>
+                <th>Number of Flags</th>
+            </tr>
+            {% for post in flagged.posts %}
+                <tr>
+                    <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
+                    <td><a href="{% url 'post:profile' post.postedBy %}" >{{post.postedBy.first_name}} {{post.postedBy.last_name}}</a></td>
+                    <td>{{post.postNumberOfFlags}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h1>Great News! No Flagged Posts Available.</h1>
+    {% endif %}
+
+    {% if flagged.comments %}
+        <h1>Flagged Comments:</h1>
+        <table class="postsTable">
+            <tr>
+                <th>Coment Content</th>
+                <th>Comment By</th>
+                <th>Number of Flags</th>
+            </tr>
+            {% for comment in flagged.comments %}
+                <tr>
+                    <td><a href="{% url 'post:showPost' comment.commentOnPost.pk %}">{{comment.commentContent}}</a></td>
+                    <td><a href="{% url 'post:profile' comment.commentBy %}" >{{comment.commentBy.first_name}} {{comment.commentBy.last_name}}</a></td>
+                    <td>{{comment.commentNumberOfFlags}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if flagged.replies %}
+        <h1>Flagged Replies:</h1>
+        <table class="postsTable">
+            <tr>
+                <th>Reply Content</th>
+                <th>Reply By</th>
+                <th>Number of Flags</th>
+            </tr>
+            {% for reply in flagged.replies %}
+                <tr>
+                    <td><a href="{% url 'post:showPost' reply.replytoComment.commentOnPost.pk %}">{{reply.replyContent}}</a></td>
+                    <td><a href="{% url 'post:profile' reply.replyBy %}" >{{reply.replyBy.first_name}} {{reply.replyBy.last_name}}</a></td>
+                    <td>{{reply.replyNumberOfFlags}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</div>
