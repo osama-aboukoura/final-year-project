@@ -8,7 +8,7 @@ from .forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def register(request):
     registered = False
@@ -112,7 +112,8 @@ class ShowPostView(generic.DetailView):
 #     else:
 #         return HttpResponseRedirect(reverse('post:user_login'))
 
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
     model = Post 
     fields = ['postTitle', 'postTopic', 'postContent']
 
@@ -122,17 +123,20 @@ class PostCreate(CreateView):
         post.postedBy = logged_in_user
         return super(PostCreate, self).form_valid(form)
 
-class PostUpdate(UpdateView):
+class PostUpdate(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
     model = Post 
     template_name = 'post/post_edit_form.html'
     fields = ['postTitle', 'postTopic', 'postContent']
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView):
+    login_url = '/login/'
     model = Post 
     success_url = reverse_lazy('post:index')
 
 
-class CommentCreate(CreateView):
+class CommentCreate(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
     model = Comment 
     fields = ['commentContent']
     
@@ -150,7 +154,8 @@ class CommentCreate(CreateView):
         post.save()
         return '/' + str(self.kwargs['pk'])
 
-class CommentUpdate(UpdateView):
+class CommentUpdate(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
     slug_field = 'pk'
     slug_url_kwarg = 'pk'
     model = Comment
@@ -160,7 +165,8 @@ class CommentUpdate(UpdateView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
 
-class CommentDelete(DeleteView):
+class CommentDelete(LoginRequiredMixin, DeleteView):
+    login_url = '/login/'
     model = Comment 
     success_url = reverse_lazy('post:index')
 
@@ -186,7 +192,8 @@ class CommentDelete(DeleteView):
         return '/' + str(self.kwargs['post_pk'])
     
 
-class ReplyCreate(CreateView):
+class ReplyCreate(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
     model = Reply 
     fields = ['replyContent']
     
@@ -204,7 +211,8 @@ class ReplyCreate(CreateView):
         post.save()
         return '/' + str(post.pk)
 
-class ReplyUpdate(UpdateView):
+class ReplyUpdate(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
     slug_field = 'pk'
     slug_url_kwarg = 'pk'
     model = Reply
@@ -214,7 +222,8 @@ class ReplyUpdate(UpdateView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
-class ReplyDelete(DeleteView):
+class ReplyDelete(LoginRequiredMixin, DeleteView):
+    login_url = '/login/'
     model = Reply 
 
     def get_context_data(self, **kwargs):
@@ -236,10 +245,11 @@ def profileInfo(request, user):
     return render(request, 'post/profile.html', {'visited_user':user_, 'visited_userProfile':userProfile})
 
 
-class FlaggedPostsView(generic.ListView):
+class FlaggedPostsView(LoginRequiredMixin, generic.ListView):
+    login_url = '/login/'
     template_name = 'post/flagged-posts.html'
     context_object_name = 'flagged'
-
+    
     def get_queryset(self):
         flagged = {'posts':[] , 'comments':[] , 'replies':[]} 
 
