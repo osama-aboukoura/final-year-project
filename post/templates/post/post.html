@@ -1,8 +1,18 @@
 <table class='post card'>
     <td class='vote-up-and-down'>
-        <i class="fas fa-angle-up"></i>
-        <p>0</p>
-        <i class="fas fa-angle-down"></i>
+        {% if user in post.postVotersUp.all  %}
+            <a href="{% url 'post:vote-up-post' post.pk %}" style='color:green'><i class="fas fa-angle-up"></i></a>
+        {% else %}
+            <a href="{% url 'post:vote-up-post' post.pk %}"><i class="fas fa-angle-up"></i></a>
+        {% endif %}
+        
+        <p>{{post.postNumberOfVotes}}</p>
+        
+        {% if user in post.postVotersDown.all  %}
+            <a href="{% url 'post:vote-down-post' post.pk %}" style='color:red'><i class="fas fa-angle-down"></i></a>
+        {% else %}
+            <a href="{% url 'post:vote-down-post' post.pk %}"><i class="fas fa-angle-down"></i></a>
+        {% endif %}
     </td>
     
     {% include "post/widgets/name-photo-card.html" with author=post.postedBy %}

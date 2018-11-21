@@ -20,6 +20,8 @@ class Post(models.Model):
     postDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     postLikes = models.ManyToManyField(User, blank=True, related_name='post_likes')
     postNumberOfVotes = models.IntegerField(default=0)
+    postVotersUp = models.ManyToManyField(User, blank=True, related_name='post_votes_up')
+    postVotersDown = models.ManyToManyField(User, blank=True, related_name='post_votes_down')
     postNumberOfFlags = models.IntegerField(default=0)
     postNumberOfComments = models.IntegerField(default=0)
 
@@ -41,6 +43,8 @@ class Comment(models.Model):
     commentDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     commentLikes = models.ManyToManyField(User, blank=True, related_name='comment_likes')
     commentNumberOfVotes = models.IntegerField(default=0)
+    commentVotersUp = models.ManyToManyField(User, blank=True, related_name='comment_votes_up')
+    commentVotersDown = models.ManyToManyField(User, blank=True, related_name='comment_votes_down')
     commentNumberOfFlags = models.IntegerField(default=0)
 
     def __str__(self):

@@ -1,8 +1,19 @@
 <table class='comment card '>
     <td class='vote-up-and-down'>
-        <i class="fas fa-angle-up"></i>
+        {% if user in comment.commentVotersUp.all  %}
+            <a href="{% url 'post:vote-up-comment' post.pk comment.pk %}" style='color:green'><i class="fas fa-angle-up"></i></a>
+        {% else %}
+            <a href="{% url 'post:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up"></i></a>
+        {% endif %}
+        
         <p>{{comment.commentNumberOfVotes}}</p>
-        <i class="fas fa-angle-down"></i>
+        
+        {% if user in comment.commentVotersDown.all  %}
+            <a href="{% url 'post:vote-down-comment' post.pk comment.pk %}" style='color:red'><i class="fas fa-angle-down"></i></a>
+        {% else %}
+            <a href="{% url 'post:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down"></i></a>
+        {% endif %}
+    
     </td>
 
     {% include "post/widgets/name-photo-card.html" with author=comment.commentBy %}

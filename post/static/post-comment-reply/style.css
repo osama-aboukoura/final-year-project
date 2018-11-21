@@ -47,7 +47,10 @@
     padding: 0; 
     margin: 10px 0; 
 }
-.vote-up-and-down i:hover{
+.vote-up-and-down a{
+    color: #21618C;
+}
+.vote-up-and-down a:hover{
     cursor: pointer;
     color: #85C1E9;
 }

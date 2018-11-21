@@ -29,7 +29,12 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/delete-post/$', views.PostDelete.as_view(), name='delete-post'),
     # url: /posts/3/like/
     url(r'^(?P<pk>[0-9]+)/like/$', views.PostLike.as_view(), name='like-post'),
+    # url: /posts/3/post-vote-up/
+    url(r'^(?P<pk>[0-9]+)/post-vote-up/$', views.PostVoteUp.as_view(), name='vote-up-post'),
+    # url: /posts/3/post-vote-down/
+    url(r'^(?P<pk>[0-9]+)/post-vote-down/$', views.PostVoteDown.as_view(), name='vote-down-post'),
     
+
     # url: /posts/3/add-comment/
     url(r'^(?P<pk>[0-9]+)/add-comment/$', views.CommentCreate.as_view(), name='add-comment'),
     # url: /posts/3/2/edit-comment/
@@ -38,7 +43,12 @@ urlpatterns = [
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/delete-comment/$', views.CommentDelete.as_view(), name='delete-comment'),
     # url: /posts/3/2/comment-like/
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/comment-like/$', views.CommentLike.as_view(), name='like-comment'),
+    # url: /posts/3/2/comment-vote-up/
+    url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/comment-vote-up/$', views.CommentVoteUp.as_view(), name='vote-up-comment'),
+    # url: /posts/3/2/comment-vote-down/
+    url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/comment-vote-down/$', views.CommentVoteDown.as_view(), name='vote-down-comment'),
     
+
     # url: /posts/2/4/add-reply/
     url(r'^(?P<post_pk>[0-9]+)/(?P<comment_pk>[0-9]+)/add-reply/$', views.ReplyCreate.as_view(), name='add-reply'),
     # url: /posts/3/2/edit-reply/

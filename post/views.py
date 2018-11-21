@@ -142,6 +142,48 @@ class PostLike(RedirectView):
                 post.postLikes.add(user)
         return redirect_url
 
+class PostVoteUp(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        # if user has already voted down before pressing up, remove the vote down first 
+        if user.is_authenticated:
+            if user in post.postVotersDown.all():
+                post.postVotersDown.remove(user)
+                post.postNumberOfVotes = post.postNumberOfVotes + 1
+
+            if user in post.postVotersUp.all():
+                post.postVotersUp.remove(user)
+                post.postNumberOfVotes = post.postNumberOfVotes - 1
+                post.save()
+            else:
+                post.postVotersUp.add(user)
+                post.postNumberOfVotes = post.postNumberOfVotes + 1
+                post.save()
+        return redirect_url
+
+class PostVoteDown(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user
+        # if user has already voted up before pressing down, remove the vote up first 
+        if user in post.postVotersUp.all():
+                post.postVotersUp.remove(user)
+                post.postNumberOfVotes = post.postNumberOfVotes - 1
+
+        if user.is_authenticated:
+            if user in post.postVotersDown.all():
+                post.postVotersDown.remove(user)
+                post.postNumberOfVotes = post.postNumberOfVotes + 1
+                post.save()
+            else:
+                post.postVotersDown.add(user)
+                post.postNumberOfVotes = post.postNumberOfVotes - 1
+                post.save()
+        return redirect_url
+
 class PostDelete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Post 
@@ -189,6 +231,50 @@ class CommentLike(RedirectView):
                 comment.commentLikes.remove(user)
             else:
                 comment.commentLikes.add(user)
+        return redirect_url
+
+class CommentVoteUp(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        # if user has already voted down before pressing up, remove the vote down first 
+        if user in comment.commentVotersDown.all():
+                comment.commentVotersDown.remove(user)
+                comment.commentNumberOfVotes = comment.commentNumberOfVotes + 1
+
+        if user.is_authenticated:
+            if user in comment.commentVotersUp.all():
+                comment.commentVotersUp.remove(user)
+                comment.commentNumberOfVotes = comment.commentNumberOfVotes - 1
+                comment.save()
+            else:
+                comment.commentVotersUp.add(user)
+                comment.commentNumberOfVotes = comment.commentNumberOfVotes + 1
+                comment.save()
+        return redirect_url
+
+class CommentVoteDown(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        # if user has already voted up before pressing down, remove the vote up first 
+        if user in comment.commentVotersUp.all():
+                comment.commentVotersUp.remove(user)
+                comment.commentNumberOfVotes = comment.commentNumberOfVotes - 1
+
+        if user.is_authenticated:
+            if user in comment.commentVotersDown.all():
+                comment.commentVotersDown.remove(user)
+                comment.commentNumberOfVotes = comment.commentNumberOfVotes + 1
+                comment.save()
+            else:
+                comment.commentVotersDown.add(user)
+                comment.commentNumberOfVotes = comment.commentNumberOfVotes - 1
+                comment.save()
         return redirect_url
 
 class CommentDelete(LoginRequiredMixin, DeleteView):
