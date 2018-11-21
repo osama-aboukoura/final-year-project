@@ -19,10 +19,24 @@
         {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>
-            <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentNumberOfLikes}} Likes</p>
+            <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %}
+            {% if comment.commentLikes.count > 2 and user in comment.commentLikes.all %}
+                (You and {{comment.commentLikes.count|add:'-1'}} others).</p>
+            {% elif comment.commentLikes.count > 1 and user in comment.commentLikes.all  %}
+                (You and {{comment.commentLikes.count|add:'-1'}} other).</p>
+            {% elif comment.commentLikes.count == 1 and user in comment.commentLikes.all %}
+                (You).
+            {% endif %}
             <hr/>
+
             {% if user.is_authenticated %}
-                <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                {% comment %} <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button> {% endcomment %}
+                {% comment %} <a class='button blue' href='{{comment.pk}}/like/'>Like <i class="far fa-thumbs-up"></i></a> {% endcomment %}
+                {% if user in comment.commentLikes.all %}
+                    <a class='comment-link' style='background:green' href='{{comment.pk}}/comment-like/'>Like <i class="fas fa-thumbs-up"></i></a>
+                {% else %}
+                    <a class='comment-link' href='{{comment.pk}}/comment-like/'>Like <i class="far fa-thumbs-up"></i></a>
+                {% endif %}
                 <a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a>
                 <button class='button danger'>Report <i class="fas fa-ban"></i></button>
             {% else %}

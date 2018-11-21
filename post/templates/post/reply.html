@@ -14,10 +14,22 @@
         {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>
-            <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyNumberOfLikes}} Likes</p>
+            {% comment %} <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyNumberOfreplyLikes}} replyLikes</p> {% endcomment %}
+            <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyLikes.count}} Like{% if reply.replyLikes.count > 1 or reply.replyLikes.count == 0 %}s{% endif %}
+            {% if reply.replyLikes.count > 2 and user in reply.replyLikes.all %}
+                (You and {{reply.replyLikes.count|add:'-1'}} others).</p>
+            {% elif reply.replyLikes.count > 1 and user in reply.replyLikes.all  %}
+                (You and {{reply.replyLikes.count|add:'-1'}} other).</p>
+            {% elif reply.replyLikes.count == 1 and user in reply.replyLikes.all %}
+                (You).
+            {% endif %}
             <hr/>
             {% if user.is_authenticated %}
-                <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                {% if user in reply.replyLikes.all %}
+                    <a class='comment-link' style='background:green' href='{{reply.pk}}/reply-like/'>Like <i class="fas fa-thumbs-up"></i></a>
+                {% else %}
+                    <a class='comment-link' href='{{reply.pk}}/reply-like/'>Like <i class="far fa-thumbs-up"></i></a>
+                {% endif %}
                 <button class='button danger'>Report <i class="fas fa-ban"></i></button>
             {% endif %}
             <p>{{reply.replyDate}}</p>

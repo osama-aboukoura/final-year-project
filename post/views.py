@@ -1,6 +1,7 @@
 from django.views import generic
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import RedirectView
 from .models import Post, Comment, Reply, UserProfile, User
 from django.urls import reverse
 from django.urls import reverse_lazy
@@ -129,6 +130,18 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'post/post_edit_form.html'
     fields = ['postTitle', 'postTopic', 'postContent']
 
+class PostLike(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        if user.is_authenticated:
+            if user in post.postLikes.all():
+                post.postLikes.remove(user)
+            else:
+                post.postLikes.add(user)
+        return redirect_url
+
 class PostDelete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Post 
@@ -164,6 +177,19 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
+
+class CommentLike(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        if user.is_authenticated:
+            if user in comment.commentLikes.all():
+                comment.commentLikes.remove(user)
+            else:
+                comment.commentLikes.add(user)
+        return redirect_url
 
 class CommentDelete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
@@ -222,6 +248,19 @@ class ReplyUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
+class ReplyLike(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        if user.is_authenticated:
+            if user in reply.replyLikes.all():
+                reply.replyLikes.remove(user)
+            else:
+                reply.replyLikes.add(user)
+        return redirect_url
+
 class ReplyDelete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Reply 

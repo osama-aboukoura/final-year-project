@@ -19,10 +19,21 @@
         {% endif %}
         
         <div class='buttons-and-date-fixed-bottom'>
-            <p style='margin-bottom: -5px; padding: 0;'>{{post.postNumberOfLikes}} Likes</p>
+            <p style='margin-bottom: -5px; padding: 0;'>{{post.postLikes.count}} Like{% if post.postLikes.count > 1 or post.postLikes.count == 0 %}s{% endif %}
+            {% if post.postLikes.count > 2 and user in post.postLikes.all %}
+                (You and {{post.postLikes.count|add:'-1'}} others).</p>
+            {% elif post.postLikes.count > 1 and user in post.postLikes.all  %}
+                (You and {{post.postLikes.count|add:'-1'}} other).</p>
+            {% elif post.postLikes.count == 1 and user in post.postLikes.all %}
+                (You).
+            {% endif %}
             <hr/>
             {% if user.is_authenticated %}
-                <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button>
+                {% if user in post.postLikes.all %}
+                    <a class='comment-link' style='background:green' href='like/'>Like <i class="fas fa-thumbs-up"></i></a>
+                {% else %}
+                    <a class='comment-link' href='like/'>Like <i class="far fa-thumbs-up"></i></a>
+                {% endif %}
                 <a class='comment-link' href='add-comment/'>Comment <i class="far fa-comment"></i></a>
                 <button class='button danger'>Report <i class="fas fa-ban"></i></button>
             {% else %}
