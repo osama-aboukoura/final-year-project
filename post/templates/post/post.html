@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <table class='post card'>
     <td class='vote-up-and-down'>
         {% if user in post.postVotersUp.all  %}
@@ -9,7 +10,7 @@
         <p>{{post.postNumberOfVotes}}</p>
         
         {% if user in post.postVotersDown.all  %}
-            <a href="{% url 'post:vote-down-post' post.pk %}" style='color:red'><i class="fas fa-angle-down"></i></a>
+            <a href="{% url 'post:vote-down-post' post.pk %}" style='color:#CB4335'><i class="fas fa-angle-down"></i></a>
         {% else %}
             <a href="{% url 'post:vote-down-post' post.pk %}"><i class="fas fa-angle-down"></i></a>
         {% endif %}
@@ -45,7 +46,8 @@
                     <a class='comment-link' href='like/'>Like <i class="far fa-thumbs-up"></i></a>
                 {% endif %}
                 <a class='comment-link' href='add-comment/'>Comment <i class="far fa-comment"></i></a>
-                <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+                <button class='button danger' onclick="report('post', {{post.pk}})">Report <i class="fas fa-ban"></i></button>
+                {% if user in post.postFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this post.</i></strong></span>{% endif %}
             {% else %}
                 <p>To comment on a question, you must be logged in. <a class='button blue' href="{% url 'post:user_login' %}">Click here to Login</a></p>
             {% endif %}
@@ -53,3 +55,5 @@
         </div>
     </td>
 </table>
+
+<script type='text/javascript' src="{% static 'allPosts/post.js' %}"></script>

@@ -189,6 +189,14 @@ class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post 
     success_url = reverse_lazy('post:index')
 
+class PostReport(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        if user.is_authenticated:
+            post.postFlags.add(user)
+        return redirect_url
 
 class CommentCreate(LoginRequiredMixin, CreateView):
     login_url = '/login/'
@@ -303,6 +311,15 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
+class CommentReport(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        if user.is_authenticated:
+            comment.commentFlags.add(user)
+        return redirect_url
 
 class ReplyCreate(LoginRequiredMixin, CreateView):
     login_url = '/login/'
@@ -361,6 +378,15 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
         post.save()
         return '/' + str(self.kwargs['post_pk'])
 
+class ReplyReport(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
+        redirect_url = post.get_absolute_url()
+        user = self.request.user 
+        if user.is_authenticated:
+            reply.replyFlags.add(user)
+        return redirect_url
 
 def profileInfo(request, user):
     user_ = User.objects.get(username=user)
@@ -380,17 +406,17 @@ class FlaggedPostsView(LoginRequiredMixin, generic.ListView):
 
         allposts = Post.objects.all()
         for post in allposts:
-            if post.postNumberOfFlags > 0:
+            if post.postFlags.count() > 0:
                 flagged['posts'].append(post)
 
         allcomments = Comment.objects.all()
         for comment in allcomments:
-            if comment.commentNumberOfFlags > 0:
+            if comment.commentFlags.count() > 0:
                 flagged['comments'].append(comment)
         
         allreplies = Reply.objects.all()
         for reply in allreplies:
-            if reply.replyNumberOfFlags > 0:
+            if reply.replyFlags.count() > 0:
                 flagged['replies'].append(reply)
 
         return flagged

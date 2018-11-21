@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-# Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True)
@@ -24,6 +23,7 @@ class Post(models.Model):
     postVotersDown = models.ManyToManyField(User, blank=True, related_name='post_votes_down')
     postNumberOfFlags = models.IntegerField(default=0)
     postNumberOfComments = models.IntegerField(default=0)
+    postFlags = models.ManyToManyField(User, blank=True, related_name='post_flags')
 
     def get_absolute_url(self):
         return reverse("post:showPost", kwargs={"pk": self.pk})
@@ -45,7 +45,7 @@ class Comment(models.Model):
     commentNumberOfVotes = models.IntegerField(default=0)
     commentVotersUp = models.ManyToManyField(User, blank=True, related_name='comment_votes_up')
     commentVotersDown = models.ManyToManyField(User, blank=True, related_name='comment_votes_down')
-    commentNumberOfFlags = models.IntegerField(default=0)
+    commentFlags = models.ManyToManyField(User, blank=True, related_name='comment_flags')
 
     def __str__(self):
         return "Comment " + str(self.pk) + " on " + str(self.commentOnPost)
@@ -59,7 +59,7 @@ class Reply(models.Model):
     replyBy = models.ForeignKey(User, on_delete=models.CASCADE)
     replyDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     replyLikes = models.ManyToManyField(User, blank=True, related_name='reply_likes')
-    replyNumberOfFlags = models.IntegerField(default=0)
+    replyFlags = models.ManyToManyField(User, blank=True, related_name='reply_flags')
 
     def __str__(self):
         return "Reply " + str(self.pk) + " to " + str(self.replytoComment)

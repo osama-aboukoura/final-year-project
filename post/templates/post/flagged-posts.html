@@ -6,59 +6,52 @@
 {% include "post/navigationbar.html" %}
 
 <div class='wrapper'>
-    {% if flagged.posts %}
+    {% if flagged.posts or flagged.comments or flagged.replies %}
         <h1>Flagged Posts:</h1>
         <table class="postsTable">
             <tr>
                 <th>Post</th>
                 <th>Discussion Started By</th>
                 <th>Number of Flags</th>
+                <th>Type</th>
             </tr>
-            {% for post in flagged.posts %}
-                <tr>
-                    <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
-                    <td><a href="{% url 'post:profile' post.postedBy %}" >{{post.postedBy.first_name}} {{post.postedBy.last_name}}</a></td>
-                    <td>{{post.postNumberOfFlags}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <h1>Great News! No Flagged Posts Available.</h1>
+    {% endif %}
+    {% if flagged.posts %}
+        {% for post in flagged.posts %}
+            <tr>
+                <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
+                <td><a href="{% url 'post:profile' post.postedBy %}" >{{post.postedBy.first_name}} {{post.postedBy.last_name}}</a></td>
+                <td>{{post.postFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
+                <td>Post</td>
+            </tr>
+        {% endfor %}
     {% endif %}
 
     {% if flagged.comments %}
-        <h1>Flagged Comments:</h1>
-        <table class="postsTable">
+        {% for comment in flagged.comments %}
             <tr>
-                <th>Coment Content</th>
-                <th>Comment By</th>
-                <th>Number of Flags</th>
+                <td><a href="{% url 'post:showPost' comment.commentOnPost.pk %}">{{comment.commentContent}}</a></td>
+                <td><a href="{% url 'post:profile' comment.commentBy %}" >{{comment.commentBy.first_name}} {{comment.commentBy.last_name}}</a></td>
+                <td>{{comment.commentFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
+                <td>Comment</td>
             </tr>
-            {% for comment in flagged.comments %}
-                <tr>
-                    <td><a href="{% url 'post:showPost' comment.commentOnPost.pk %}">{{comment.commentContent}}</a></td>
-                    <td><a href="{% url 'post:profile' comment.commentBy %}" >{{comment.commentBy.first_name}} {{comment.commentBy.last_name}}</a></td>
-                    <td>{{comment.commentNumberOfFlags}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% endfor %}
     {% endif %}
 
     {% if flagged.replies %}
-        <h1>Flagged Replies:</h1>
-        <table class="postsTable">
+        {% for reply in flagged.replies %}
             <tr>
-                <th>Reply Content</th>
-                <th>Reply By</th>
-                <th>Number of Flags</th>
+                <td><a href="{% url 'post:showPost' reply.replytoComment.commentOnPost.pk %}">{{reply.replyContent}}</a></td>
+                <td><a href="{% url 'post:profile' reply.replyBy %}" >{{reply.replyBy.first_name}} {{reply.replyBy.last_name}}</a></td>
+                <td>{{reply.replyFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
+                <td>Reply</td>
             </tr>
-            {% for reply in flagged.replies %}
-                <tr>
-                    <td><a href="{% url 'post:showPost' reply.replytoComment.commentOnPost.pk %}">{{reply.replyContent}}</a></td>
-                    <td><a href="{% url 'post:profile' reply.replyBy %}" >{{reply.replyBy.first_name}} {{reply.replyBy.last_name}}</a></td>
-                    <td>{{reply.replyNumberOfFlags}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
-                </tr>
-            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    {% if flagged.posts or flagged.comments or flagged.replies %}
         </table>
+    {% else %}
+        <h2>Great News! There are no flagged posts.</h2>
     {% endif %}
 </div>

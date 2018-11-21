@@ -30,7 +30,8 @@
                 {% else %}
                     <a class='comment-link' href='{{reply.pk}}/reply-like/'>Like <i class="far fa-thumbs-up"></i></a>
                 {% endif %}
-                <button class='button danger'>Report <i class="fas fa-ban"></i></button>
+                <button class='button danger' onclick="report('reply', {{reply.pk}})">Report <i class="fas fa-ban"></i></button>
+                {% if user in reply.replyFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this reply.</i></strong></span>{% endif %}
             {% endif %}
             <p>{{reply.replyDate}}</p>
         </div>
