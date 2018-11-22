@@ -24,6 +24,7 @@ class Post(models.Model):
     postNumberOfFlags = models.IntegerField(default=0)
     postNumberOfComments = models.IntegerField(default=0)
     postFlags = models.ManyToManyField(User, blank=True, related_name='post_flags')
+    postDisabled = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("post:showPost", kwargs={"pk": self.pk})
@@ -46,6 +47,7 @@ class Comment(models.Model):
     commentVotersUp = models.ManyToManyField(User, blank=True, related_name='comment_votes_up')
     commentVotersDown = models.ManyToManyField(User, blank=True, related_name='comment_votes_down')
     commentFlags = models.ManyToManyField(User, blank=True, related_name='comment_flags')
+    commentDisabled = models.BooleanField(default=False)
 
     def __str__(self):
         return "Comment " + str(self.pk) + " on " + str(self.commentOnPost)
@@ -60,6 +62,7 @@ class Reply(models.Model):
     replyDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     replyLikes = models.ManyToManyField(User, blank=True, related_name='reply_likes')
     replyFlags = models.ManyToManyField(User, blank=True, related_name='reply_flags')
+    replyDisabled = models.BooleanField(default=False)
 
     def __str__(self):
         return "Reply " + str(self.pk) + " to " + str(self.replytoComment)

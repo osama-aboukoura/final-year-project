@@ -10,41 +10,66 @@
         <h1>Flagged Posts:</h1>
         <table class="postsTable">
             <tr>
-                <th>Post</th>
-                <th>Discussion Started By</th>
-                <th>Number of Flags</th>
-                <th>Type</th>
+                <th width="35%">Post</th>
+                <th width="20%">Discussion Started By</th>
+                <th width="10%">Number of Flags</th>
+                <th width="10%">Type</th>
+                <th>Disable/Delete Post</th>
             </tr>
     {% endif %}
     {% if flagged.posts %}
         {% for post in flagged.posts %}
-            <tr>
-                <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
+            <tr {% if post.postDisabled %}class='disabled'{% endif %}>
+                <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a>{% if post.postDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
                 <td><a href="{% url 'post:profile' post.postedBy %}" >{{post.postedBy.first_name}} {{post.postedBy.last_name}}</a></td>
                 <td>{{post.postFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Post</td>
+                <td align='center' class='flagged-posts-buttons'>
+                    <span>Delete <a href="{% url 'post:delete-post' post.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a></span>&nbsp;
+                    {% if post.postDisabled %}
+                        <span>Enable <button onclick="disable('post', {{post.pk}}, '{{post.postDisabled}}')" style='background:green'><i class="far fa-check-circle"></i></button></span>
+                    {% else %}
+                        <span>Disable <button onclick="disable('post', {{post.pk}}, '{{post.postDisabled}}')" style='background:#CB4335'><i class="fas fa-ban"></i></button></span>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     {% endif %}
 
     {% if flagged.comments %}
         {% for comment in flagged.comments %}
-            <tr>
-                <td><a href="{% url 'post:showPost' comment.commentOnPost.pk %}">{{comment.commentContent}}</a></td>
+            <tr {% if comment.commentDisabled %}class='disabled'{% endif %}>
+                <td><a href="{% url 'post:showPost' comment.commentOnPost.pk %}">{{comment.commentContent}}</a>{% if comment.commentDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
                 <td><a href="{% url 'post:profile' comment.commentBy %}" >{{comment.commentBy.first_name}} {{comment.commentBy.last_name}}</a></td>
                 <td>{{comment.commentFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Comment</td>
+                <td align='center' class='flagged-posts-buttons'>
+                    <span>Delete <a href="{% url 'post:delete-comment' comment.commentOnPost.pk comment.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a></span>&nbsp;
+                    {% if comment.commentDisabled %}
+                        <span>Enable <button onclick="disable('comment', {{comment.pk}}, '{{comment.commentDisabled}}')" style='background:green'><i class="far fa-check-circle"></i></button></span>
+                    {% else %}
+                        <span>Disable <button onclick="disable('comment', {{comment.pk}}, '{{comment.commentDisabled}}')" style='background:#CB4335'><i class="fas fa-ban"></i></button></span>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     {% endif %}
 
     {% if flagged.replies %}
         {% for reply in flagged.replies %}
-            <tr>
-                <td><a href="{% url 'post:showPost' reply.replytoComment.commentOnPost.pk %}">{{reply.replyContent}}</a></td>
+            <tr {% if reply.replyDisabled %}class='disabled'{% endif %}>
+                <td><a href="{% url 'post:showPost' reply.replytoComment.commentOnPost.pk %}">{{reply.replyContent}}</a>{% if reply.replyDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
                 <td><a href="{% url 'post:profile' reply.replyBy %}" >{{reply.replyBy.first_name}} {{reply.replyBy.last_name}}</a></td>
                 <td>{{reply.replyFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Reply</td>
+                <td align='center' class='flagged-posts-buttons'>
+                    <span>Delete <a href="{% url 'post:delete-reply' reply.replytoComment.commentOnPost.pk reply.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a></span>&nbsp;
+                    {% if reply.replyDisabled %}
+                        <span>Enable <button onclick="disable('reply', {{reply.pk}}, '{{reply.replyDisabled}}')" style='background:green'><i class="far fa-check-circle"></i></button></span>
+                    {% else %}
+                        <span>Disable <button onclick="disable('reply', {{reply.pk}}, '{{reply.replyDisabled}}')" style='background:#CB4335'><i class="fas fa-ban"></i></button></span>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     {% endif %}
@@ -55,3 +80,5 @@
         <h2>Great News! There are no flagged posts.</h2>
     {% endif %}
 </div>
+
+<script type='text/javascript' src="{% static 'allPosts/post.js' %}"></script>

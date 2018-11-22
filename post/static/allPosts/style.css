@@ -14,6 +14,10 @@
 
 .postsTable tr:hover {background-color: lightgray;}
 
+.disabled {
+    background-color: #F1948A !important;
+}
+
 .postsTable th {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -43,4 +47,19 @@ a:hover {
     border: 1px dotted gray;
     padding: 10px;
     margin: 20px 0;
+}
+
+.flagged-posts-buttons button, .flagged-posts-buttons a{
+    cursor: pointer;
+    text-decoration: none;
+    padding: 5px 10px;
+    font-size: 18px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px rgb(150,150,150);
+}
+
+.flagged-posts-buttons a:visited{
+    color: white;
 }

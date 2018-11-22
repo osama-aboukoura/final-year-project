@@ -420,3 +420,28 @@ class FlaggedPostsView(LoginRequiredMixin, generic.ListView):
                 flagged['replies'].append(reply)
 
         return flagged
+
+
+class PostEnableDisable(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = '/flagged-posts/'
+        post.postDisabled = not post.postDisabled
+        post.save()
+        return redirect_url
+
+class CommentEnableDisable(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+        redirect_url = '/flagged-posts/'
+        comment.commentDisabled = not comment.commentDisabled
+        comment.save()
+        return redirect_url
+
+class ReplyEnableDisable(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+        redirect_url = '/flagged-posts/'
+        reply.replyDisabled = not reply.replyDisabled
+        reply.save()
+        return redirect_url
