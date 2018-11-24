@@ -13,6 +13,6 @@
     </div>
 
     <a class='button blue' href="{% url 'post:flagged-posts' %}">Back</a>
-    <a class='button blue' href="{% url 'post:disable-comment-confirm' comment.pk %}">{% if comment.commentDisabled %}Enable{% else %}Disable{% endif %}</a>
+    <a class='button blue' href="{% url 'comment:disable-comment-confirm' comment.pk %}">{% if comment.commentDisabled %}Enable{% else %}Disable{% endif %}</a>
 
 </div>

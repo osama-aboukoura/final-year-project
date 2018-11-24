@@ -2,7 +2,8 @@ from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
-from post.models import Post, Comment, UserProfile, User
+from post.models import Post, UserProfile, User
+from comment.models import Comment
 from .models import Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
@@ -79,6 +80,7 @@ class ReplyReport(RedirectView):
         if user.is_authenticated:
             reply.replyFlags.add(user)
         return redirect_url
+
 
 class ReplyEnableDisablePage(generic.DeleteView):
     model = Reply

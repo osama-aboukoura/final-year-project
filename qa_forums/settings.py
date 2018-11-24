@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'post.apps.PostConfig',
+    'comment.apps.CommentConfig',
     'reply.apps.ReplyConfig',
 ]
 
