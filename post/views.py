@@ -398,7 +398,7 @@ def profileInfo(request, user):
 
 class FlaggedPostsView(LoginRequiredMixin, generic.ListView):
     login_url = '/login/'
-    template_name = 'post/flagged-posts.html'
+    template_name = 'post/flagged-posts/flagged-posts.html'
     context_object_name = 'flagged'
     
     def get_queryset(self):
@@ -425,7 +425,7 @@ class FlaggedPostsView(LoginRequiredMixin, generic.ListView):
 
 class PostEnableDisablePage(generic.DetailView):
     model = Post 
-    template_name = 'post/disable-post.html'
+    template_name = 'post/flagged-posts/disable-post.html'
 
 class PostEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -437,7 +437,7 @@ class PostEnableDisable(RedirectView):
 
 class PostRemoveFlagsPage(generic.DetailView):
     model = Post 
-    template_name = 'post/remove-flags-post.html'
+    template_name = 'post/flagged-posts/remove-flags-post.html'
 
 class PostRemoveFlags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -451,7 +451,7 @@ class PostRemoveFlags(RedirectView):
 
 class CommentEnableDisablePage(generic.DeleteView):
     model = Comment
-    template_name = 'post/disable-comment.html'
+    template_name = 'post/flagged-posts/disable-comment.html'
 
 class CommentEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -463,7 +463,7 @@ class CommentEnableDisable(RedirectView):
 
 class CommentRemoveFlagsPage(generic.DetailView):
     model = Comment 
-    template_name = 'post/remove-flags-comment.html'
+    template_name = 'post/flagged-posts/remove-flags-comment.html'
 
 class CommentRemoveFlags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -477,7 +477,7 @@ class CommentRemoveFlags(RedirectView):
 
 class ReplyEnableDisablePage(generic.DeleteView):
     model = Reply
-    template_name = 'post/disable-reply.html'
+    template_name = 'post/flagged-posts/disable-reply.html'
 
 class ReplyEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -489,7 +489,7 @@ class ReplyEnableDisable(RedirectView):
 
 class ReplyRemoveFlagsPage(generic.DetailView):
     model = Reply 
-    template_name = 'post/remove-flags-reply.html'
+    template_name = 'post/flagged-posts/remove-flags-reply.html'
 
 class ReplyRemoveFlags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
