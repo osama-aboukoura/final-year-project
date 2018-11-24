@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment, Reply, UserProfile
+from .models import Post, Comment, UserProfile
 
 class PostModelAdmin(admin.ModelAdmin):
     list_display = ["pk", "postTitle", "postTopic", "postedBy", "postDate"]
@@ -17,14 +17,6 @@ class CommentModelAdmin(admin.ModelAdmin):
     class Meta:
         model = Comment
 
-class ReplyModelAdmin(admin.ModelAdmin):
-    list_display = ["pk", "__str__", "replyBy", "replyDate"]
-    list_display_links = ["__str__"]
-    search_fields = ["replyContent", "replyBy"]
-    list_filter = ["replyDate"]
-    class Meta:
-        model = Reply 
-
 class UserProfileModelAdmin(admin.ModelAdmin):
     list_display = ["pk", "__str__"]
     list_display_links = ["__str__"]
@@ -33,7 +25,6 @@ class UserProfileModelAdmin(admin.ModelAdmin):
 
 admin.site.register(Post, PostModelAdmin)
 admin.site.register(Comment, CommentModelAdmin)
-admin.site.register(Reply, ReplyModelAdmin)
 
 admin.site.register(UserProfile, UserProfileModelAdmin)
 

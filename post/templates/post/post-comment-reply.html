@@ -24,7 +24,7 @@
                 {% include "post/comment.html" %}
                 {% for reply in comment.reply_set.all %}
                     {% if not reply.replyDisabled %}
-                        {% include "post/reply.html" %}
+                        {% include "reply/reply.html" %}
                     {% endif %}
                 {% endfor %}
             {% endif %}

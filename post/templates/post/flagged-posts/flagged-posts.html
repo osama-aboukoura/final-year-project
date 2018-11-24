@@ -91,18 +91,18 @@
                 <td align='center' class='flagged-posts-buttons'>
                     <div class='buttons-div'>
                         <div class='button-div'>
-                            <a href="{% url 'post:delete-reply' reply.replytoComment.commentOnPost.pk reply.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a>
+                            <a href="{% url 'reply:delete-reply' reply.replytoComment.commentOnPost.pk reply.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a>
                             <span>Delete </span>
                         </div>
                         <div class='button-div'>
                             {% if reply.replyDisabled %}
-                                <span>Enable</span><a href="{% url 'post:disable-reply' reply.pk %}" style='background:green'><i class="far fa-check-circle"></i></a>
+                                <span>Enable</span><a href="{% url 'reply:disable-reply' reply.pk %}" style='background:green'><i class="far fa-check-circle"></i></a>
                             {% else %}
-                                <span>Disable</span><a href="{% url 'post:disable-reply' reply.pk %}" style='background:#CB4335'><i class="fas fa-ban"></i></a>
+                                <span>Disable</span><a href="{% url 'reply:disable-reply' reply.pk %}" style='background:#CB4335'><i class="fas fa-ban"></i></a>
                             {% endif %}
                         </div>
                         <div class='button-div'>
-                            <a href="{% url 'post:remove-reply-flags' reply.pk %}"  style='background:#DC7633'><i class="fas fa-flag"></i></a>
+                            <a href="{% url 'reply:remove-reply-flags' reply.pk %}"  style='background:#DC7633'><i class="fas fa-flag"></i></a>
                             <span>Remove Flags</span>
                         </div>
                     </div>
