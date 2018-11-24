@@ -6,15 +6,13 @@
 {% include "main/navigationbar.html" %}
 
 <div class='wrapper'>
-    <h1>Are you sure you want to delete?</h1>
-    <p>You're about to delete the following {{type}}:</p>
+    <h1>Are you sure you want to {% if post.postDisabled %}enable{% else %}disable{% endif %} this post?</h1>
     <div class='post-title'>
-        <h2>{{title}}</h2>
-        <p class='discussion-postedBy-and-date'>By: {{author_first_name}} {{author_last_name}} on {{date}}</p>
+        <h2>{{post.postTitle}}</h2>
+        <p class='discussion-postedBy-and-date'>By: {{post.postedBy}} on {{post.postDate}}</p>
     </div>
-    <form method='POST' style='margin-top:30px;'>
-        {% csrf_token %}
-        <a class='button blue' href={{back_url}}>Go Back</a>
-        <input class='button danger' type='submit' value='Delete Now' />
-    </form>
+
+    <a class='button blue' href="{% url 'main:flagged-posts' %}">Back</a>
+    <a class='button blue' href="{% url 'post:disable-post-confirm' post.pk %}">{% if post.postDisabled %}Enable{% else %}Disable{% endif %}</a>
+
 </div>

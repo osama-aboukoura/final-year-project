@@ -3,16 +3,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'post-comment-reply/style.css' %}" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
-{% include "post/navigationbar.html" %}
+{% include "main/navigationbar.html" %}
 
 <div class='wrapper'>
-    <h1>Are you sure you want to remove all flags on this post?</h1>
+    <h1>Are you sure you want to remove all flags on this comment?</h1>
     <div class='post-title'>
-        <h2>{{post.postTitle}}</h2>
-        <p class='discussion-postedBy-and-date'>By: {{post.postedBy}} on {{post.postDate}}</p>
+        <h2>{{comment.commentContent}}</h2>
+        <p class='discussion-postedBy-and-date'>By: {{comment.commentBy}} on {{comment.commentDate}}</p>
     </div>
 
-    <a class='button blue' href="{% url 'post:flagged-posts' %}">Back</a>
-    <a class='button blue' href="{% url 'post:remove-post-flags-confirm' post.pk %}">Remove Flags</a>
+    <a class='button blue' href="{% url 'main:flagged-posts' %}">Back</a>
+    <a class='button blue' href="{% url 'comment:remove-comment-flags-confirm' comment.pk %}">Remove Flags</a>
 
 </div>

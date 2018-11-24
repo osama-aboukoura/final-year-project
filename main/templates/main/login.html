@@ -7,7 +7,7 @@
     <div class='login-box'>
         <h1>Login</h1>
         <hr/><br/><br/>
-        <form action="{% url 'post:user_login' %}" method='POST'>
+        <form action="{% url 'main:user_login' %}" method='POST'>
             {% csrf_token %}
             <label for='username'>Username:</label>
             <input type='text' name='username' placeholder='Enter your username'/><br/>

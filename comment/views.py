@@ -2,12 +2,13 @@ from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
-from post.models import Post, UserProfile, User
+from main.models import UserProfile, User
+from post.models import Post
 from reply.models import Reply
 from .models import Comment
 from django.urls import reverse
 from django.urls import reverse_lazy
-from post.forms import UserForm, UserProfileForm
+from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -139,7 +140,7 @@ class CommentReport(RedirectView):
 
 class CommentEnableDisablePage(generic.DeleteView):
     model = Comment
-    template_name = 'post/flagged-posts/disable-comment.html'
+    template_name = 'main/flagged-posts/disable-comment.html'
 
 class CommentEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -151,7 +152,7 @@ class CommentEnableDisable(RedirectView):
 
 class CommentRemoveFlagsPage(generic.DetailView):
     model = Comment 
-    template_name = 'post/flagged-posts/remove-flags-comment.html'
+    template_name = 'main/flagged-posts/remove-flags-comment.html'
 
 class CommentRemoveFlags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):

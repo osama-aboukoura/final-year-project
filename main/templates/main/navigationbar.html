@@ -5,13 +5,13 @@
 
 <div class="navigationbar">
     <button class='logo'>Intelligent Q&#38;A Forums</button>
-    <a href="{% url 'post:index'%}">All Posts</a>
-    <a href="{% url 'post:topics'%}">Topics</a>
+    <a href="{% url 'main:index'%}">All Posts</a>
+    <a href="{% url 'main:topics'%}">Topics</a>
     {% if user.is_authenticated %}
         <a href="{% url 'post:add-post'%}"><i class="fas fa-plus"></i>&nbsp; Add New Post</a>
     {% endif %}
     {% if user.is_superuser %}
-        <a href="{% url 'post:flagged-posts'%}"><i class="fas fa-exclamation-circle"></i>&nbsp; Flagged Posts</a>
+        <a href="{% url 'main:flagged-posts'%}"><i class="fas fa-exclamation-circle"></i>&nbsp; Flagged Posts</a>
     {% endif %}
     <a style="float:right" href="/admin"><i class="fas fa-unlock-alt"></i>&nbsp; Admin</a>
 
@@ -25,14 +25,14 @@
             {% endif %}
             <i class="fa fa-caret-down"></i></button>
             <div class="dropdown-content">
-                <a href="{% url 'post:profile' user %}"><i class="fas fa-user"></i>&nbsp; My Profile</a>
-                <a href="{% url 'post:logout' %}"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
+                <a href="{% url 'main:profile' user %}"><i class="fas fa-user"></i>&nbsp; My Profile</a>
+                <a href="{% url 'main:logout' %}"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
             </div>
         </div> 
-        {% comment %} <li style="float:right"><a href="{% url 'post:logout' %}"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a></li> {% endcomment %}
+        {% comment %} <li style="float:right"><a href="{% url 'main:logout' %}"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a></li> {% endcomment %}
     {% else %}
-        <a style="float:right" href="{% url 'post:register' %}"><i class="fas fa-user-plus"></i>&nbsp; Sign Up</a>
-        <a style="float:right" href="{% url 'post:user_login' %}"><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
+        <a style="float:right" href="{% url 'main:register' %}"><i class="fas fa-user-plus"></i>&nbsp; Sign Up</a>
+        <a style="float:right" href="{% url 'main:user_login' %}"><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
     {% endif %}
 
 </div>

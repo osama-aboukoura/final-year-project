@@ -6,5 +6,5 @@ urlpatterns = [
     url(r'^', include('post.urls')),
     url(r'^', include('comment.urls')),
     url(r'^', include('reply.urls')),
-    # url(r'^', include('main.urls')),
+    url(r'^', include('main.urls')),
 ]

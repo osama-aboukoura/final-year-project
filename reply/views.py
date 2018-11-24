@@ -2,12 +2,13 @@ from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
-from post.models import Post, UserProfile, User
+from main.models import UserProfile, User
+from post.models import Post
 from comment.models import Comment
 from .models import Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
-from post.forms import UserForm, UserProfileForm
+from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -84,7 +85,7 @@ class ReplyReport(RedirectView):
 
 class ReplyEnableDisablePage(generic.DeleteView):
     model = Reply
-    template_name = 'post/flagged-posts/disable-reply.html'
+    template_name = 'main/flagged-posts/disable-reply.html'
 
 class ReplyEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -96,7 +97,7 @@ class ReplyEnableDisable(RedirectView):
 
 class ReplyRemoveFlagsPage(generic.DetailView):
     model = Reply 
-    template_name = 'post/flagged-posts/remove-flags-reply.html'
+    template_name = 'main/flagged-posts/remove-flags-reply.html'
 
 class ReplyRemoveFlags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):

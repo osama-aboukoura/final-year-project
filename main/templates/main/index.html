@@ -3,7 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'allPosts/style.css' %}" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
-{% include "post/navigationbar.html" %}
+{% include "main/navigationbar.html" %}
 
 <div class='wrapper'>
     {% if all_posts %}
@@ -21,8 +21,8 @@
                     <tr>
                         <td>{% if post.postNumberOfVotes < 0 %}<i class="fas fa-angle-double-down"></i>{% else %}<i class="fas fa-angle-double-up"></i>{% endif %} <strong>{{post.postNumberOfVotes}}</strong></td>
                         <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
-                        <td><a href="{% url 'post:topic' post.postTopic %}">{{post.postTopic}}</a></td>
-                        <td><a href="{% url 'post:profile' post.postedBy %}" >{{post.postedBy.first_name}} {{post.postedBy.last_name}}</a></td>
+                        <td><a href="{% url 'main:topic' post.postTopic %}">{{post.postTopic}}</a></td>
+                        <td><a href="{% url 'main:profile' post.postedBy %}" >{{post.postedBy.first_name}} {{post.postedBy.last_name}}</a></td>
                         <td>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
                     </tr>
                 {% endif %}
