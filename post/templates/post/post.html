@@ -49,7 +49,7 @@
                 <button class='button danger' onclick="report('post', {{post.pk}})">Report <i class="fas fa-ban"></i></button>
                 {% if user in post.postFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this post.</i></strong></span>{% endif %}
             {% else %}
-                <p>To comment on a question, you must be logged in. <a class='button blue' href="{% url 'post:user_login' %}">Click here to Login</a></p>
+                <p>To comment on a question, you must be logged in. <a class='button blue' href="{% url 'main:user_login' %}">Click here to Login</a></p>
             {% endif %}
             <p>{{post.postDate}}</p>
         </div>
