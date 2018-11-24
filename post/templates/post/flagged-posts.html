@@ -10,11 +10,11 @@
         <h1>Flagged Posts:</h1>
         <table class="postsTable">
             <tr>
-                <th width="35%">Post</th>
-                <th width="20%">Discussion Started By</th>
+                <th width="45%">Post</th>
+                <th width="15%">Discussion Started By</th>
                 <th width="10%">Number of Flags</th>
                 <th width="10%">Type</th>
-                <th>Disable/Delete Post</th>
+                <th>Action</th>
             </tr>
     {% endif %}
     {% if flagged.posts %}
@@ -25,12 +25,25 @@
                 <td>{{post.postFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Post</td>
                 <td align='center' class='flagged-posts-buttons'>
-                    <span>Delete <a href="{% url 'post:delete-post' post.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a></span>&nbsp;
-                    {% if post.postDisabled %}
-                        <span>Enable <button onclick="disable('post', {{post.pk}}, '{{post.postDisabled}}')" style='background:green'><i class="far fa-check-circle"></i></button></span>
-                    {% else %}
-                        <span>Disable <button onclick="disable('post', {{post.pk}}, '{{post.postDisabled}}')" style='background:#CB4335'><i class="fas fa-ban"></i></button></span>
-                    {% endif %}
+                    <div class='buttons-div'>
+                        <div class='button-div'>
+                            <a href="{% url 'post:delete-post' post.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a>
+                            <span>Delete</span>
+                        </div>
+                        <div class='button-div'>
+                            {% if post.postDisabled %}
+                                <a href="{% url 'post:disable-post' post.pk %}" style='background:green'><i class="far fa-check-circle"></i></a>
+                                <span>Enable </span>
+                            {% else %}
+                                <a href="{% url 'post:disable-post' post.pk %}" style='background:#CB4335'><i class="fas fa-ban"></i></a>
+                                <span>Disable </span>
+                            {% endif %}
+                        </div>
+                        <div class='button-div'>
+                            <a href="{% url 'post:remove-post-flags' post.pk %}"  style='background:#DC7633'><i class="fas fa-flag"></i></a>
+                            <span>Remove Flags</span>
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
@@ -44,12 +57,25 @@
                 <td>{{comment.commentFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Comment</td>
                 <td align='center' class='flagged-posts-buttons'>
-                    <span>Delete <a href="{% url 'post:delete-comment' comment.commentOnPost.pk comment.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a></span>&nbsp;
-                    {% if comment.commentDisabled %}
-                        <span>Enable <button onclick="disable('comment', {{comment.pk}}, '{{comment.commentDisabled}}')" style='background:green'><i class="far fa-check-circle"></i></button></span>
-                    {% else %}
-                        <span>Disable <button onclick="disable('comment', {{comment.pk}}, '{{comment.commentDisabled}}')" style='background:#CB4335'><i class="fas fa-ban"></i></button></span>
-                    {% endif %}
+                    <div class='buttons-div'>
+                        <div class='button-div'>
+                            <a href="{% url 'post:delete-comment' comment.commentOnPost.pk comment.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a>
+                            <span>Delete</span>
+                        </div>
+                        <div class='button-div'>
+                            {% if comment.commentDisabled %}
+                                <a href="{% url 'post:disable-comment' comment.pk %}" style='background:green'><i class="far fa-check-circle"></i></a>
+                                <span>Enable</span>
+                            {% else %}
+                                <a href="{% url 'post:disable-comment' comment.pk %}" style='background:#CB4335'><i class="fas fa-ban"></i></a>
+                                <span>Disable</span>
+                            {% endif %}
+                        </div>
+                        <div class='button-div'>
+                            <a href="{% url 'post:remove-comment-flags' comment.pk %}"  style='background:#DC7633'><i class="fas fa-flag"></i></a>
+                            <span>Remove Flags</span>
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
@@ -63,12 +89,23 @@
                 <td>{{reply.replyFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Reply</td>
                 <td align='center' class='flagged-posts-buttons'>
-                    <span>Delete <a href="{% url 'post:delete-reply' reply.replytoComment.commentOnPost.pk reply.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a></span>&nbsp;
-                    {% if reply.replyDisabled %}
-                        <span>Enable <button onclick="disable('reply', {{reply.pk}}, '{{reply.replyDisabled}}')" style='background:green'><i class="far fa-check-circle"></i></button></span>
-                    {% else %}
-                        <span>Disable <button onclick="disable('reply', {{reply.pk}}, '{{reply.replyDisabled}}')" style='background:#CB4335'><i class="fas fa-ban"></i></button></span>
-                    {% endif %}
+                    <div class='buttons-div'>
+                        <div class='button-div'>
+                            <a href="{% url 'post:delete-reply' reply.replytoComment.commentOnPost.pk reply.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a>
+                            <span>Delete </span>
+                        </div>
+                        <div class='button-div'>
+                            {% if reply.replyDisabled %}
+                                <span>Enable</span><a href="{% url 'post:disable-reply' reply.pk %}" style='background:green'><i class="far fa-check-circle"></i></a>
+                            {% else %}
+                                <span>Disable</span><a href="{% url 'post:disable-reply' reply.pk %}" style='background:#CB4335'><i class="fas fa-ban"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class='button-div'>
+                            <a href="{% url 'post:remove-reply-flags' reply.pk %}"  style='background:#DC7633'><i class="fas fa-flag"></i></a>
+                            <span>Remove Flags</span>
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% endfor %}

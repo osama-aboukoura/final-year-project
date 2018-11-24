@@ -422,6 +422,11 @@ class FlaggedPostsView(LoginRequiredMixin, generic.ListView):
         return flagged
 
 
+
+class PostEnableDisablePage(generic.DetailView):
+    model = Post 
+    template_name = 'post/disable-post.html'
+
 class PostEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
@@ -429,6 +434,24 @@ class PostEnableDisable(RedirectView):
         post.postDisabled = not post.postDisabled
         post.save()
         return redirect_url
+
+class PostRemoveFlagsPage(generic.DetailView):
+    model = Post 
+    template_name = 'post/remove-flags-post.html'
+
+class PostRemoveFlags(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = '/flagged-posts/'
+        post.postFlags.clear()
+        post.postNumberOfFlags = 0
+        post.postDisabled = False
+        post.save()
+        return redirect_url
+
+class CommentEnableDisablePage(generic.DeleteView):
+    model = Comment
+    template_name = 'post/disable-comment.html'
 
 class CommentEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -438,10 +461,42 @@ class CommentEnableDisable(RedirectView):
         comment.save()
         return redirect_url
 
+class CommentRemoveFlagsPage(generic.DetailView):
+    model = Comment 
+    template_name = 'post/remove-flags-comment.html'
+
+class CommentRemoveFlags(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+        redirect_url = '/flagged-posts/'
+        comment.commentFlags.clear()
+        comment.commentNumberOfFlags = 0
+        comment.commentDisabled = False
+        comment.save()
+        return redirect_url
+
+class ReplyEnableDisablePage(generic.DeleteView):
+    model = Reply
+    template_name = 'post/disable-reply.html'
+
 class ReplyEnableDisable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
         redirect_url = '/flagged-posts/'
         reply.replyDisabled = not reply.replyDisabled
+        reply.save()
+        return redirect_url
+
+class ReplyRemoveFlagsPage(generic.DetailView):
+    model = Reply 
+    template_name = 'post/remove-flags-reply.html'
+
+class ReplyRemoveFlags(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+        redirect_url = '/flagged-posts/'
+        reply.replyFlags.clear()
+        reply.replyNumberOfFlags = 0
+        reply.replyDisabled = False
         reply.save()
         return redirect_url

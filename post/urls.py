@@ -36,7 +36,13 @@ urlpatterns = [
     # url: /posts/3/report-post/
     url(r'^(?P<pk>[0-9]+)/report-post/$', views.PostReport.as_view(), name='report-post'),
     # url: /posts/3/disable-post/
-    url(r'^(?P<pk>[0-9]+)/disable-post/$', views.PostEnableDisable.as_view(), name='disable-post'),
+    url(r'^(?P<pk>[0-9]+)/disable-post/$', views.PostEnableDisablePage.as_view(), name='disable-post'),
+    # url: /posts/3/disable-post-confirm/
+    url(r'^(?P<pk>[0-9]+)/disable-post-confirm/$', views.PostEnableDisable.as_view(), name='disable-post-confirm'),
+    # url: /posts/3/remove-post-flags/
+    url(r'^(?P<pk>[0-9]+)/remove-post-flags/$', views.PostRemoveFlagsPage.as_view(), name='remove-post-flags'),
+    # url: /posts/3/remove-post-flags/
+    url(r'^(?P<pk>[0-9]+)/remove-post-flags-confirm/$', views.PostRemoveFlags.as_view(), name='remove-post-flags-confirm'),
     
 
     # url: /posts/3/add-comment/
@@ -54,7 +60,13 @@ urlpatterns = [
     # url: /posts/3/2/report-comment/
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/report-comment/$', views.CommentReport.as_view(), name='report-comment'),
     # url: /posts/3/2/disable-comment/
-    url(r'^(?P<pk>[0-9]+)/disable-comment/$', views.CommentEnableDisable.as_view(), name='disable-comment'),
+    url(r'^(?P<pk>[0-9]+)/disable-comment/$', views.CommentEnableDisablePage.as_view(), name='disable-comment'),
+    # url: /posts/3/disable-comment-confirm/
+    url(r'^(?P<pk>[0-9]+)/disable-comment-confirm/$', views.CommentEnableDisable.as_view(), name='disable-comment-confirm'),
+    # url: /posts/3/remove-comment-flags/
+    url(r'^(?P<pk>[0-9]+)/remove-comment-flags/$', views.CommentRemoveFlagsPage.as_view(), name='remove-comment-flags'),
+    # url: /posts/3/remove-comment-flags/
+    url(r'^(?P<pk>[0-9]+)/remove-comment-flags-confirm/$', views.CommentRemoveFlags.as_view(), name='remove-comment-flags-confirm'),
     
 
     # url: /posts/2/4/add-reply/
@@ -68,7 +80,13 @@ urlpatterns = [
     # url: /posts/3/2/report-reply/
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/report-reply/$', views.ReplyReport.as_view(), name='report-reply'),
     # url: /posts/3/2/disable-reply/
-    url(r'^(?P<pk>[0-9]+)/disable-reply/$', views.ReplyEnableDisable.as_view(), name='disable-reply'),
+    url(r'^(?P<pk>[0-9]+)/disable-reply/$', views.ReplyEnableDisablePage.as_view(), name='disable-reply'),
+    # url: /posts/3/2/disable-reply-confirm/
+    url(r'^(?P<pk>[0-9]+)/disable-reply-confirm/$', views.ReplyEnableDisable.as_view(), name='disable-reply-confirm'),
+    # url: /posts/3/remove-reply-flags/
+    url(r'^(?P<pk>[0-9]+)/remove-reply-flags/$', views.ReplyRemoveFlagsPage.as_view(), name='remove-reply-flags'),
+    # url: /posts/3/remove-reply-flags/
+    url(r'^(?P<pk>[0-9]+)/remove-reply-flags-confirm/$', views.ReplyRemoveFlags.as_view(), name='remove-reply-flags-confirm'),
     
 ]
 

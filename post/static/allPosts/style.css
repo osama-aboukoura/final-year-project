@@ -63,3 +63,48 @@ a:hover {
 .flagged-posts-buttons a:visited{
     color: white;
 }
+
+.buttons-div{
+    margin: 0 auto;
+    padding: 5px;
+    display: inline-block;
+}
+
+.buttons-div a{
+    margin: 5px;
+    font-size: 20px;
+}
+
+.button-div {
+    position: relative;
+    display: inline-table;
+}
+/* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top */
+.button-div span {
+    position: absolute;
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(50, 50, 50);
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -65px;
+}
+.button-div span::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+.button-div:hover span {
+    visibility: visible;
+}
