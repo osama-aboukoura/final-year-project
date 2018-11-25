@@ -26,6 +26,11 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
         reply.replytoComment = comment
         logged_in_user = self.request.user
         reply.replyBy = logged_in_user
+
+        user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
+        user_profile.save()
+        
         return super(ReplyCreate, self).form_valid(form)
     
     def get_success_url(self):
@@ -50,22 +55,34 @@ class ReplyLike(RedirectView):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        if user.is_authenticated:
-            if user in reply.replyLikes.all():
-                reply.replyLikes.remove(user)
+        logged_in_user = self.request.user 
+        user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+
+        if logged_in_user.is_authenticated:
+            if logged_in_user in reply.replyLikes.all():
+                reply.replyLikes.remove(logged_in_user)
+                user_profile.num_of_likes = user_profile.num_of_likes - 1
             else:
-                reply.replyLikes.add(user)
+                reply.replyLikes.add(logged_in_user)
+                user_profile.num_of_likes = user_profile.num_of_likes + 1
+        user_profile.save()
+
         return redirect_url
 
 class ReplyDelete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Reply 
 
-    def get_context_data(self, **kwargs):
-        reply = Reply.objects.get(id=self.kwargs['pk'])
-        return {'post_pk': self.kwargs['post_pk'], 'reply': reply}
-    
+    def delete(self, request, *args, **kwargs):
+        reply = self.get_object()
+        author = reply.replyBy
+        user_profile = get_object_or_404(UserProfile, user=author)
+        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
+        user_profile.num_of_likes = user_profile.num_of_likes - 1
+        user_profile.save()
+        reply.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         post.postNumberOfComments -= 1

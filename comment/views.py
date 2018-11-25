@@ -25,6 +25,11 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         comment.commentOnPost = post
         logged_in_user = self.request.user
         comment.commentBy = logged_in_user
+
+        user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
+        user_profile.save()
+        
         return super(CommentCreate, self).form_valid(form)
     
     def get_success_url(self):
@@ -49,12 +54,16 @@ class CommentLike(RedirectView):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        if user.is_authenticated:
-            if user in comment.commentLikes.all():
-                comment.commentLikes.remove(user)
+        logged_in_user = self.request.user 
+        user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        if logged_in_user.is_authenticated:
+            if logged_in_user in comment.commentLikes.all():
+                comment.commentLikes.remove(logged_in_user)
+                user_profile.num_of_likes = user_profile.num_of_likes - 1
             else:
-                comment.commentLikes.add(user)
+                comment.commentLikes.add(logged_in_user)
+                user_profile.num_of_likes = user_profile.num_of_likes + 1
+        user_profile.save()
         return redirect_url
 
 class CommentVoteUp(RedirectView):
@@ -104,10 +113,11 @@ class CommentVoteDown(RedirectView):
 class CommentDelete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Comment 
-    success_url = reverse_lazy('post:index')
+    success_url = reverse_lazy('main:index')
 
     def delete(self, request, *args, **kwargs):
         comment = self.get_object()
+        
         allreplies = Reply.objects.all()
         post = Post.objects.get(id=self.kwargs['post_pk'])
 
@@ -116,6 +126,20 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
                 post.postNumberOfComments -= 1 # decrement 1 for every reply to this comment
         
         post.postNumberOfComments -= 1 # decrement 1 for this comment
+
+        author = comment.commentBy
+        user_profile = get_object_or_404(UserProfile, user=author)
+        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
+
+        replies_on_comment = comment.reply_set.all()
+        for reply in replies_on_comment:
+            if author == reply.replyBy:
+                user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
+            if author in reply.replyLikes.all():
+                user_profile.num_of_likes = user_profile.num_of_likes - 1
+
+        user_profile.save()
+        
         post.save()
         comment.delete()
         return HttpResponseRedirect(self.get_success_url())
