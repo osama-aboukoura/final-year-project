@@ -1,2 +1,2 @@
 {% url 'post:showPost' post_pk as go_back_url %}
-{% include "post/widgets/confirm-delete-page.html" with type='comment' title=comment.commentContent author_first_name=comment.commentBy.first_name author_last_name=comment.commentBy.last_name date=comment.commentDate back_url=go_back_url %}
+{% include "post/widgets/confirm-delete-page.html" with type='comment' title=comment.commentContent author_first_name=comment.commentBy.user.first_name author_last_name=comment.commentBy.user.last_name date=comment.commentDate back_url=go_back_url %}

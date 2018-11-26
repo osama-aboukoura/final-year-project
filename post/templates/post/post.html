@@ -1,28 +1,32 @@
 {% load staticfiles %}
 <table class='post card'>
     <td class='vote-up-and-down'>
-        {% if user in post.postVotersUp.all  %}
-            <a href="{% url 'post:vote-up-post' post.pk %}" style='color:green'><i class="fas fa-angle-up"></i></a>
+        {% if user.is_authenticated %}
+            {% if logged_in_user_profile in post.postVotersUp.all  %}
+                <a href="{% url 'post:vote-up-post' post.pk %}" style='color:green'><i class="fas fa-angle-up"></i></a>
+            {% else %}
+                <a href="{% url 'post:vote-up-post' post.pk %}"><i class="fas fa-angle-up"></i></a>
+            {% endif %}
+            
+            <p>{{post.postNumberOfVotes}}</p>
+            
+            {% if logged_in_user_profile in post.postVotersDown.all  %}
+                <a href="{% url 'post:vote-down-post' post.pk %}" style='color:#CB4335'><i class="fas fa-angle-down"></i></a>
+            {% else %}
+                <a href="{% url 'post:vote-down-post' post.pk %}"><i class="fas fa-angle-down"></i></a>
+            {% endif %}
         {% else %}
-            <a href="{% url 'post:vote-up-post' post.pk %}"><i class="fas fa-angle-up"></i></a>
-        {% endif %}
-        
-        <p>{{post.postNumberOfVotes}}</p>
-        
-        {% if user in post.postVotersDown.all  %}
-            <a href="{% url 'post:vote-down-post' post.pk %}" style='color:#CB4335'><i class="fas fa-angle-down"></i></a>
-        {% else %}
-            <a href="{% url 'post:vote-down-post' post.pk %}"><i class="fas fa-angle-down"></i></a>
+            <p>{{post.postNumberOfVotes}}</p>
         {% endif %}
     </td>
     
-    {% include "post/widgets/name-photo-card.html" with author=post.postedBy %}
+    {% include "post/widgets/name-photo-card.html" with user_profile=post.postedBy %}
 
     <td class='post-content'>
         <p>{{post.postContent}}</p>
 
         {% if user.is_authenticated %}
-            {% if user.username == post.postedBy.username or user.is_superuser %}
+            {% if user.username == post.postedBy.user.username or user.is_superuser %}
                 {% url 'post:edit-post' post.pk as the_edit_url %}
                 {% url 'post:delete-post' post.pk as the_delete_url %}
                 {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
@@ -31,23 +35,23 @@
         
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{post.postLikes.count}} Like{% if post.postLikes.count > 1 or post.postLikes.count == 0 %}s{% endif %}
-            {% if post.postLikes.count > 2 and user in post.postLikes.all %}
+            {% if post.postLikes.count > 2 and logged_in_user_profile in post.postLikes.all %}
                 (You and {{post.postLikes.count|add:'-1'}} others).</p>
-            {% elif post.postLikes.count > 1 and user in post.postLikes.all  %}
+            {% elif post.postLikes.count > 1 and logged_in_user_profile in post.postLikes.all  %}
                 (You and {{post.postLikes.count|add:'-1'}} other).</p>
-            {% elif post.postLikes.count == 1 and user in post.postLikes.all %}
+            {% elif post.postLikes.count == 1 and logged_in_user_profile in post.postLikes.all %}
                 (You).
             {% endif %}
             <hr/>
             {% if user.is_authenticated %}
-                {% if user in post.postLikes.all %}
+                {% if logged_in_user_profile in post.postLikes.all %}
                     <a class='comment-link' style='background:green' href='like/'>Like <i class="fas fa-thumbs-up"></i></a>
                 {% else %}
                     <a class='comment-link' href='like/'>Like <i class="far fa-thumbs-up"></i></a>
                 {% endif %}
                 <a class='comment-link' href='add-comment/'>Comment <i class="far fa-comment"></i></a>
                 <button class='button danger' onclick="report('post', {{post.pk}})">Report <i class="fas fa-ban"></i></button>
-                {% if user in post.postFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this post.</i></strong></span>{% endif %}
+                {% if logged_in_user_profile in post.postFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this post.</i></strong></span>{% endif %}
             {% else %}
                 <p>To comment on a question, you must be logged in. <a class='button blue' href="{% url 'main:user_login' %}">Click here to Login</a></p>
             {% endif %}

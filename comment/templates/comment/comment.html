@@ -1,28 +1,32 @@
+
 <table class='comment card '>
     <td class='vote-up-and-down'>
-        {% if user in comment.commentVotersUp.all  %}
-            <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}" style='color:green'><i class="fas fa-angle-up"></i></a>
+        {% if user.is_authenticated %}
+            {% if logged_in_user_profile in comment.commentVotersUp.all  %}
+                <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}" style='color:green'><i class="fas fa-angle-up"></i></a>
+            {% else %}
+                <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up"></i></a>
+            {% endif %}
+            
+            <p>{{comment.commentNumberOfVotes}}</p>
+            
+            {% if logged_in_user_profile in comment.commentVotersDown.all  %}
+                <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}" style='color:#CB4335'><i class="fas fa-angle-down"></i></a>
+            {% else %}
+                <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down"></i></a>
+            {% endif %}
         {% else %}
-            <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up"></i></a>
+            <p>{{comment.commentNumberOfVotes}}</p>
         {% endif %}
-        
-        <p>{{comment.commentNumberOfVotes}}</p>
-        
-        {% if user in comment.commentVotersDown.all  %}
-            <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}" style='color:#CB4335'><i class="fas fa-angle-down"></i></a>
-        {% else %}
-            <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down"></i></a>
-        {% endif %}
-    
     </td>
 
-    {% include "post/widgets/name-photo-card.html" with author=comment.commentBy %}
+    {% include "post/widgets/name-photo-card.html" with user_profile=comment.commentBy %}
 
     <td class='post-content'>
         <p>{{comment.commentContent}}</p>
 
         {% if user.is_authenticated %}
-            {% if user.username == comment.commentBy.username or user.is_superuser %}
+            {% if user.username == comment.commentBy.user.username or user.is_superuser %}
                 {% url 'comment:edit-comment' post.pk comment.pk as the_edit_url %}
                 {% url 'comment:delete-comment' post.pk comment.pk as the_delete_url %}
                 {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
@@ -31,11 +35,11 @@
 
         <div class='buttons-and-date-fixed-bottom'>
             <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %}
-            {% if comment.commentLikes.count > 2 and user in comment.commentLikes.all %}
+            {% if comment.commentLikes.count > 2 and logged_in_user_profile in comment.commentLikes.all %}
                 (You and {{comment.commentLikes.count|add:'-1'}} others).</p>
-            {% elif comment.commentLikes.count > 1 and user in comment.commentLikes.all  %}
+            {% elif comment.commentLikes.count > 1 and logged_in_user_profile in comment.commentLikes.all  %}
                 (You and {{comment.commentLikes.count|add:'-1'}} other).</p>
-            {% elif comment.commentLikes.count == 1 and user in comment.commentLikes.all %}
+            {% elif comment.commentLikes.count == 1 and logged_in_user_profile in comment.commentLikes.all %}
                 (You).
             {% endif %}
             <hr/>
@@ -43,14 +47,14 @@
             {% if user.is_authenticated %}
                 {% comment %} <button class='button blue'>Like <i class="far fa-thumbs-up"></i></button> {% endcomment %}
                 {% comment %} <a class='button blue' href='{{comment.pk}}/like/'>Like <i class="far fa-thumbs-up"></i></a> {% endcomment %}
-                {% if user in comment.commentLikes.all %}
+                {% if logged_in_user_profile in comment.commentLikes.all %}
                     <a class='comment-link' style='background:green' href='{{comment.pk}}/comment-like/'>Like <i class="fas fa-thumbs-up"></i></a>
                 {% else %}
                     <a class='comment-link' href='{{comment.pk}}/comment-like/'>Like <i class="far fa-thumbs-up"></i></a>
                 {% endif %}
                 <a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a>
                 <button class='button danger' onclick="report('comment', {{comment.pk}})">Report <i class="fas fa-ban"></i></button>
-                {% if user in comment.commentFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this comment.</i></strong></span>{% endif %}
+                {% if logged_in_user_profile in comment.commentFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this comment.</i></strong></span>{% endif %}
             {% else %}
                 <p>To reply to a comment, you must be logged in. <a class='button blue' href="{% url 'main:user_login' %}">Click here to Login</a></p>
             {% endif %}

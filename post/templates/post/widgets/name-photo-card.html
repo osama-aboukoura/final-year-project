@@ -1,12 +1,12 @@
 <td class='name-and-photo-card'>
     <table class='name-and-photo-text'>
         <td><i class="fas fa-user-circle my-avatar"></i></td>
-        <td style='font-weight: bold'>{{author.first_name}} {{author.last_name}}</td>
+        <td style='font-weight: bold'><a href="{% url 'main:profile' user_profile.user %}" >{{user_profile.user.first_name}} {{user_profile.user.last_name}}</a></td>
     </table>
     <table style='width:100%; color:gray'>
         <tr>
-            <td align='center'>{{userProfile.num_of_posts_comments_replies}} <i class="far fa-edit"></i></td>
-            <td align='center'>{{userProfile.num_of_likes}} <i class="far fa-thumbs-up"></i></td>
+            <td align='center'>{{user_profile.num_of_posts_comments_replies}} <i class="far fa-edit"></i></td>
+            <td align='center'>{{user_profile.num_of_likes}} <i class="far fa-thumbs-up"></i></td>
         </tr>
         <tr>
             <td  align='center'>Posts</td>

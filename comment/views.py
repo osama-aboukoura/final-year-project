@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 class CommentCreate(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Comment 
@@ -23,13 +24,11 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         comment = form.save(commit=False)
         post = Post.objects.get(id=self.kwargs['pk'])
         comment.commentOnPost = post
-        logged_in_user = self.request.user
-        comment.commentBy = logged_in_user
-
+        logged_in_user = self.request.user        
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
+        comment.commentBy = user_profile
         user_profile.save()
-        
         return super(CommentCreate, self).form_valid(form)
     
     def get_success_url(self):
@@ -55,15 +54,15 @@ class CommentLike(RedirectView):
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
         logged_in_user = self.request.user 
-        user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         if logged_in_user.is_authenticated:
-            if logged_in_user in comment.commentLikes.all():
-                comment.commentLikes.remove(logged_in_user)
-                user_profile.num_of_likes = user_profile.num_of_likes - 1
+            if logged_in_user_profile in comment.commentLikes.all():
+                comment.commentLikes.remove(logged_in_user_profile)
+                logged_in_user_profile.num_of_likes = logged_in_user_profile.num_of_likes - 1
             else:
-                comment.commentLikes.add(logged_in_user)
-                user_profile.num_of_likes = user_profile.num_of_likes + 1
-        user_profile.save()
+                comment.commentLikes.add(logged_in_user_profile)
+                logged_in_user_profile.num_of_likes = logged_in_user_profile.num_of_likes + 1
+        logged_in_user_profile.save()
         return redirect_url
 
 class CommentVoteUp(RedirectView):
@@ -71,21 +70,22 @@ class CommentVoteUp(RedirectView):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        # if user has already voted down before pressing up, remove the vote down first 
-        if user in comment.commentVotersDown.all():
-                comment.commentVotersDown.remove(user)
+        logged_in_user = self.request.user 
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        
+        if logged_in_user.is_authenticated:
+            # if user has already voted down before pressing up, remove the vote down first 
+            if logged_in_user_profile in comment.commentVotersDown.all():
+                comment.commentVotersDown.remove(logged_in_user_profile)
                 comment.commentNumberOfVotes = comment.commentNumberOfVotes + 1
 
-        if user.is_authenticated:
-            if user in comment.commentVotersUp.all():
-                comment.commentVotersUp.remove(user)
+            if logged_in_user_profile in comment.commentVotersUp.all():
+                comment.commentVotersUp.remove(logged_in_user_profile)
                 comment.commentNumberOfVotes = comment.commentNumberOfVotes - 1
-                comment.save()
             else:
-                comment.commentVotersUp.add(user)
+                comment.commentVotersUp.add(logged_in_user_profile)
                 comment.commentNumberOfVotes = comment.commentNumberOfVotes + 1
-                comment.save()
+            comment.save()
         return redirect_url
 
 class CommentVoteDown(RedirectView):
@@ -93,21 +93,22 @@ class CommentVoteDown(RedirectView):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        # if user has already voted up before pressing down, remove the vote up first 
-        if user in comment.commentVotersUp.all():
-                comment.commentVotersUp.remove(user)
+        logged_in_user = self.request.user 
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        
+        if logged_in_user.is_authenticated:
+            # if user has already voted up before pressing down, remove the vote up first 
+            if logged_in_user_profile in comment.commentVotersUp.all():
+                comment.commentVotersUp.remove(logged_in_user_profile)
                 comment.commentNumberOfVotes = comment.commentNumberOfVotes - 1
 
-        if user.is_authenticated:
-            if user in comment.commentVotersDown.all():
-                comment.commentVotersDown.remove(user)
+            if logged_in_user_profile in comment.commentVotersDown.all():
+                comment.commentVotersDown.remove(logged_in_user_profile)
                 comment.commentNumberOfVotes = comment.commentNumberOfVotes + 1
-                comment.save()
             else:
-                comment.commentVotersDown.add(user)
+                comment.commentVotersDown.add(logged_in_user_profile)
                 comment.commentNumberOfVotes = comment.commentNumberOfVotes - 1
-                comment.save()
+            comment.save()
         return redirect_url
 
 class CommentDelete(LoginRequiredMixin, DeleteView):
@@ -127,18 +128,22 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
         
         post.postNumberOfComments -= 1 # decrement 1 for this comment
 
-        author = comment.commentBy
-        user_profile = get_object_or_404(UserProfile, user=author)
-        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
+        author_profile = comment.commentBy
+        author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
+
+        # removing the like on the comment 
+        if author_profile in comment.commentLikes.all():
+            author_profile.num_of_likes = author_profile.num_of_likes - 1
+
 
         replies_on_comment = comment.reply_set.all()
         for reply in replies_on_comment:
-            if author == reply.replyBy:
-                user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
-            if author in reply.replyLikes.all():
-                user_profile.num_of_likes = user_profile.num_of_likes - 1
+            if author_profile == reply.replyBy:
+                author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
+            if author_profile in reply.replyLikes.all():
+                author_profile.num_of_likes = author_profile.num_of_likes - 1
 
-        user_profile.save()
+        author_profile.save()
         
         post.save()
         comment.delete()
@@ -156,9 +161,10 @@ class CommentReport(RedirectView):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        if user.is_authenticated:
-            comment.commentFlags.add(user)
+        logged_in_user = self.request.user 
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        if logged_in_user.is_authenticated:
+            comment.commentFlags.add(logged_in_user_profile)
         return redirect_url
 
 

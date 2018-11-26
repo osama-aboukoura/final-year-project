@@ -71,6 +71,16 @@
     font-size: 3.5em;
 }
 
+.name-and-photo-text a {
+    color: #21618C;
+    text-decoration: none;
+}
+
+.name-and-photo-text a:visited {
+    color: #21618C;
+    text-decoration: none;
+
+}
 .post-content {
     position: relative;
     vertical-align: top;

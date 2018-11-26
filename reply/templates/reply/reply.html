@@ -1,12 +1,12 @@
 <table class='reply card '>
 
-    {% include "post/widgets/name-photo-card.html" with author=reply.replyBy %}
+    {% include "post/widgets/name-photo-card.html" with user_profile=reply.replyBy %}
 
     <td class='post-content'>
         <p>{{reply.replyContent}}</p>
 
         {% if user.is_authenticated %}
-            {% if user.username == reply.replyBy.username or user.is_superuser %}
+            {% if user.username == reply.replyBy.user.username or user.is_superuser %}
                 {% url 'reply:edit-reply' post.pk reply.pk as the_edit_url %}
                 {% url 'reply:delete-reply' post.pk reply.pk as the_delete_url %}
                 {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
@@ -14,24 +14,23 @@
         {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>
-            {% comment %} <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyNumberOfreplyLikes}} replyLikes</p> {% endcomment %}
             <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyLikes.count}} Like{% if reply.replyLikes.count > 1 or reply.replyLikes.count == 0 %}s{% endif %}
-            {% if reply.replyLikes.count > 2 and user in reply.replyLikes.all %}
+            {% if reply.replyLikes.count > 2 and logged_in_user_profile in reply.replyLikes.all %}
                 (You and {{reply.replyLikes.count|add:'-1'}} others).</p>
-            {% elif reply.replyLikes.count > 1 and user in reply.replyLikes.all  %}
+            {% elif reply.replyLikes.count > 1 and logged_in_user_profile in reply.replyLikes.all  %}
                 (You and {{reply.replyLikes.count|add:'-1'}} other).</p>
-            {% elif reply.replyLikes.count == 1 and user in reply.replyLikes.all %}
+            {% elif reply.replyLikes.count == 1 and logged_in_user_profile in reply.replyLikes.all %}
                 (You).
             {% endif %}
             <hr/>
             {% if user.is_authenticated %}
-                {% if user in reply.replyLikes.all %}
+                {% if logged_in_user_profile in reply.replyLikes.all %}
                     <a class='comment-link' style='background:green' href='{{reply.pk}}/reply-like/'>Like <i class="fas fa-thumbs-up"></i></a>
                 {% else %}
                     <a class='comment-link' href='{{reply.pk}}/reply-like/'>Like <i class="far fa-thumbs-up"></i></a>
                 {% endif %}
                 <button class='button danger' onclick="report('reply', {{reply.pk}})">Report <i class="fas fa-ban"></i></button>
-                {% if user in reply.replyFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this reply.</i></strong></span>{% endif %}
+                {% if logged_in_user_profile in reply.replyFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this reply.</i></strong></span>{% endif %}
             {% endif %}
             <p>{{reply.replyDate}}</p>
         </div>

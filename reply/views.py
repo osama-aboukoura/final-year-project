@@ -25,12 +25,10 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
         comment = Comment.objects.get(id=self.kwargs['comment_pk'])
         reply.replytoComment = comment
         logged_in_user = self.request.user
-        reply.replyBy = logged_in_user
-
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
+        reply.replyBy = user_profile
         user_profile.save()
-        
         return super(ReplyCreate, self).form_valid(form)
     
     def get_success_url(self):
@@ -56,17 +54,15 @@ class ReplyLike(RedirectView):
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
         logged_in_user = self.request.user 
-        user_profile = get_object_or_404(UserProfile, user=logged_in_user)
-
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         if logged_in_user.is_authenticated:
-            if logged_in_user in reply.replyLikes.all():
-                reply.replyLikes.remove(logged_in_user)
-                user_profile.num_of_likes = user_profile.num_of_likes - 1
+            if logged_in_user_profile in reply.replyLikes.all():
+                reply.replyLikes.remove(logged_in_user_profile)
+                logged_in_user_profile.num_of_likes = logged_in_user_profile.num_of_likes - 1
             else:
-                reply.replyLikes.add(logged_in_user)
-                user_profile.num_of_likes = user_profile.num_of_likes + 1
-        user_profile.save()
-
+                reply.replyLikes.add(logged_in_user_profile)
+                logged_in_user_profile.num_of_likes = logged_in_user_profile.num_of_likes + 1
+        logged_in_user_profile.save()
         return redirect_url
 
 class ReplyDelete(LoginRequiredMixin, DeleteView):
@@ -74,12 +70,17 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
     model = Reply 
 
     def delete(self, request, *args, **kwargs):
+        # post = Post.objects.get(id=self.kwargs['post_pk']) # STILL NEED TO DECREESE THE TOTAL NUMBER OF COMMENTS(REPLIES) AFTER DELETING
+        
         reply = self.get_object()
-        author = reply.replyBy
-        user_profile = get_object_or_404(UserProfile, user=author)
-        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
-        user_profile.num_of_likes = user_profile.num_of_likes - 1
-        user_profile.save()
+        author_profile = reply.replyBy
+        author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
+        
+        # removing the like on the reply 
+        if author_profile in reply.replyLikes.all():
+            author_profile.num_of_likes = author_profile.num_of_likes - 1
+
+        author_profile.save()
         reply.delete()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -94,9 +95,10 @@ class ReplyReport(RedirectView):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        if user.is_authenticated:
-            reply.replyFlags.add(user)
+        logged_in_user = self.request.user 
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        if logged_in_user.is_authenticated:
+            reply.replyFlags.add(logged_in_user_profile)
         return redirect_url
 
 

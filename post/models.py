@@ -1,21 +1,21 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
+from main.models import UserProfile
 
 class Post(models.Model):
-    postedBy = models.ForeignKey(User, on_delete=models.CASCADE)
+    postedBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     postTitle = models.CharField(max_length=80)
     postTopic = models.CharField(max_length=30)
     postContent = models.TextField()
     postImage = models.ImageField(null=True, blank=True)
     postDate = models.DateTimeField(auto_now=False, auto_now_add=True)
-    postLikes = models.ManyToManyField(User, blank=True, related_name='post_likes')
+    postLikes = models.ManyToManyField(UserProfile, blank=True, related_name='post_likes')
     postNumberOfVotes = models.IntegerField(default=0)
-    postVotersUp = models.ManyToManyField(User, blank=True, related_name='post_votes_up')
-    postVotersDown = models.ManyToManyField(User, blank=True, related_name='post_votes_down')
+    postVotersUp = models.ManyToManyField(UserProfile, blank=True, related_name='post_votes_up')
+    postVotersDown = models.ManyToManyField(UserProfile, blank=True, related_name='post_votes_down')
     postNumberOfFlags = models.IntegerField(default=0)
     postNumberOfComments = models.IntegerField(default=0)
-    postFlags = models.ManyToManyField(User, blank=True, related_name='post_flags')
+    postFlags = models.ManyToManyField(UserProfile, blank=True, related_name='post_flags')
     postDisabled = models.BooleanField(default=False)
 
     def get_absolute_url(self):

@@ -20,10 +20,19 @@ class ShowPostView(generic.DetailView):
     template_name = 'post/post-comment-reply.html'
     
     def get_context_data(self, **kwargs):
-        logged_in_user = self.request.user
+        context = {}
         post = Post.objects.get(id=self.kwargs['pk'])
-        userProfile = UserProfile.objects.get(user=logged_in_user)
-        return {'post': post, 'userProfile': userProfile}
+        context['post'] = post
+        logged_in_user = self.request.user
+        if logged_in_user.is_authenticated:
+            logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+            context['logged_in_user_profile'] = logged_in_user_profile
+        
+        comments_on_post = post.comment_set.all()
+        
+        # print(context)
+
+        return context
 
 
 # def addPostIfLoggedIn(request):
@@ -41,9 +50,9 @@ class PostCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         logged_in_user = self.request.user
-        post.postedBy = logged_in_user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
+        post.postedBy = user_profile
         user_profile.save()
         return super(PostCreate, self).form_valid(form)
 
@@ -59,56 +68,58 @@ class PostLike(RedirectView):
         redirect_url = post.get_absolute_url()        
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
-        
         if logged_in_user.is_authenticated:
-            if logged_in_user in post.postLikes.all():
-                post.postLikes.remove(logged_in_user)
-                user_profile.num_of_likes = user_profile.num_of_likes - 1
+            if user_profile in post.postLikes.all():
+                post.postLikes.remove(user_profile)
+                user_profile.num_of_likes = post.postedBy.num_of_likes - 1
             else:
-                post.postLikes.add(logged_in_user)
-                user_profile.num_of_likes = user_profile.num_of_likes + 1
+                post.postLikes.add(user_profile)
+                user_profile.num_of_likes = post.postedBy.num_of_likes + 1
+        
         user_profile.save()
-
         return redirect_url
 
 class PostVoteUp(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        # if user has already voted down before pressing up, remove the vote down first 
-        if user.is_authenticated:
-            if user in post.postVotersDown.all():
-                post.postVotersDown.remove(user)
+        logged_in_user = self.request.user 
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+
+        if logged_in_user.is_authenticated:
+            # if user has already voted down before pressing up, remove the vote down first 
+            if logged_in_user_profile in post.postVotersDown.all():
+                post.postVotersDown.remove(logged_in_user_profile)
                 post.postNumberOfVotes = post.postNumberOfVotes + 1
 
-            if user in post.postVotersUp.all():
-                post.postVotersUp.remove(user)
+            if logged_in_user_profile in post.postVotersUp.all():
+                post.postVotersUp.remove(logged_in_user_profile)
                 post.postNumberOfVotes = post.postNumberOfVotes - 1
-                post.save()
             else:
-                post.postVotersUp.add(user)
+                post.postVotersUp.add(logged_in_user_profile)
                 post.postNumberOfVotes = post.postNumberOfVotes + 1
-                post.save()
+            post.save()
         return redirect_url
 
 class PostVoteDown(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user
-        # if user has already voted up before pressing down, remove the vote up first 
-        if user in post.postVotersUp.all():
-                post.postVotersUp.remove(user)
+        logged_in_user = self.request.user
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+
+        if logged_in_user.is_authenticated:
+             # if user has already voted up before pressing down, remove the vote up first 
+            if logged_in_user_profile in post.postVotersUp.all():
+                post.postVotersUp.remove(logged_in_user_profile)
                 post.postNumberOfVotes = post.postNumberOfVotes - 1
 
-        if user.is_authenticated:
-            if user in post.postVotersDown.all():
-                post.postVotersDown.remove(user)
+            if logged_in_user_profile in post.postVotersDown.all():
+                post.postVotersDown.remove(logged_in_user_profile)
                 post.postNumberOfVotes = post.postNumberOfVotes + 1
                 post.save()
             else:
-                post.postVotersDown.add(user)
+                post.postVotersDown.add(logged_in_user_profile)
                 post.postNumberOfVotes = post.postNumberOfVotes - 1
                 post.save()
         return redirect_url
@@ -122,24 +133,24 @@ class PostDelete(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        post_owner = post.postedBy
-        user_profile = get_object_or_404(UserProfile, user=post_owner)
-        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
+        author_profile = post.postedBy
+        # user_profile = get_object_or_404(UserProfile, user=post_owner)
+        author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
 
         # removing the like on the post 
-        if post_owner in post.postLikes.all():
-            user_profile.num_of_likes = user_profile.num_of_likes - 1
+        if author_profile in post.postLikes.all():
+            author_profile.num_of_likes = author_profile.num_of_likes - 1
 
         # removing comments and any likes on all the comments on this post 
         comments_on_post = post.comment_set.all()
         for comment in comments_on_post:
-            if post_owner == comment.commentBy:
-                user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies - 1
-            if post_owner in comment.commentLikes.all():
-                user_profile.num_of_likes = user_profile.num_of_likes - 1
+            if author_profile == comment.commentBy:
+                author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
+            if author_profile in comment.commentLikes.all():
+                author_profile.num_of_likes = author_profile.num_of_likes - 1
                 # WHAT ABOUT THE COMMENTS FOR OTHER USERS? TO FIX LATER
 
-        user_profile.save()
+        author_profile.save()
         post.delete()
         return HttpResponseRedirect(self.get_success_url())
         
@@ -147,9 +158,10 @@ class PostReport(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
-        user = self.request.user 
-        if user.is_authenticated:
-            post.postFlags.add(user)
+        logged_in_user = self.request.user 
+        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
+        if logged_in_user.is_authenticated:
+            post.postFlags.add(logged_in_user_profile)
         return redirect_url
 
 class PostEnableDisablePage(generic.DetailView):

@@ -44,13 +44,6 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
     
-    print('user_form')
-    print(user_form)
-    print('profile_form')
-    print(profile_form)
-    print('registered')
-    print(registered)
-    
     return render(request, 'main/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
@@ -81,11 +74,9 @@ def user_logout(request):
     return HttpResponseRedirect(reverse('main:index'))
 
 def profileInfo(request, user):
-    user_ = User.objects.get(username=user)
-    userProfile = UserProfile.objects.get(user=user_)
-    print('userProfile ' , userProfile.pk)
-    # print('profile ', profile)
-    return render(request, 'main/profile.html', {'visited_user':user_, 'visited_userProfile':userProfile})
+    visited_user = User.objects.get(username=user)
+    userProfile = UserProfile.objects.get(user=visited_user)
+    return render(request, 'main/profile.html', {'visited_user_profile': userProfile})
 
 
 
