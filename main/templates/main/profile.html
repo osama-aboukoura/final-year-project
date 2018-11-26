@@ -9,12 +9,29 @@
     <div class='profile-container'>
         <h1>Profile:</h1>
         <hr/>
-        <i style='font-size:100px;' class="fas fa-user-circle my-avatar"></i>
-        <h2>Username: {{visited_user_profile.user.username}}</h2>
-        <h2>First Name: {{visited_user_profile.user.first_name}}</h2>
-        <h2>Last Name: {{visited_user_profile.user.last_name}}</h2>
-        <h2>Email Address: {{visited_user_profile.user.email}}</h2>
-        <h2>Total Number of Posts, Comments and Replies: {{visited_user_profile.num_of_posts_comments_replies}}</h2>
-        <h2>Total Number of Likes: {{visited_user_profile.num_of_likes}}</h2>
+        <br/>
+        <center>
+            <i style='font-size:100px;' class="fas fa-user-circle my-avatar"></i>
+            <h2>{{visited_user_profile.user.first_name}} {{visited_user_profile.user.last_name}}</h2>
+            <h4>Username: {{visited_user_profile.user.username}}</h4>
+            <table>
+                <tr>
+                    <th width='140px'>
+                        <h1>{{visited_user_profile.num_of_posts_comments_replies}}</h1>
+                    </th>
+                    <th width='140px'>
+                        <h1>{{visited_user_profile.num_of_likes}}</h1>
+                    </th>
+                </tr>
+                <tr>
+                    <th width='140px'>
+                        <h4>Number of Posts, Comments and Replies</h4>
+                    </th>
+                    <th width='140px'>
+                        <h4>Likes on Posts, Comments and Replies</h4>
+                    </th>
+                </tr>
+            </table>
+        </center>
     </div>
 </div>
