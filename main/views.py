@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse, HttpResponseNotFound
 
 def register(request):
     registered = False
@@ -117,27 +118,27 @@ class IndexView(generic.ListView):
         return Post.objects.all()
 
 
-class FlaggedPostsView(LoginRequiredMixin, generic.ListView):
-    login_url = '/login/'
-    template_name = 'main/flagged-posts/flagged-posts.html'
-    context_object_name = 'flagged'
+
+def flaggedPostsView(request):
+    logged_in_user = request.user
+    if not logged_in_user.is_superuser:
+        return HttpResponseRedirect(reverse('main:index'))
+
+    flagged = {'posts':[] , 'comments':[] , 'replies':[]} 
+
+    allposts = Post.objects.all()
+    for post in allposts:
+        if post.postFlags.count() > 0:
+            flagged['posts'].append(post)
+
+    allcomments = Comment.objects.all()
+    for comment in allcomments:
+        if comment.commentFlags.count() > 0:
+            flagged['comments'].append(comment)
     
-    def get_queryset(self):
-        flagged = {'posts':[] , 'comments':[] , 'replies':[]} 
+    allreplies = Reply.objects.all()
+    for reply in allreplies:
+        if reply.replyFlags.count() > 0:
+            flagged['replies'].append(reply)
 
-        allposts = Post.objects.all()
-        for post in allposts:
-            if post.postFlags.count() > 0:
-                flagged['posts'].append(post)
-
-        allcomments = Comment.objects.all()
-        for comment in allcomments:
-            if comment.commentFlags.count() > 0:
-                flagged['comments'].append(comment)
-        
-        allreplies = Reply.objects.all()
-        for reply in allreplies:
-            if reply.replyFlags.count() > 0:
-                flagged['replies'].append(reply)
-
-        return flagged
+    return render(request, 'main/flagged-posts/flagged-posts.html', {'flagged': flagged})
