@@ -117,31 +117,35 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('main:index')
 
     def delete(self, request, *args, **kwargs):
+        post = Post.objects.get(id=self.kwargs['post_pk'])
+        post.postNumberOfComments -= 1 # decrement 1 for this comment
+
         comment = self.get_object()
         
-        allreplies = Reply.objects.all()
-        post = Post.objects.get(id=self.kwargs['post_pk'])
-
-        for reply in allreplies:
-            if reply.replytoComment.pk == comment.pk:
-                post.postNumberOfComments -= 1 # decrement 1 for every reply to this comment
-        
-        post.postNumberOfComments -= 1 # decrement 1 for this comment
+        # updating the likes count and the total num of posts/comments/replies count for each user who replied 
+        replies_to_comment = comment.reply_set.all()
+        for reply in replies_to_comment:
+            post.postNumberOfComments -= 1 # decrement 1 for every reply to this comment
+            reply_author_profile = UserProfile.objects.get(pk=reply.replyBy.pk)
+            reply_author_profile.num_of_posts_comments_replies = reply_author_profile.num_of_posts_comments_replies - 1
+            reply_author_profile.save()
+            for user_profile in reply.replyLikes.all():
+                profile = UserProfile.objects.get(pk=user_profile.pk)
+                profile.num_of_likes = profile.num_of_likes - 1
+                profile.save()
 
         author_profile = comment.commentBy
         author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
 
-        # removing the like on the comment 
+        # update the likes count for the comment author 
         if author_profile in comment.commentLikes.all():
             author_profile.num_of_likes = author_profile.num_of_likes - 1
 
-
-        replies_on_comment = comment.reply_set.all()
-        for reply in replies_on_comment:
-            if author_profile == reply.replyBy:
-                author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
-            if author_profile in reply.replyLikes.all():
-                author_profile.num_of_likes = author_profile.num_of_likes - 1
+        # update the likes count for each user that liked this comment. if the author has liked their own comment, it will be over written when we save author_profile
+        for user_profile in comment.commentLikes.all():
+            profile = UserProfile.objects.get(pk=user_profile.pk)
+            profile.num_of_likes = profile.num_of_likes - 1
+            profile.save()
 
         author_profile.save()
         
