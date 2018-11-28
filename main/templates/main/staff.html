@@ -1,0 +1,48 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'allPosts/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+{% include "main/navigationbar.html" %}
+
+<div class='wrapper'>
+    {% if True %}
+        <h1>Admin Panel</h1>
+        <hr/>
+        <p>Change the users' permissions on the site to either staff/regular user</p>
+        <table class="postsTable">
+            <tr>
+                <th width='15%'>Username</th>
+                <th width='25%'>Name</th>
+                <th width='10%'>Staff</th>
+                <th width='20%'>Update Staff Status</th>
+                <th width='10%'>Active</th>
+                <th width='20%'>Update Active Status</th>
+            </tr>
+            {% for user in users %}
+                {% if not user.is_superuser %}
+                    <tr>
+                        <td>{{user.username}}</td>
+                        <td>{{user.first_name}} {{user.last_name}}</td>
+                        <td>
+                            {% if user.is_staff %}
+                                <p style='color:green'><i class="fas fa-check-circle"></i></p>
+                            {% else %}
+                                <p style='color:red'><i class="fas fa-times-circle"></i></p>
+                            {% endif %}
+                        </td>
+                        <td><a href="{% url 'main:update-staff' user.username %}">{% if user.is_staff %}Change to Regular User{% else %}Change to Staff{% endif %}</a></td>
+                        <td>
+                            {% if user.is_active %}
+                                <p style='color:green'><i class="fas fa-check-circle"></i></p>
+                            {% else %}
+                                <p style='color:red'><i class="fas fa-times-circle"></i></p>
+                            {% endif %}
+                        </td>
+                        <td><a href="{% url 'main:update-active' user.username %}">{% if user.is_active %}Change to Disabled{% else %}Change to Active{% endif %}</a></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {% endif %}
+</div>

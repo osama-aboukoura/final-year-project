@@ -121,8 +121,8 @@ class IndexView(generic.ListView):
 
 def flaggedPostsView(request):
     logged_in_user = request.user
-    if not logged_in_user.is_superuser:
-        return HttpResponseRedirect(reverse('main:index'))
+    if not logged_in_user.is_staff:
+        return render(request, 'main/page-not-found.html')
 
     flagged = {'posts':[] , 'comments':[] , 'replies':[]} 
 
@@ -142,3 +142,32 @@ def flaggedPostsView(request):
             flagged['replies'].append(reply)
 
     return render(request, 'main/flagged-posts/flagged-posts.html', {'flagged': flagged})
+
+
+def staff(request):
+    logged_in_user = request.user
+    if not logged_in_user.is_superuser:
+        return render(request, 'main/page-not-found.html')
+    users = User.objects.all() 
+    return render(request, 'main/staff.html', {'users': users})
+
+def updateStaffStatus(request, user):
+    logged_in_user = request.user
+    if not logged_in_user.is_superuser:
+        return render(request, 'main/page-not-found.html')
+    user = User.objects.get(username=user)
+    user.is_staff = not user.is_staff
+    user.save()
+    return HttpResponseRedirect('/staff/')
+
+def updateActiveStatus(request, user):
+    logged_in_user = request.user
+    if not logged_in_user.is_superuser:
+        return render(request, 'main/page-not-found.html')
+    user = User.objects.get(username=user)
+    user.is_active = not user.is_active
+    user.save()
+    return HttpResponseRedirect('/staff/')
+
+def pageNotFound(request):
+    return render(request, 'main/page-not-found.html')
