@@ -70,15 +70,19 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
     model = Reply 
 
     def delete(self, request, *args, **kwargs):
-        # post = Post.objects.get(id=self.kwargs['post_pk']) # STILL NEED TO DECREESE THE TOTAL NUMBER OF COMMENTS(REPLIES) AFTER DELETING
-        
         reply = self.get_object()
         author_profile = reply.replyBy
         author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
         
-        # removing the like on the reply 
+        # update the likes count for the reply author 
         if author_profile in reply.replyLikes.all():
             author_profile.num_of_likes = author_profile.num_of_likes - 1
+
+        # update the likes count for each user that liked this reply. if the author has liked their own reply, it will be over written when we save author_profile
+        for user_profile in reply.replyLikes.all():
+            profile = UserProfile.objects.get(pk=user_profile.pk)
+            profile.num_of_likes = profile.num_of_likes - 1
+            profile.save()
 
         author_profile.save()
         reply.delete()
