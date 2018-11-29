@@ -58,3 +58,12 @@ input[type=submit] {
 input[type=submit]:hover {
     background-color: #85C1E9
 }
+
+.error {
+    margin: 10px;
+    background-image: linear-gradient(to right bottom, #F1948A, #FADBD8);
+    border: 1px solid #CB4335;
+    border-radius: 4px;
+    padding: 5px 20px;
+    float:left
+}

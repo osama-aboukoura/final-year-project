@@ -56,15 +56,19 @@ def user_login(request):
         
         user = authenticate(username=username, password=password)
 
+        print('user')
+        print(user)
+
         if user: 
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect(reverse('main:index'))
             else:
-                return HttpResponse("Sorry, Your Account is Not Active")
+                # DOESN'T WORK FOR SOME REASON!!!!!
+                return HttpResponse("Sorry, Your Account is Not Active") 
         else:
             print('log in failed')
-            return HttpResponse('Invalid Login Details')
+            return render(request, 'main/login.html', {'error': 'Sorry, unable to log you in.'})
     else:
         return render(request, 'main/login.html', {})
 
