@@ -71,10 +71,10 @@ class PostLike(RedirectView):
         if logged_in_user.is_authenticated:
             if user_profile in post.postLikes.all():
                 post.postLikes.remove(user_profile)
-                user_profile.num_of_likes = post.postedBy.num_of_likes - 1
+                user_profile.num_of_likes = user_profile.num_of_likes - 1
             else:
                 post.postLikes.add(user_profile)
-                user_profile.num_of_likes = post.postedBy.num_of_likes + 1
+                user_profile.num_of_likes = user_profile.num_of_likes + 1
         
         user_profile.save()
         return redirect_url
@@ -133,24 +133,59 @@ class PostDelete(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        author_profile = post.postedBy
-        # user_profile = get_object_or_404(UserProfile, user=post_owner)
-        author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
+        post_author_profile = post.postedBy
 
-        # removing the like on the post 
-        if author_profile in post.postLikes.all():
-            author_profile.num_of_likes = author_profile.num_of_likes - 1
+        author_likes_to_delete = 0
+        author_posts_to_delete = 1
 
-        # removing comments and any likes on all the comments on this post 
+        # update the likes count for the post author 
+        if post_author_profile in post.postLikes.all():
+            author_likes_to_delete += 1
+
+        # update the likes count for everyone else who liked the post 
+        for user_profile in post.postLikes.all():
+            if post.postedBy != user_profile:
+                profile = UserProfile.objects.get(pk=user_profile.pk)
+                profile.num_of_likes = profile.num_of_likes - 1
+                profile.save()
+
         comments_on_post = post.comment_set.all()
         for comment in comments_on_post:
-            if author_profile == comment.commentBy:
-                author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
-            if author_profile in comment.commentLikes.all():
-                author_profile.num_of_likes = author_profile.num_of_likes - 1
-                # WHAT ABOUT THE COMMENTS FOR OTHER USERS? TO FIX LATER
+            comment_author_profile = UserProfile.objects.get(pk=comment.commentBy.pk)
+            if comment_author_profile == post_author_profile:
+                author_posts_to_delete += 1
+            else:
+                comment_author_profile.num_of_posts_comments_replies = comment_author_profile.num_of_posts_comments_replies - 1
+                comment_author_profile.save()
+            # update the likes count for the list of people who liked this comment
+            for user_profile in comment.commentLikes.all():
+                profile = UserProfile.objects.get(pk=user_profile.pk)
+                if user_profile == post_author_profile:
+                    author_likes_to_delete += 1
+                else:
+                    profile.num_of_likes = profile.num_of_likes - 1
+                    profile.save()
+            # update the likes count for the list of people who liked the replies on this comment
+            replies_to_comment = comment.reply_set.all()
+            for reply in replies_to_comment:
+                reply_author_profile = UserProfile.objects.get(pk=reply.replyBy.pk)
+                if reply_author_profile == post_author_profile:
+                    author_posts_to_delete += 1
+                else:
+                    reply_author_profile.num_of_posts_comments_replies = reply_author_profile.num_of_posts_comments_replies - 1
+                    reply_author_profile.save()
+                for user_profile_reply in reply.replyLikes.all():
+                    profile_reply = UserProfile.objects.get(pk=user_profile_reply.pk)
+                    if profile_reply == post_author_profile:
+                        author_likes_to_delete += 1
+                    else:
+                        profile_reply.num_of_likes = profile_reply.num_of_likes - 1
+                        profile_reply.save()
+                
+        post_author_profile.num_of_posts_comments_replies = post_author_profile.num_of_posts_comments_replies - author_posts_to_delete
+        post_author_profile.num_of_likes = post_author_profile.num_of_likes - author_likes_to_delete
 
-        author_profile.save()
+        post_author_profile.save()
         post.delete()
         return HttpResponseRedirect(self.get_success_url())
         
