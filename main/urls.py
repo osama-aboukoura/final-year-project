@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^register/$', views.register, name='register'),
     url(r'^login/$', views.user_login, name='user_login'),
     url(r'^logout/$', views.user_logout, name='logout'),
+    url(r'^activate/$', views.activate, name='activate'),
     url(r'^profile/(?P<user>[A-Za-z0-9]+)$', views.profileInfo, name='profile'),    
     url(r'^flagged-posts/$', views.flaggedPostsView, name='flagged-posts'),    
     url(r'^staff/$', views.staff, name='staff'), 

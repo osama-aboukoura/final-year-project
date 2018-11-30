@@ -67,3 +67,11 @@ input[type=submit]:hover {
     padding: 5px 20px;
     float:left
 }
+.success {
+    margin: 10px;
+    background-image: linear-gradient(to right bottom, #90FC87, #CFF0DA);
+    border: 1px solid green;
+    border-radius: 4px;
+    padding: 5px 20px;
+    float:left
+}

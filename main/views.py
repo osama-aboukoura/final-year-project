@@ -1,3 +1,4 @@
+from random import randint
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -14,6 +15,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseNotFound
+from django.conf import settings
+from django.template import RequestContext
+from django.template.loader import get_template
+from django.core.mail import send_mail, EmailMultiAlternatives
 
 def register(request):
     registered = False
@@ -24,18 +29,34 @@ def register(request):
 
         if user_form.is_valid() and  profile_form.is_valid():
             print('form valid and profile form valid')
-            user = user_form.save()
+            user = user_form.save(commit=False)
             user.set_password(user.password)
+            user.is_active = False
             user.save()
 
             profile = profile_form.save(commit=False)
             profile.user = user # sets the one to one relationship 
+            profile.activation_code = randint(1000, 9999)
 
             if 'profile_picture' in request.FILES:
                 profile.profile_picture = request.FILES['profile_picture']
                 
             registered = True
             profile.save()
+
+            subject = 'Welcome! - Intelligent Q&A Forums'
+            email_to = [user.email] 
+            with open(settings.BASE_DIR + "/main/templates/main/sign_up_email.txt") as temp:
+                sign_up_email = temp.read()
+            email = EmailMultiAlternatives(
+                subject=subject, 
+                body=sign_up_email,
+                from_email=settings.EMAIL_HOST_USER,
+                to=email_to
+            )
+            html = get_template("main/sign_up_email.html").render({'user': user, 'activation_code': profile.activation_code})
+            email.attach_alternative(html, "text/html")
+            email.send()
 
         else:
             print('erros in form')
@@ -56,12 +77,16 @@ def user_login(request):
         
         user = authenticate(username=username, password=password)
 
-        print('user')
-        print(user)
+        # print('user')
+        # print(user)
 
         if user: 
             if user.is_active:
                 login(request, user)
+                # redirect_to = request.get('next', '')
+                # if redirect_to:
+                #     print ('redirect_to')
+                #     print (redirect_to)
                 return HttpResponseRedirect(reverse('main:index'))
             else:
                 # DOESN'T WORK FOR SOME REASON!!!!!
@@ -72,6 +97,33 @@ def user_login(request):
     else:
         return render(request, 'main/login.html', {})
 
+
+def activate(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        activation_code = request.POST.get('activation_code')
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = None 
+        
+        if user:
+            userProfile = UserProfile.objects.get(user=user)
+
+            if activation_code == userProfile.activation_code: 
+                user.is_active = True 
+                user.save()
+                # changing the activation_code so the user won't be able to activate themselves when Admin disables them.
+                userProfile.activation_code = randint(1000, 9999)
+                userProfile.save()
+                return render(request, 'main/login.html', {'activation_success': 'Success! Your account is now activated!'})
+            else: 
+                return render(request, 'main/activate.html', {'error': 'Sorry, unable to activate your account.'})
+
+        else:
+            return render(request, 'main/activate.html', {'error': 'Sorry, unable to activate your account.'})
+    else:
+        return render(request, 'main/activate.html', {})
 
 @login_required
 def user_logout(request):
@@ -146,7 +198,6 @@ def flaggedPostsView(request):
             flagged['replies'].append(reply)
 
     return render(request, 'main/flagged-posts/flagged-posts.html', {'flagged': flagged})
-
 
 def staff(request):
     logged_in_user = request.user

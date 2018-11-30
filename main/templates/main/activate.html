@@ -5,23 +5,18 @@
 
 <div class='background'>
     <div class='login-box'>
-        <h1>Login</h1>
+        <h1>Activate</h1>
         <hr/><br/><br/>
-        <form action="{% url 'main:user_login' %}" method='POST'>
+        <form action="{% url 'main:activate' %}" method='POST'>
             {% csrf_token %}
             <label for='username'>Username:</label>
             <input type='text' name='username' placeholder='Enter your username'/><br/>
-            <label for='password'>Password:</label>
-            <input type='password' name='password' placeholder='Enter your password'/><br/><br/>
+            <label for='activation_code'>Activation Code:</label>
+            <input type='text' name='activation_code' placeholder='Enter your activation code'/><br/><br/>
             {% if error %}
                 <p class='error'>{{error}}</p>
             {% endif %}
-            {% if activation_success %}
-                <p class='success'>{{activation_success}}</p>
-            {% else %}
-                <p style='float:left'>Logging in for the first time? <a href="{% url 'main:activate' %}">Activate Your Account here</a></p>
-            {% endif %}
-            <input type='submit' value='Login'/>
+            <input type='submit' value='Activate'/>
         </form>
     </div>
 </div>

@@ -6,17 +6,22 @@
 {% include "main/navigationbar.html" %}
 
 <div class='wrapper'>
-    <h1>All Posts:</h1>
-    <table class="postsTable">
-        <tr>
-            <th>Topic</th>
-            <th>Number of Posts</th>
-        </tr>
-    {% for key, value in all_topics.items %}
-        <tr>
-            <td><a href="{{key}}">{{key}}</a></td>
-            <td>{{value}}</td>
-        </tr>
-    {% endfor %}
-    </table>
+    {% if all_topics %}
+        <h1>All Posts:</h1>
+        <table class="postsTable">
+            <tr>
+                <th>Topic</th>
+                <th>Number of Posts</th>
+            </tr>
+        {% for key, value in all_topics.items %}
+            <tr>
+                <td><a href="{{key}}">{{key}}</a></td>
+                <td>{{value}}</td>
+            </tr>
+        {% endfor %}
+        </table>
+
+    {% else %}
+        <h1>Sorry, No Posts Available.</h1>
+    {% endif %}
 </div>
