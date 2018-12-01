@@ -3,20 +3,18 @@
 <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
-<div class='background'>
-    <div class='register-box'>
-        {% if registered %}
-            <h2>Thank You for Your Registeration!</h2>
-            <a class='button blue' href="{% url 'main:user_login' %}">Log in and start</a>
-        {% else %}
-            <h2>Register</h2>
-            <hr/><br/>
-            <form method='POST' enctype='multipart/form-data'>
-                {% csrf_token %}
-                {{ user_form.as_p }}
-                {{ profile_form.as_p }}
-                <input type='submit' value='Register' />
-            </form>
-        {% endif %}
-    </div>
+<div class='register-box'>
+    {% if registered %}
+        <h2>Thank You for Your Registeration!</h2>
+        <a class='button blue' href="{% url 'main:user_login' %}">Log in and start</a>
+    {% else %}
+        <h2>Register</h2>
+        <hr/><br/>
+        <form method='POST' enctype='multipart/form-data'>
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+            <input type='submit' value='Register' />
+        </form>
+    {% endif %}
 </div>

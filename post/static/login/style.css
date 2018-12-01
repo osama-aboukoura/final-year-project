@@ -1,17 +1,10 @@
-.background{
-    margin: 0;
-    padding: 0;
-    position: relative;
-    min-width: 100%;
-    min-height: 100%;
-}
-
 .login-box{
-    position: absolute;
-    top: 25%;
-    left: 25%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 45%;
-    height: 300px;
+    min-height: 300px;
     background-image: linear-gradient(to right, #D5F5E3, #FADBD8);
     border: 2px dashed gray;
     border-radius: 10px;
@@ -19,11 +12,12 @@
 }
 
 .register-box {
-    position: absolute;
-    top: 5%;
-    left: 25%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 45%;
-    height: 565px;
+    min-height: 565px;
     background-image: linear-gradient(to right, #D5F5E3, #FADBD8);
     border: 2px dashed gray;
     border-radius: 10px;
@@ -45,6 +39,9 @@ input[type=text], input[type=password], input[type=email] {
 }
 
 input[type=submit] {
+    position: absolute;
+    bottom: 20px;
+    right: 22px;
     border: none;
     background-color: #3E7A9B;
     color: white;
@@ -52,7 +49,6 @@ input[type=submit] {
     padding: 12px 20px;
     border-radius: 4px;
     cursor: pointer;
-    float: right;
 }
 
 input[type=submit]:hover {

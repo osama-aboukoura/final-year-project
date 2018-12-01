@@ -3,20 +3,18 @@
 <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
-<div class='background'>
-    <div class='login-box'>
-        <h1>Activate</h1>
-        <hr/><br/><br/>
-        <form action="{% url 'main:activate' %}" method='POST'>
-            {% csrf_token %}
-            <label for='username'>Username:</label>
-            <input type='text' name='username' placeholder='Enter your username'/><br/>
-            <label for='activation_code'>Activation Code:</label>
-            <input type='text' name='activation_code' placeholder='Enter your activation code'/><br/><br/>
-            {% if error %}
-                <p class='error'>{{error}}</p>
-            {% endif %}
-            <input type='submit' value='Activate'/>
-        </form>
-    </div>
+<div class='login-box'>
+    <h1>Activate</h1>
+    <hr/><br/><br/>
+    <form action="{% url 'main:activate' %}" method='POST'>
+        {% csrf_token %}
+        <label for='username'>Username:</label>
+        <input type='text' name='username' placeholder='Enter your username'/><br/>
+        <label for='activation_code'>Activation Code:</label>
+        <input type='text' name='activation_code' placeholder='Enter your activation code'/><br/><br/>
+        {% if error %}
+            <p class='error'>{{error}}</p>
+        {% endif %}
+        <input type='submit' value='Activate'/>
+    </form>
 </div>
