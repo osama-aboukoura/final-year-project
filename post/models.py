@@ -8,6 +8,7 @@ class Post(models.Model):
     postTopic = models.CharField(max_length=30)
     postContent = models.TextField()
     postImage = models.ImageField(null=True, blank=True)
+    postLastUpdated = models.DateTimeField(auto_now=True, auto_now_add=False)
     postDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     postLikes = models.ManyToManyField(UserProfile, blank=True, related_name='post_likes')
     postNumberOfVotes = models.IntegerField(default=0)

@@ -12,7 +12,7 @@
 
     <div class='post-title'>
         <h1>{{post.postTitle}}</h1>
-        <p class='discussion-postedBy-and-date'>Discussion started by: {{post.postedBy.first_name}} {{post.postedBy.last_name}} on {{post.postDate}}</p>
+        <p class='discussion-postedBy-and-date'>Discussion started by: {{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}} on {{post.postDate}}{% if post.postLastUpdated > post.postDate %} - latest update on {{post.postLastUpdated}}{% endif %}</p>
     </div>
     <hr />
 
