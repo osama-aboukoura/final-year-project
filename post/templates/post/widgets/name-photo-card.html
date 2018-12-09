@@ -1,8 +1,11 @@
 <td class='name-and-photo-card'>
     <table class='name-and-photo-text'>
-        <td><i class="fas fa-user-circle my-avatar"></i></td>
-        <td style='font-weight: bold'><a href="{% url 'main:profile' user_profile.user %}" >{{user_profile.user.first_name}} {{user_profile.user.last_name}}</a></td>
+        <tr>
+            <td align='center'><i class="fas fa-user-circle my-avatar"></i></td>
+        </tr>
     </table>
+    <h3><a href="{% url 'main:profile' user_profile.user %}" >{{user_profile.user.first_name}} {{user_profile.user.last_name}}</a></h3>
+    <p style='font-size:14px;'>Joined on {{user_profile.date_joined|date:"M d, Y"}}</p>
     <table style='width:100%; color:gray'>
         <tr>
             <td align='center'>{{user_profile.num_of_posts_comments_replies}} <i class="far fa-edit"></i></td>

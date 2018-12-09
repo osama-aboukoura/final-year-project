@@ -15,6 +15,7 @@
             <i style='font-size:100px;' class="fas fa-user-circle my-avatar"></i>
             <h2>{{visited_user_profile.user.first_name}} {{visited_user_profile.user.last_name}}</h2>
             <h4>Username: {{visited_user_profile.user.username}}</h4>
+            <p>Joined on: {{visited_user_profile.date_joined|date:"M d, Y"}}</p>
             <table>
                 <tr>
                     <th width='140px'>
