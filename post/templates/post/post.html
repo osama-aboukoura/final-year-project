@@ -49,7 +49,9 @@
                 {% else %}
                     <a class='comment-link' href='like/'>Like <i class="far fa-thumbs-up"></i></a>
                 {% endif %}
-                <a class='comment-link' href='add-comment/'>Comment <i class="far fa-comment"></i></a>
+                {% if post.postClosed == False %}
+                    <a class='comment-link' href='add-comment/'>Comment <i class="far fa-comment"></i></a>
+                {% endif %}
                 <button class='button danger' onclick="report('post', {{post.pk}})">Report <i class="fas fa-ban"></i></button>
                 {% if logged_in_user_profile in post.postFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this post.</i></strong></span>{% endif %}
             {% else %}
