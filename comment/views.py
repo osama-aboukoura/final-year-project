@@ -13,6 +13,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template
 
 
 class CommentCreate(LoginRequiredMixin, CreateView):
@@ -34,7 +37,35 @@ class CommentCreate(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['pk'])
         post.postNumberOfComments += 1
+        
+        logged_in_user = self.request.user
+
+        subject = 'A New Comment! - Intelligent Q&A Forums'
+        email_to = []
+        # don't email yourself 
+        if post.postedBy.user != logged_in_user:
+            email_to.append(post.postedBy.user.email)
+        # email every user that has commented on the post  
+        for comment in post.comment_set.all():
+            if comment.commentBy.user != logged_in_user:
+                # don't email users who have commented twice more than once 
+                if comment.commentBy.user.email not in email_to:
+                    email_to.append(comment.commentBy.user.email)
+
+        with open(settings.BASE_DIR + "/comment/templates/comment/notify_author_email.txt") as temp:
+            notify_author_email = temp.read()
+        email = EmailMultiAlternatives(
+            subject=subject, 
+            body=notify_author_email,
+            from_email=settings.EMAIL_HOST_USER,
+            to=email_to
+        )
+        html = get_template("comment/notify_author_email.html").render({'post': post, 'comment':self.object, 'comment_by':logged_in_user})
+        email.attach_alternative(html, "text/html")
+        email.send()
+
         post.save()
+
         return '/' + str(self.kwargs['pk'])
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):

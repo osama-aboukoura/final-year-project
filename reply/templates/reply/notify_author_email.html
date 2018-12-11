@@ -1,0 +1,21 @@
+<html>
+<head>
+</head>
+<body>
+    <h1>Hello!</h1>
+
+    <h2>A New Reply on One of Our Intelligent Q&#38;A Comment!</h2>
+    <p>{{reply_by.first_name}} {{reply_by.last_name}} has added a new reply to a comment you have either started or replied to.</p>
+    <h2 style='background:#D6FFDE; padding:10px 20px; border:1px solid green; border-radius:4px;'>Post Title: {{post.postTitle}} - ({{post.postTopic}})</h2>
+    <h4 style='background:#D6EAF8; padding:10px 20px; border:1px solid #21618C; border-radius:4px;'>Post: {{post.postContent}}</h4>
+    <h4 style='background:#D6EAF8; padding:10px 30px; border:1px solid #21618C; border-radius:4px;'>Comment: {{comment.commentContent}}</h4>
+    <h4 style='background:#D6EAF8; padding:10px 40px; border:1px solid #21618C; border-radius:4px;'>Reply by {{reply_by.first_name}}: {{reply.replyContent}}</h4>
+    <p style='color:#CB4335;'>Click the link to view the reply on the site: <a href="http://localhost:8000/{{post.pk}}/">View Reply</a>.</p>
+
+    <br/><br/>
+    <hr/>
+    <h5>Have you received this email in error?<h5/>
+    <h5>You are receiving this email because you are signed up for the Intelligent Q&#38;A Forums. 
+    If you are not the intended recipient and you believe you are receiving this in error, please delete this email and inform the sender immediately.<h5/>
+</body>
+</html>

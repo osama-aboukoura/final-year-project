@@ -13,6 +13,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template
+
 
 
 class ReplyCreate(LoginRequiredMixin, CreateView):
@@ -34,6 +38,39 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         post.postNumberOfComments += 1
+
+        reply = self.object 
+        comment = reply.replytoComment
+
+        logged_in_user = self.request.user
+
+        subject = 'A New Reply! - Intelligent Q&A Forums'
+        email_to = []
+        # email the post author if it isn't yourself 
+        if post.postedBy.user != logged_in_user:
+            email_to.append(post.postedBy.user.email)
+        # email the comment author if it isn't yourself 
+        if comment.commentBy.user != logged_in_user:
+            email_to.append(comment.commentBy.user.email)
+        # email every user that has replied to the comment  
+        for reply in comment.reply_set.all():
+            if reply.replyBy.user != logged_in_user:
+                # don't email users who have replied twice more than once 
+                if reply.replyBy.user.email not in email_to:
+                    email_to.append(reply.replyBy.user.email)
+
+        with open(settings.BASE_DIR + "/reply/templates/reply/notify_author_email.txt") as temp:
+            notify_author_email = temp.read()
+        email = EmailMultiAlternatives(
+            subject=subject, 
+            body=notify_author_email,
+            from_email=settings.EMAIL_HOST_USER,
+            to=email_to
+        )
+        html = get_template("reply/notify_author_email.html").render({'post': post, 'comment':comment, 'reply':self.object, 'reply_by':logged_in_user})
+        email.attach_alternative(html, "text/html")
+        email.send()
+
         post.save()
         return '/' + str(post.pk)
 
