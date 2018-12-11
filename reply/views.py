@@ -27,6 +27,9 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         reply = form.save(commit=False)
         comment = Comment.objects.get(id=self.kwargs['comment_pk'])
+        post = Post.objects.get(id=self.kwargs['post_pk'])
+        if post.postClosed:
+            return render(self.request, 'main/page-not-found.html')
         reply.replytoComment = comment
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)

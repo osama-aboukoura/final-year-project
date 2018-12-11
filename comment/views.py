@@ -26,6 +26,12 @@ class CommentCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         comment = form.save(commit=False)
         post = Post.objects.get(id=self.kwargs['pk'])
+        if post.postClosed:
+            return render(self.request, 'main/page-not-found.html')
+            # return HttpResponseRedirect(reverse('main:index'))
+
+            # return HttpResponse(render(request, ''))
+
         comment.commentOnPost = post
         logged_in_user = self.request.user        
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
@@ -34,6 +40,10 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         user_profile.save()
         return super(CommentCreate, self).form_valid(form)
     
+    def form_invalid(self, form):
+        print ('form invalidddd')
+        return self.render_to_response(self.get_context_data(form=form))
+
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['pk'])
         post.postNumberOfComments += 1
