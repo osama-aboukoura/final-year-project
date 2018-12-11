@@ -11,7 +11,7 @@
         <a href="{% url 'main:flagged-posts'%}"><i class="fas fa-exclamation-circle"></i>&nbsp; Flagged Posts</a>
     {% endif %}
     {% if user.is_superuser %}
-        <a href="{% url 'main:staff'%}"><i class="fas fa-users"></i></i>&nbsp; Staff</a>
+        <a href="{% url 'main:staff'%}"><i class="fas fa-users"></i></i>&nbsp; Users</a>
     {% endif %}
     {% comment %} <a style="float:right" href="/admin"><i class="fas fa-unlock-alt"></i>&nbsp; Admin</a> {% endcomment %}
     {% if user.is_authenticated %}

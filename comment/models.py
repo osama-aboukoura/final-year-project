@@ -14,6 +14,7 @@ class Comment(models.Model):
     commentVotersDown = models.ManyToManyField(UserProfile, blank=True, related_name='comment_votes_down')
     commentFlags = models.ManyToManyField(UserProfile, blank=True, related_name='comment_flags')
     commentDisabled = models.BooleanField(default=False)
+    commentAccepted = models.BooleanField(default=False)
 
     def __str__(self):
         return "Comment " + str(self.pk) + " on " + str(self.commentOnPost)

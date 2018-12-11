@@ -51,7 +51,8 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
             email_to.append(post.postedBy.user.email)
         # email the comment author if it isn't yourself 
         if comment.commentBy.user != logged_in_user:
-            email_to.append(comment.commentBy.user.email)
+            if comment.commentBy.user.email not in email_to:
+                email_to.append(comment.commentBy.user.email)
         # email every user that has replied to the comment  
         for reply in comment.reply_set.all():
             if reply.replyBy.user != logged_in_user:

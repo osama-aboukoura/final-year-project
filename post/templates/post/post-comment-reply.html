@@ -11,7 +11,15 @@
 <div class='wrapper'>
 
     <div class='post-title'>
+        {% if user.is_authenticated %}
+            {% if user.username == post.postedBy.user.username and post.postClosed == True %}
+                <a class='button green repoen-comments-button' href="{% url 'post:open-comments' post.pk %}">Re-open Post Comments</a>
+            {% endif %}
+        {% endif %}
         <h1>{{post.postTitle}}</h1>
+        {% if post.postClosed %}
+            <h2 style='color:#CB4335;'>[CLOSED. Author has accepted one of the answers]</h2>
+        {% endif %}
         <p class='discussion-postedBy-and-date'>Discussion started by: {{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}} on {{post.postDate}}{% if post.postLastUpdated > post.postDate %} - latest update on {{post.postLastUpdated}}{% endif %}</p>
     </div>
     <hr />

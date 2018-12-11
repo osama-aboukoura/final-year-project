@@ -18,6 +18,7 @@ class Post(models.Model):
     postNumberOfComments = models.IntegerField(default=0)
     postFlags = models.ManyToManyField(UserProfile, blank=True, related_name='post_flags')
     postDisabled = models.BooleanField(default=False)
+    postClosed = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("post:showPost", kwargs={"pk": self.pk})

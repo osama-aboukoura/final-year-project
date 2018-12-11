@@ -228,3 +228,18 @@ class CommentRemoveFlags(RedirectView):
         comment.commentDisabled = False
         comment.save()
         return redirect_url
+
+class AcceptAnswer(LoginRequiredMixin, RedirectView):
+    login_url = '/login/'
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))        
+        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+        redirect_url = post.get_absolute_url()
+        logged_in_user = self.request.user    
+        if logged_in_user == post.postedBy.user:
+            comment.commentAccepted = True 
+            post.postClosed = True 
+        comment.save()
+        post.save()
+        return redirect_url
+        
