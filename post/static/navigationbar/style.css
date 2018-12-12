@@ -7,12 +7,12 @@
     background-color: #345678;
 }
 
-.navigationbar a {
+.navigationbar a:not(.logo) {
     float: left;
     font-size: 16px;
     color: white;
     text-align: center;
-    padding: 12px 16px;
+    padding: 12px 10px;
     text-decoration: none;
 }
 
@@ -53,18 +53,56 @@
 }
 
 .logo {
-    cursor: pointer;
     float: left;
     font-family: 'Gloria Hallelujah', cursive;
-    font-size: 15px;
     padding: 6px 20px;
-    border: none;
-    outline: none;
-    background-color: inherit;
-    color: white
+    /* background-color: inherit; */
+    font-size: 15px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+.logo:link, .logo:visited {
+    text-decoration: none;
+
 }
 
 .logo:hover {
     background: black;
 
+}
+
+
+.narrow-screen {
+    display: none;
+}
+.narrow-screen-logo {
+    display: none;
+}
+.icon-only {
+    font-size: 40px;
+    padding: 5px 10px
+}
+.big-font {
+    font-size: 34px;
+    padding: 10px 5px
+}
+
+
+@media (max-width: 1050px) {
+    .navigationbar { width: 100%; }
+}
+@media (max-width: 850px) {
+    .wide-screen-logo { display: none; }
+    .narrow-screen-logo { display: block }
+}
+@media (max-width: 720px) {
+    .wide-screen { display: none; }
+    .narrow-screen { display: block }
+    .logo { font-size: 31px; padding: 6px 10px; }
+}
+@media (max-width: 570px) {
+    .icon-only { padding: 3px 2px }
+    .logo { font-size: 24px; }
+    .icon-only { font-size: 30px; }
 }

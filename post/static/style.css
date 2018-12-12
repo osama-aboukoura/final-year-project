@@ -40,3 +40,8 @@ body {
 .green {
     background-color: green;
 }
+
+
+@media (max-width: 1050px) {
+    .wrapper { width: 96%; }
+}

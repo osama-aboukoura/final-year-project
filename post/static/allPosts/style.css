@@ -26,21 +26,17 @@
     color: white;
 }
 
-a:link {
+.postsTable a {
     text-decoration: none;
     color: #2D86C1
 }
 
-a:visited {
-    color: #2D86C1
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 .postsTable a:visited {
     color: #2D86C1
+}
+
+.postsTable a:hover{
+    text-decoration: underline;
 }
 
 .pagination {
@@ -49,7 +45,7 @@ a:hover {
     margin: 20px 0;
 }
 
-.flagged-posts-buttons button, .flagged-posts-buttons a{
+.flagged-posts-buttons a{
     cursor: pointer;
     text-decoration: none;
     padding: 5px 10px;
@@ -73,12 +69,14 @@ a:hover {
 .buttons-div a{
     margin: 5px;
     font-size: 20px;
+    color: white !important;
 }
 
 .button-div {
     position: relative;
     display: inline-table;
 }
+
 /* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top */
 .button-div span {
     position: absolute;
@@ -108,3 +106,9 @@ a:hover {
 .button-div:hover span {
     visibility: visible;
 }
+
+
+
+/* @media (max-width: 1230px) {
+    .Education { width: 90%; }
+} */

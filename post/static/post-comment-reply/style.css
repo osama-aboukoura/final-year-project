@@ -190,3 +190,9 @@
 .comment-link:hover { 
     background-color: #85C1E9
 }
+
+
+
+@media (max-width: 1050px) {
+    .post-topic { width: 100%; }
+}
