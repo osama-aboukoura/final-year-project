@@ -6,22 +6,18 @@
 {% include "main/navigationbar.html" %}
 
 <div class='wrapper'>
-    {% if all_topics %}
-        <h1>All Topics:</h1>
-        <table class="postsTable">
-            <tr>
-                <th>Topic</th>
-                <th>Number of Posts</th>
-            </tr>
-        {% for key, value in all_topics.items %}
-            <tr>
-                <td><a href="{{key}}">{{key}}</a></td>
-                <td>{{value}}</td>
-            </tr>
-        {% endfor %}
-        </table>
 
+    <h3 style=>Reply by {{reply.replyBy.user.first_name}}:</h3>
+    <h3>{{reply.replyContent}}</h3>
+    <hr/>
+    {% if reply.replyLikes.count > 0 %}
+        <h4>Users who liked this reply:</h4>
+        <ul>
+            {% for user in list_of_users %}
+                <li><a class='blue-link' href="{% url 'main:profile' user.username %}" >{{user.first_name}} {{user.last_name}}</a></li>
+            {% endfor %}
+        </ul>
     {% else %}
-        <h1>Sorry, No Posts Available.</h1>
+        <h4>No likes yet.</h4>
     {% endif %}
 </div>

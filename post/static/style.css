@@ -40,6 +40,14 @@ body {
 .green {
     background-color: green;
 }
+.blue-link{
+    color: #21618C;
+    text-decoration: none;
+}
+.blue-link:hover{
+    color: #85C1E9;
+    text-decoration: underline;
+}
 
 
 @media (max-width: 1050px) {

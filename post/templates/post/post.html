@@ -34,14 +34,15 @@
         {% endif %}
         
         <div class='buttons-and-date-fixed-bottom'>
-            <p style='margin-bottom: -5px; padding: 0;'>{{post.postLikes.count}} Like{% if post.postLikes.count > 1 or post.postLikes.count == 0 %}s{% endif %}
-            {% if post.postLikes.count > 2 and logged_in_user_profile in post.postLikes.all %}
-                (You and {{post.postLikes.count|add:'-1'}} others).</p>
-            {% elif post.postLikes.count > 1 and logged_in_user_profile in post.postLikes.all  %}
-                (You and {{post.postLikes.count|add:'-1'}} other).</p>
-            {% elif post.postLikes.count == 1 and logged_in_user_profile in post.postLikes.all %}
-                (You).
-            {% endif %}
+            <a href="{% url 'post:like-list-post' post.pk %}" class='likes'>{{post.postLikes.count}} Like{% if post.postLikes.count > 1 or post.postLikes.count == 0 %}s{% endif %}
+                {% if post.postLikes.count > 2 and logged_in_user_profile in post.postLikes.all %}
+                    (You and {{post.postLikes.count|add:'-1'}} others).
+                {% elif post.postLikes.count > 1 and logged_in_user_profile in post.postLikes.all  %}
+                    (You and {{post.postLikes.count|add:'-1'}} other).
+                {% elif post.postLikes.count == 1 and logged_in_user_profile in post.postLikes.all %}
+                    (You).
+                {% endif %}
+            </a>
             <hr/>
             {% if user.is_authenticated %}
                 {% if logged_in_user_profile in post.postLikes.all %}

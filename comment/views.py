@@ -106,6 +106,18 @@ class CommentLike(RedirectView):
         logged_in_user_profile.save()
         return redirect_url
 
+class CommentLikesList(generic.DetailView):
+    model = Comment 
+    template_name = 'comment/comment-likes-list.html'
+    def get_context_data(self, **kwargs):
+        comment = Comment.objects.get(id=self.kwargs['pk'])
+        list_of_users = [] 
+        for username in comment.commentLikes.all():
+            user = get_object_or_404(User, username=username)
+            list_of_users.append(user)
+        return {'comment': comment, 'list_of_users': list_of_users}
+
+
 class CommentVoteUp(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))

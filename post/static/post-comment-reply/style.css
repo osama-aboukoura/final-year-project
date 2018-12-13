@@ -153,6 +153,16 @@
     background: #F9FBFB
 }
 
+.likes{
+    margin-bottom: -7px; 
+    padding: 0;
+    text-decoration: none;
+    color: gray;
+}
+.likes:hover{
+    text-decoration: underline;
+}
+
 .delete-button {
     display: block;
     width: 100%;

@@ -40,14 +40,16 @@
         {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>
-            <p style='margin-bottom: -5px; padding: 0;'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %}
-            {% if comment.commentLikes.count > 2 and logged_in_user_profile in comment.commentLikes.all %}
-                (You and {{comment.commentLikes.count|add:'-1'}} others).</p>
-            {% elif comment.commentLikes.count > 1 and logged_in_user_profile in comment.commentLikes.all  %}
-                (You and {{comment.commentLikes.count|add:'-1'}} other).</p>
-            {% elif comment.commentLikes.count == 1 and logged_in_user_profile in comment.commentLikes.all %}
-                (You).
-            {% endif %}
+            {% comment %} <p onclick="showLikes('{{ comment.commentLikes.all|join:", " }}')" style='margin-bottom: -5px; padding: 0;'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %} {% endcomment %}
+            <a href="{% url 'comment:like-list-comment' comment.pk %}" class='likes'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %}
+                {% if comment.commentLikes.count > 2 and logged_in_user_profile in comment.commentLikes.all %}
+                    (You and {{comment.commentLikes.count|add:'-1'}} others).
+                {% elif comment.commentLikes.count > 1 and logged_in_user_profile in comment.commentLikes.all  %}
+                    (You and {{comment.commentLikes.count|add:'-1'}} other).
+                {% elif comment.commentLikes.count == 1 and logged_in_user_profile in comment.commentLikes.all %}
+                    (You).
+                {% endif %}
+            </a>
             <hr/>
 
             {% if user.is_authenticated %}

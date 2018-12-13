@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'allPosts/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+{% include "main/navigationbar.html" %}
+
+<div class='wrapper'>
+
+    <h3 style=>Comment by {{comment.commentBy.user.first_name}}:</h3>
+    <h3>{{comment.commentContent}}</h3>
+    <hr/>
+    {% if comment.commentLikes.count > 0 %}
+        <h4>Users who liked this comment:</h4>
+        <ul>
+            {% for user in list_of_users %}
+                <li><a class='blue-link' href="{% url 'main:profile' user.username %}" >{{user.first_name}} {{user.last_name}}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h4>No likes yet.</h4>
+    {% endif %}
+</div>

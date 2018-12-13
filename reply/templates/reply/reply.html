@@ -14,14 +14,15 @@
         {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>
-            <p style='margin-bottom: -5px; padding: 0;'>{{reply.replyLikes.count}} Like{% if reply.replyLikes.count > 1 or reply.replyLikes.count == 0 %}s{% endif %}
-            {% if reply.replyLikes.count > 2 and logged_in_user_profile in reply.replyLikes.all %}
-                (You and {{reply.replyLikes.count|add:'-1'}} others).</p>
-            {% elif reply.replyLikes.count > 1 and logged_in_user_profile in reply.replyLikes.all  %}
-                (You and {{reply.replyLikes.count|add:'-1'}} other).</p>
-            {% elif reply.replyLikes.count == 1 and logged_in_user_profile in reply.replyLikes.all %}
-                (You).
-            {% endif %}
+            <a href="{% url 'reply:like-list-reply' reply.pk %}" class='likes'>{{reply.replyLikes.count}} Like{% if reply.replyLikes.count > 1 or reply.replyLikes.count == 0 %}s{% endif %}
+                {% if reply.replyLikes.count > 2 and logged_in_user_profile in reply.replyLikes.all %}
+                    (You and {{reply.replyLikes.count|add:'-1'}} others).
+                {% elif reply.replyLikes.count > 1 and logged_in_user_profile in reply.replyLikes.all  %}
+                    (You and {{reply.replyLikes.count|add:'-1'}} other).
+                {% elif reply.replyLikes.count == 1 and logged_in_user_profile in reply.replyLikes.all %}
+                    (You).
+                {% endif %}
+            </p>
             <hr/>
             {% if user.is_authenticated %}
                 {% if logged_in_user_profile in reply.replyLikes.all %}

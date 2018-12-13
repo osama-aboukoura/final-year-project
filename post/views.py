@@ -79,6 +79,17 @@ class PostLike(RedirectView):
         user_profile.save()
         return redirect_url
 
+class PostLikesList(generic.DetailView):
+    model = Post 
+    template_name = 'post/post-likes-list.html'
+    def get_context_data(self, **kwargs):
+        post = Post.objects.get(id=self.kwargs['pk'])
+        list_of_users = [] 
+        for username in post.postLikes.all():
+            user = get_object_or_404(User, username=username)
+            list_of_users.append(user)
+        return {'post': post, 'list_of_users': list_of_users}
+
 class PostVoteUp(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
