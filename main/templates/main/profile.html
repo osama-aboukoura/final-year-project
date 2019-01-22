@@ -8,7 +8,9 @@
 <div class='wrapper'>
     <div class='profile-container'>
         <h1>Profile:</h1>
-        <a href=''>Edit Profile - (to fix)</a>
+        {% if logged_in_user.username == visited_user_profile.user.username %}
+            <a class='edit-profile-button button blue' href={% url 'main:edit-profile' visited_user_profile.user %}>Edit Profile</a>
+        {% endif %}
         <hr/>
         <br/>
         <center>

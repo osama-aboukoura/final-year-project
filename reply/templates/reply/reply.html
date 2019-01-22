@@ -22,7 +22,7 @@
                 {% elif reply.replyLikes.count == 1 and logged_in_user_profile in reply.replyLikes.all %}
                     (You).
                 {% endif %}
-            </p>
+            </a>
             <hr/>
             {% if user.is_authenticated %}
                 {% if logged_in_user_profile in reply.replyLikes.all %}

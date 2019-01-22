@@ -1,6 +1,6 @@
 from random import randint
 from django.views import generic
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
 from .models import UserProfile, User
@@ -131,11 +131,53 @@ def user_logout(request):
     return HttpResponseRedirect(reverse('main:index'))
 
 def profileInfo(request, user):
+    logged_in_user = request.user
     visited_user = User.objects.get(username=user)
     userProfile = UserProfile.objects.get(user=visited_user)
-    return render(request, 'main/profile.html', {'visited_user_profile': userProfile})
+    return render(request, 'main/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
+
+def editprofileInfo(request, user):
+    logged_in_user = request.user
+    print('logged_in_user ', logged_in_user)
+    
+    user_to_edit = User.objects.get(username=user)
+    print('user_to_edit ', user_to_edit)
+    userProfile = UserProfile.objects.get(user=user_to_edit)
+
+    if user_to_edit != logged_in_user:
+        print('not the same user! ')
+        return render(request, 'main/page-not-found.html')
 
 
+    if request.method == 'POST':
+        print('POST REQUEST ')
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('main:profile', kwargs={'user': userProfile.user}))
+            # return render(request, 'main/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
+        else:
+            return render(request, 'main/page-not-found.html')
+
+    else:
+        print('GET REQUEST ')
+        form = UserProfileForm(instance=request.user)
+        return render(request, 'main/profile_edit_form.html', {'form': form})
+
+    # user_to_edit = User.objects.get(username=user)
+    # userProfile = UserProfile.objects.get(user=user_to_edit)
+    # return render(request, 'main/profile.html', {'visited_user_profile': userProfile})
+
+# class ProfileUpdate(LoginRequiredMixin, UpdateView):
+#     login_url = '/login/'
+#     model = UserProfile 
+#     template_name = 'main/profile_edit_form.html'
+#     fields = ['user', 'first_name']  
+
+#     def get_success_url(self):
+#         profile = get_object_or_404(UserProfile, id= self.kwargs.get('pk'))
+#         user = profile.user
+#         return reverse_lazy('main:profile' , kwargs={'user': user})
 
 class TopicsView(generic.ListView):
     template_name = 'main/topics.html'

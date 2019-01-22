@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^activate/$', views.activate, name='activate'),
     url(r'^profile/(?P<user>[A-Za-z0-9]+)$', views.profileInfo, name='profile'),    
+    url(r'^edit-profile/(?P<user>[A-Za-z0-9]+)$', views.editprofileInfo, name='edit-profile'),    
     url(r'^flagged-posts/$', views.flaggedPostsView, name='flagged-posts'),    
     url(r'^staff/$', views.staff, name='staff'), 
     url(r'^update-staff/(?P<user>[A-Za-z0-9]+)', views.updateStaffStatus, name='update-staff'),

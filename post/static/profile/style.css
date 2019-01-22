@@ -4,4 +4,11 @@
     border: 2px dashed gray;
     border-radius: 10px;
     background-color: #D6EAF8;
+    position: relative;
+}
+
+.edit-profile-button {
+    position: absolute;
+    right: 30px;
+    top: 40px;
 }
