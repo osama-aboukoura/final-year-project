@@ -1,7 +1,13 @@
 <td class='name-and-photo-card'>
     <table class='name-and-photo-text'>
         <tr>
-            <td align='center'><i class="fas fa-user-circle my-avatar"></i></td>
+            <td align='center'>
+                {% if user_profile.profile_picture %}
+                    <img src="{{user_profile.profile_picture.url}}" width='70'/>
+                {% else %}
+                    <i class="fas fa-user-circle my-avatar"></i>
+                {% endif %}
+            </td>
         </tr>
     </table>
     <h3><a href="{% url 'main:profile' user_profile.user %}" >{{user_profile.user.first_name}} {{user_profile.user.last_name}}</a></h3>

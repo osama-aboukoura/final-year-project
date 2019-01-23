@@ -11,9 +11,15 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    # first_name = forms.CharField(required=True, label=('First Name'))
+    # last_name = forms.CharField(required=True, label=('Last Name'))
+    class Meta():
+        model = UserProfile 
+        fields = ('profile_picture',)
+
+class UserProfileUpdateForm(forms.ModelForm):
     first_name = forms.CharField(required=True, label=('First Name'))
     last_name = forms.CharField(required=True, label=('Last Name'))
-
     class Meta():
         model = UserProfile 
         fields = ('first_name', 'last_name', 'profile_picture',)

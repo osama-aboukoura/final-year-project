@@ -9,7 +9,7 @@ from comment.models import Comment
 from reply.models import Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
-from main.forms import UserForm, UserProfileForm
+from main.forms import UserForm, UserProfileForm, UserProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -76,9 +76,6 @@ def user_login(request):
         password = request.POST.get('password')
         
         user = authenticate(username=username, password=password)
-
-        # print('user')
-        # print(user)
 
         if user: 
             if user.is_active:
@@ -151,7 +148,9 @@ def editprofileInfo(request, user):
 
     if request.method == 'POST':
         print('POST REQUEST ')
-        form = UserProfileForm(request.POST, instance=request.user)
+        # form = UserProfileUpdateForm(request.POST, instance=request.user)
+        form = UserProfileUpdateForm(data=request.POST, files=request.FILES, instance=request.user)
+
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('main:profile', kwargs={'user': userProfile.user}))
@@ -161,8 +160,10 @@ def editprofileInfo(request, user):
 
     else:
         print('GET REQUEST ')
-        form = UserProfileForm(instance=request.user)
-        return render(request, 'main/profile_edit_form.html', {'form': form})
+        form = UserProfileUpdateForm(instance=request.user)
+        # return render(request, 'main/profile_edit_form.html', {'form': form})
+        return render(request, 'main/profile_edit_form.html', {'user_form': form})
+
 
     # user_to_edit = User.objects.get(username=user)
     # userProfile = UserProfile.objects.get(user=user_to_edit)
