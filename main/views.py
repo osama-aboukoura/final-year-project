@@ -19,6 +19,8 @@ from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.core.mail import send_mail, EmailMultiAlternatives
+import string
+import random
 
 def register(request):
     registered = False
@@ -121,6 +123,101 @@ def activate(request):
             return render(request, 'main/activate.html', {'error': 'Sorry, unable to activate your account.'})
     else:
         return render(request, 'main/activate.html', {})
+
+
+def reset_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+        
+        if user:
+            userProfile = UserProfile.objects.get(user=user)
+
+            userProfile.reset_password_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
+            userProfile.save() 
+            print ('userProfile.reset_password_code')
+            print (userProfile.reset_password_code)
+
+            subject = 'Reset your Password - Intelligent Q&A Forums'
+            email_to = [userProfile.user.email] 
+            with open(settings.BASE_DIR + "/main/templates/main/reset_password_email.txt") as temp:
+                reset_password_email = temp.read()
+            email = EmailMultiAlternatives(
+                subject=subject, 
+                body=reset_password_email,
+                from_email=settings.EMAIL_HOST_USER,
+                to=email_to
+            )
+            html = get_template("main/reset_password_email.html").render({'userProfile': userProfile})
+            email.attach_alternative(html, "text/html")
+            email.send()
+
+        return render(request, 'main/reset-password-auth.html', {'reset_password_email_sent': 'If the email address is correct, a temp code will be sent to you.'})
+
+    else:
+        return render(request, 'main/reset-password.html', {})
+
+def reset_password_auth(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        temp_code = request.POST.get('temp_code')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None 
+        
+        if user:
+            userProfile = UserProfile.objects.get(user=user)
+
+            if email == userProfile.user.email and temp_code == userProfile.reset_password_code: 
+                return render(request, 'main/reset-password-confirm.html', {'reset_user_auth': 'Success! You can now reset your password!', 'user': user})
+            else: 
+                return render(request, 'main/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
+
+        else:
+            return render(request, 'main/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
+    else:
+        return render(request, 'main/reset-password-auth.html', {})
+
+
+def reset_password_confirm(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        password_confirm = request.POST.get('password_confirm')
+        
+        username = request.POST.get('user')
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = None 
+
+        print ('user to update passworddd')
+        print (user)
+
+        if user:
+            if password == password_confirm:
+                user.set_password(password)
+                try:
+                    # change the current reset_password_code so that it cannot be used twice 
+                    userProfile = UserProfile.objects.get(user=user)
+                    userProfile.reset_password_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
+                    userProfile.save() 
+                except UserProfile.DoesNotExist:
+                    userProfile = None 
+                user.save()
+                return render(request, 'main/login.html', {'activation_success': 'Success! Your password has been reset!'})
+            else: 
+                return render(request, 'main/reset-password-confirm.html', {'error': 'Sorry, your passwords do not match'})
+        else:
+            return render(request, 'main/reset-password-confirm.html', {'error': 'Sorry, You cannot reset your password this time.'})
+    else:
+        return render(request, 'main/reset-password-confirm.html', {})
+
+    
 
 @login_required
 def user_logout(request):
