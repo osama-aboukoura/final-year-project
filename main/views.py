@@ -32,6 +32,12 @@ def register(request):
         if user_form.is_valid() and  profile_form.is_valid():
             print('form valid and profile form valid')
             user = user_form.save(commit=False)
+
+            all_users = User.objects.all()
+            for _user in all_users:
+                if _user.email == user.email: 
+                    return render(request, 'main/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered, 'error': 'Email address already used.'})
+
             user.set_password(user.password)
             user.is_active = False
             user.save()
