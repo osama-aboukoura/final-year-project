@@ -8,7 +8,7 @@
     background-image: linear-gradient(to right, #D5F5E3, #FADBD8);
     border: 2px dashed gray;
     border-radius: 10px;
-    padding: 0 2%;
+    padding: 0 2% 50px 2%;
 }
 
 .register-box {
@@ -21,7 +21,7 @@
     background-image: linear-gradient(to right, #D5F5E3, #FADBD8);
     border: 2px dashed gray;
     border-radius: 10px;
-    padding: 0 2%;
+    padding: 0 2% 50px 2%;
 }
 
 label {
@@ -70,4 +70,13 @@ input[type=submit]:hover {
     border-radius: 4px;
     padding: 5px 20px;
     float:left
+}
+
+@media (max-width: 1050px) {
+    .login-box{ width: 60%; } 
+    .register-box { width: 60%; } 
+}
+@media (max-width: 750px) {
+    .login-box{ width: 80%; } 
+    .register-box{ width: 80%; } 
 }
