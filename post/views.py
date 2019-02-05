@@ -46,7 +46,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Post 
     fields = ['postTitle', 'postTopic', 'postContent']
-
+    
     def form_valid(self, form):
         post = form.save(commit=False)
         logged_in_user = self.request.user

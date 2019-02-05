@@ -4,7 +4,7 @@ from main.models import UserProfile
 
 class Comment(models.Model):
     commentOnPost = models.ForeignKey(Post, on_delete=models.CASCADE)
-    commentContent = models.TextField()
+    commentContent = models.TextField(verbose_name=('Comment on Post:'))
     commentBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     commentImage = models.ImageField(null=True, blank=True)
     commentDate = models.DateTimeField(auto_now=False, auto_now_add=True)

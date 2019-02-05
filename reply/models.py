@@ -4,7 +4,7 @@ from comment.models import Comment
 
 class Reply(models.Model):
     replytoComment = models.ForeignKey(Comment ,on_delete=models.CASCADE)
-    replyContent = models.TextField()
+    replyContent = models.TextField(verbose_name=('Reply to Comment:'))
     replyBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     replyDate = models.DateTimeField(auto_now=False, auto_now_add=True)
     replyLikes = models.ManyToManyField(UserProfile, blank=True, related_name='reply_likes')

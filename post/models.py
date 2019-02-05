@@ -4,9 +4,9 @@ from main.models import UserProfile
 
 class Post(models.Model):
     postedBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    postTitle = models.CharField(max_length=80)
-    postTopic = models.CharField(max_length=30)
-    postContent = models.TextField()
+    postTitle = models.CharField(max_length=80, verbose_name=('Post Title'))
+    postTopic = models.CharField(max_length=30, verbose_name=('Post Topic'))
+    postContent = models.TextField(verbose_name=('Post'))
     postImage = models.ImageField(null=True, blank=True)
     postLastUpdated = models.DateTimeField(auto_now=True, auto_now_add=False)
     postDate = models.DateTimeField(auto_now=False, auto_now_add=True)

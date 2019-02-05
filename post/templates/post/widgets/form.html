@@ -13,7 +13,7 @@
         {% csrf_token %}
         <table >
             {% for field in form %}
-                <tr>
+                <tr class='form-field'>
                     <td valign='top' class='new-post-label'><label>{{field.label_tag}}</label></td>
                     <td class='new-post-field'>{{field}}</td>
                 </tr>

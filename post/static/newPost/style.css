@@ -1,6 +1,6 @@
 .new-post-form {
     width: 70%;
-    background-color: #85C1E9;
+    background-color: #CFF0DA;
     border: 1px dashed gray;
     border-radius: 8px;
     padding: 50px 30px;
@@ -12,14 +12,24 @@
     width: 30%;
     padding: 2% 3%;
     text-align: right;
-    text-decoration: underline;
+    color: green;
+    background-color: #FADBD8; 
+    border: 2px dotted green; 
+    border-radius: 5px;
     font-weight: bold;
 }
 
+.new-post-field {
+    border: 1px solid black; 
+    border-radius: 5px;
+    padding: 0;
+    /* margin: 0; */
+}
 .new-post-field input, textarea{
     font-size: 15px;
     width: 100%;
-    border-radius: 5px;
+    height: 100%;
+    margin: 0;
 }
 
 .submit-button {
@@ -28,8 +38,8 @@
     float: right;
     border-radius: 4px;
     padding: 3px 10px;
-    /* color: white; */
-    /* background-color:#21618C; */
+    color: white;
+    background-color:#21618C;
     box-shadow: 0 2px rgb(150,150,150);
 }
 
