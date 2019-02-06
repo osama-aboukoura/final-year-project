@@ -107,8 +107,16 @@
     visibility: visible;
 }
 
-
-
-/* @media (max-width: 1230px) {
-    .Education { width: 90%; }
-} */
+.toast-message {
+    background-color: #F1948A;
+    color: black;
+    font: bold;
+    padding: 7px;
+    border: 1px solid red;
+    animation: cssAnimation 7s forwards;
+}
+@keyframes cssAnimation {
+    0%   {opacity: 1;}
+    60%  {opacity: 1;}
+    100% {opacity: 0;}
+}

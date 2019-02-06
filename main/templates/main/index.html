@@ -6,6 +6,9 @@
 {% include "main/navigationbar.html" %}
 
 <div class='wrapper'>
+    {% if user_deleted %}
+        <div class='toast-message'>{{user_deleted}}</div>
+    {% endif %}
     {% if all_posts %}
         <h1>All Posts:</h1>
         <table class="postsTable">

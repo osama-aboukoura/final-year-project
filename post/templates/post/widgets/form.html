@@ -11,7 +11,8 @@
     <hr/>
     <form action='' method='post' class='new-post-form'>
         {% csrf_token %}
-        <table >
+        <center>
+        <table class='form-table'>
             {% for field in form %}
                 <tr class='form-field'>
                     <td valign='top' class='new-post-label'><label>{{field.label_tag}}</label></td>
@@ -19,6 +20,7 @@
                 </tr>
             {% endfor %}
         </table>
+        <center/>
         <button type='submit' class='submit-button'>Submit</button>
     </form>
 </div>

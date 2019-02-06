@@ -237,16 +237,13 @@ def profileInfo(request, user):
     return render(request, 'main/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
 def editprofileInfo(request, user):
-    logged_in_user = request.user
-    print('logged_in_user ', logged_in_user)
-    
+    logged_in_user = request.user    
     user_to_edit = User.objects.get(username=user)
-    print('user_to_edit ', user_to_edit)
     userProfile = UserProfile.objects.get(user=user_to_edit)
 
-    if user_to_edit != logged_in_user:
-        print('not the same user! ')
-        return render(request, 'main/page-not-found.html')
+    # if user_to_edit != logged_in_user:
+    #     print('not the same user! ')
+    #     return render(request, 'main/page-not-found.html')
 
 
     if request.method == 'POST':
@@ -267,6 +264,85 @@ def editprofileInfo(request, user):
         # return render(request, 'main/profile_edit_form.html', {'form': form})
         return render(request, 'main/profile_edit_form.html', {'user_form': form})
 
+
+def deleteProfileAndUser(request):
+    logged_in_user = request.user
+    return render(request, 'main/delete-user.html', {'logged_in_user': logged_in_user})
+
+def deleteProfileAndUserConfirm(request):
+    logged_in_user = request.user 
+    
+    for post in Post.objects.all():
+        
+        postNumberOfCommentsToDecrement = 0
+
+        if post.postedBy.user == logged_in_user:
+            print ('1 post owner about to be deleted')
+            # remove everyone's likes on every post posted by the user we're deleting 
+            for userProfile in post.postLikes.all(): 
+                userProfile.num_of_likes -= 1 
+                userProfile.save()
+                print ('4 updating profile num_of_likes')
+
+            # update the likes & posts count on every comment by all users participating in this post 
+            for comment in post.comment_set.all():
+                comment.commentBy.num_of_posts_comments_replies -= 1
+                comment.commentBy.save() 
+                print ('5 updating profile num_of_posts_comments_replies')
+
+                for userProfile in comment.commentLikes.all(): 
+                    userProfile.num_of_likes -= 1 
+                    userProfile.save()
+                    print ('6 updating profile num_of_likes')
+
+                # update the likes & posts count on every reply by all users replying to this comment 
+                for reply in comment.reply_set.all():
+                    reply.replyBy.num_of_posts_comments_replies -= 1
+                    reply.replyBy.save() 
+                    print ('7 updating profile num_of_posts_comments_replies')
+
+                    for userProfile in reply.replyLikes.all(): 
+                        userProfile.num_of_likes -= 1 
+                        userProfile.save()
+                        print ('8 updating profile num_of_likes')
+
+        else:
+            print ('2 user to delete is not post owner')
+            for comment in post.comment_set.all():
+                if comment.commentBy.user == logged_in_user:
+                    postNumberOfCommentsToDecrement += 1  # remove this comment 
+
+                    # remove all users' likes on any comment posted by the user we're deleting 
+                    for userProfile in comment.commentLikes.all(): 
+                        userProfile.num_of_likes -= 1 
+                        userProfile.save()
+                    
+                    for reply in comment.reply_set.all():
+                        reply.replyBy.num_of_posts_comments_replies -= 1
+                        reply.replyBy.save() 
+                        postNumberOfCommentsToDecrement += 1 # remove all replies on this comment 
+                else:
+                    print ('3 user is not comment owner')
+                    for reply in comment.reply_set.all():
+                        if reply.replyBy.user == logged_in_user:
+                            postNumberOfCommentsToDecrement += 1
+                            for userProfile in reply.replyLikes.all(): 
+                                userProfile.num_of_likes -= 1 
+                                userProfile.save()
+                        
+        post.postNumberOfComments = post.postNumberOfComments - postNumberOfCommentsToDecrement 
+        post.save()
+
+    logout(request)
+    logged_in_user.delete() 
+    
+    return render(request, 'main/index.html', {
+        'logged_in_user': logged_in_user, 
+        'user_deleted': 'Your account has been deleted!',
+        'all_posts': Post.objects.all()
+    })
+    # return reverse_lazy('main:index' , kwargs={)
+    # return HttpResponseRedirect(reverse('main:index'), kwargs={})
 
     # user_to_edit = User.objects.get(username=user)
     # userProfile = UserProfile.objects.get(user=user_to_edit)
