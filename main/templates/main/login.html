@@ -18,8 +18,9 @@
         {% if activation_success %}
             <p class='success'>{{activation_success}}</p>
         {% else %}
-            <p style="float:left">Logging in for the first time? <a href="{% url 'main:activate' %}">Activate Your Account here</a></p>
-            <p style="float:left">Forgot your password? <a href="{% url 'main:reset_password' %}">Reset Your password here</a></p>
+            <p style="float:left">Logging in for the first time? <a href="{% url 'main:activate' %}">Activate my account</a></p>
+            <p style="float:left">Forgot your username? <a href="{% url 'main:resend_username' %}">Email me my username</a></p>
+            <p style="float:left">Forgot your password? <a href="{% url 'main:reset_password' %}">Reset my password</a></p>
         {% endif %}
         <input type='submit' value='Login'/>
     </form>

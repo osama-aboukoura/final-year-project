@@ -131,6 +131,36 @@ def activate(request):
         return render(request, 'main/activate.html', {})
 
 
+def resend_username(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+        
+        if user:
+            subject = 'Your Username - Intelligent Q&A Forums'
+            email_to = [user.email] 
+            with open(settings.BASE_DIR + "/main/templates/main/resend_username_email.txt") as temp:
+                resend_username_email = temp.read()
+            email = EmailMultiAlternatives(
+                subject=subject, 
+                body=resend_username_email,
+                from_email=settings.EMAIL_HOST_USER,
+                to=email_to
+            )
+            html = get_template("main/resend_username_email.html").render({'user': user})
+            email.attach_alternative(html, "text/html")
+            email.send()
+        
+        return render(request, 'main/login.html', {'activation_success': 'If your email address is linked with an account, an email will be sent to you with your username.'})
+
+    else:
+        return render(request, 'main/resend-username.html', {})
+
+
 def reset_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')

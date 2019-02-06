@@ -1,0 +1,16 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+<div class='login-box'>
+    <h1>Resend Username</h1>
+    <p>Enter the email address associated with your account:</p>
+    <hr/><br/><br/>
+    <form action="{% url 'main:resend_username' %}" method='POST'>
+        {% csrf_token %}
+        <label for='email'>Email:</label>
+        <input type='email' name='email' placeholder='Enter your Email'/><br/>
+        <input type='submit' value='Email Me My Username'/>
+    </form>
+</div>
