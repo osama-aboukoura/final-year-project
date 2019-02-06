@@ -27,8 +27,21 @@
     {% include "post/post.html" %}
     
     {% if post.comment_set.all %}
+        {% comment %} show the accepted comment first {% endcomment %}
         {% for comment in post.comment_set.all %}
-            {% if not comment.commentDisabled %}
+            {% if comment.commentAccepted and not comment.commentDisabled %} 
+                {% include "comment/comment.html" %}
+                {% for reply in comment.reply_set.all %}
+                    {% if not reply.replyDisabled %}
+                        {% include "reply/reply.html" %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        
+        {% comment %} show all the other comments {% endcomment %}
+        {% for comment in post.comment_set.all %}
+            {% if not comment.commentAccepted and not comment.commentDisabled %}
                 {% include "comment/comment.html" %}
                 {% for reply in comment.reply_set.all %}
                     {% if not reply.replyDisabled %}

@@ -8,7 +8,9 @@
         <h2>Thank You for Your Registeration!</h2>
         <a class='button blue' href="{% url 'main:user_login' %}">Log in and start</a>
     {% else %}
-        <h2>Register</h2>
+        <h1 style='float:left'>Register</h1>
+        <p><a style='float:right; margin-top:10px' class='button danger' href="{% url 'main:index' %}" > &#x226A; Back To The Posts</a></p>
+        <div style='clear:both'></div>
         <hr/><br/>
         <form method='POST' enctype='multipart/form-data'>
             {% csrf_token %}

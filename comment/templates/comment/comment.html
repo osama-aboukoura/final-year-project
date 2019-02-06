@@ -26,7 +26,7 @@
         <p>{{comment.commentContent}}</p>
 
         {% if user.is_authenticated %}
-            {% if user.username == comment.commentBy.user.username or user.is_superuser %}
+            {% if user.username == comment.commentBy.user.username %}
                 {% url 'comment:edit-comment' post.pk comment.pk as the_edit_url %}
                 {% url 'comment:delete-comment' post.pk comment.pk as the_delete_url %}
                 {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
@@ -36,7 +36,7 @@
         {% endif %}
 
         {% if comment.commentAccepted %}
-            <span class='accepted-comment'>Author has accepted this comment &nbsp;&nbsp;<i style='font-size: 2em' class="fas fa-user-check"></i></span>
+            <span class='accepted-comment'><span class='accepted-comment-text'>Author has accepted this comment &nbsp;&nbsp;</span><i style='font-size: 2em' class="fas fa-user-check"></i></span>
         {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>

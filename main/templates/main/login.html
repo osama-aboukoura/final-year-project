@@ -4,7 +4,9 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
 <div class='login-box'>
-    <h1>Login</h1>
+    <h1 style='float:left'>Login</h1>
+    <p><a style='float:right; margin-top:10px' class='button danger' href="{% url 'main:index' %}" > &#x226A; Back To The Posts</a></p>
+    <div style='clear:both'></div>
     <hr/><br/><br/>
     <form action="{% url 'main:user_login' %}" method='POST'>
         {% csrf_token %}
@@ -18,9 +20,11 @@
         {% if activation_success %}
             <p class='success'>{{activation_success}}</p>
         {% else %}
-            <p style="float:left">Logging in for the first time? <a href="{% url 'main:activate' %}">Activate my account</a></p>
-            <p style="float:left">Forgot your username? <a href="{% url 'main:resend_username' %}">Email me my username</a></p>
-            <p style="float:left">Forgot your password? <a href="{% url 'main:reset_password' %}">Reset my password</a></p>
+            <div style='clear: both'></div>
+            <p>Logging in for the first time? <a href="{% url 'main:activate' %}">Activate my account</a></p>
+            <p>Forgot your username? <a href="{% url 'main:resend_username' %}">Email me my username</a></p>
+            <p>Forgot your password? <a href="{% url 'main:reset_password' %}">Reset my password</a></p>
+            <p>Don't have an account yet? <a href="{% url 'main:register' %}">Sign up here</a></p>
         {% endif %}
         <input type='submit' value='Login'/>
     </form>
