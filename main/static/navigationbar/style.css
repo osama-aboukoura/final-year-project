@@ -56,7 +56,6 @@
     float: left;
     font-family: 'Gloria Hallelujah', cursive;
     padding: 6px 20px;
-    /* background-color: inherit; */
     font-size: 15px;
     color: white;
     text-align: center;
@@ -89,6 +88,8 @@
 }
 
 
+
+/* media queries to change the look of the nav bar in different screen sizes */
 @media (max-width: 1050px) {
     .navigationbar { width: 100%; }
 }
