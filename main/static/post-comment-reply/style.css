@@ -29,6 +29,14 @@
     font-size: 1em;
 }
 
+.discussion-started-by {
+    color:gray; 
+    text-decoration:none 
+}
+.discussion-started-by:hover {
+    text-decoration:underline; 
+}
+
 .discussion-postedBy-and-date {
     color: gray;
     margin-top: -10px;
@@ -62,6 +70,18 @@
 .vote-up-and-down a:hover{
     cursor: pointer;
     color: #85C1E9;
+}
+.green-text {
+    color: green;
+}
+.green-text:hover {
+    color: rgb(0, 200, 0);
+}
+.red-text {
+    color: #CB4335;
+}
+.red-text:hover {
+    color: red;
 }
 
 .name-and-photo-card {

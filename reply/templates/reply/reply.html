@@ -1,15 +1,15 @@
 <table class='reply card '>
 
-    {% include "post/widgets/name-photo-card.html" with user_profile=reply.replyBy %}
+    {% include "main/widgets/name-photo-card.html" with user_profile=reply.replyBy %}
 
     <td class='post-content'>
         <p>{{reply.replyContent}}</p>
 
         {% if user.is_authenticated %}
-            {% if user.username == reply.replyBy.user.username or user.is_superuser %}
+            {% if user.username == reply.replyBy.user.username %}
                 {% url 'reply:edit-reply' post.pk reply.pk as the_edit_url %}
                 {% url 'reply:delete-reply' post.pk reply.pk as the_delete_url %}
-                {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
+                {% include "main/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
             {% endif %}
         {% endif %}
 

@@ -13,7 +13,7 @@
         <table class="postsTable">
             <tr>
                 <th width='15%'>Username</th>
-                <th width='25%'>Name</th>
+                <th width='25%'>Name &#38; Email</th>
                 <th width='10%'>Staff</th>
                 <th width='20%'>Update Staff Status</th>
                 <th width='10%'>Active</th>
@@ -22,8 +22,8 @@
             {% for user in users %}
                 {% if not user.is_superuser %}
                     <tr>
-                        <td>{{user.username}}</td>
-                        <td>{{user.first_name}} {{user.last_name}}</td>
+                        <td><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
+                        <td><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
                         <td>
                             {% if user.is_staff %}
                                 <p style='color:green'><i class="fas fa-check-circle"></i></p>

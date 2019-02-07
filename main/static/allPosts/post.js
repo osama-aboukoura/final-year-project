@@ -11,8 +11,3 @@ function report(type, id) {
         }
     } 
 }
-
-// function showLikes(listOfLikes) {
-//     array = listOfLikes.replace(/, /g, '\n'); // replacing commas with line breaks 
-//     alert("Users who liked this: \n\n" + array)
-// }

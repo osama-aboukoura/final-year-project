@@ -20,7 +20,7 @@
         {% if post.postClosed %}
             <h2 style='color:#CB4335;'>[CLOSED. Author has accepted one of the answers]</h2>
         {% endif %}
-        <p class='discussion-postedBy-and-date'>Discussion started by: {{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}} on {{post.postDate}}{% if post.postLastUpdated > post.postDate %} - latest update on {{post.postLastUpdated}}{% endif %}</p>
+        <p class='discussion-postedBy-and-date'>Discussion started by: <a class='discussion-started-by' href="{% url 'main:profile' post.postedBy.user %}" >{{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}}</a> on {{post.postDate}}{% if post.postLastUpdated > post.postDate %} - latest update on {{post.postLastUpdated}}{% endif %}</p>
     </div>
     <hr />
 

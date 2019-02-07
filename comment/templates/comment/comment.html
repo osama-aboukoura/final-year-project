@@ -3,7 +3,7 @@
     <td class='vote-up-and-down'>
         {% if user.is_authenticated %}
             {% if logged_in_user_profile in comment.commentVotersUp.all  %}
-                <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}" style='color:green'><i class="fas fa-angle-up"></i></a>
+                <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up green-text"></i></a>
             {% else %}
                 <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up"></i></a>
             {% endif %}
@@ -11,7 +11,7 @@
             <p>{{comment.commentNumberOfVotes}}</p>
             
             {% if logged_in_user_profile in comment.commentVotersDown.all  %}
-                <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}" style='color:#CB4335'><i class="fas fa-angle-down"></i></a>
+                <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down red-text"></i></a>
             {% else %}
                 <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down"></i></a>
             {% endif %}
@@ -20,7 +20,7 @@
         {% endif %}
     </td>
 
-    {% include "post/widgets/name-photo-card.html" with user_profile=comment.commentBy %}
+    {% include "main/widgets/name-photo-card.html" with user_profile=comment.commentBy %}
 
     <td class='post-content'>
         <p>{{comment.commentContent}}</p>
@@ -29,7 +29,7 @@
             {% if user.username == comment.commentBy.user.username %}
                 {% url 'comment:edit-comment' post.pk comment.pk as the_edit_url %}
                 {% url 'comment:delete-comment' post.pk comment.pk as the_delete_url %}
-                {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
+                {% include "main/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
             {% elif user.username == post.postedBy.user.username and post.postClosed == False %}
                 <a class='button accept-answer-button' href="{% url 'comment:accept-answer' post.pk comment.pk %}">Accept Answer</a>
             {% endif %}

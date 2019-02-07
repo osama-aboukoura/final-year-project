@@ -36,7 +36,7 @@ def register(request):
             all_users = User.objects.all()
             for _user in all_users:
                 if _user.email == user.email: 
-                    return render(request, 'main/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered, 'error': 'Email address already used.'})
+                    return render(request, 'main/authentication/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered, 'error': 'Email address already used.'})
 
             user.set_password(user.password)
             user.is_active = False
@@ -54,7 +54,7 @@ def register(request):
 
             subject = 'Welcome! - Intelligent Q&A Forums'
             email_to = [user.email] 
-            with open(settings.BASE_DIR + "/main/templates/main/sign_up_email.txt") as temp:
+            with open(settings.BASE_DIR + "/main/templates/main/authentication/sign_up_email.txt") as temp:
                 sign_up_email = temp.read()
             email = EmailMultiAlternatives(
                 subject=subject, 
@@ -62,7 +62,7 @@ def register(request):
                 from_email=settings.EMAIL_HOST_USER,
                 to=email_to
             )
-            html = get_template("main/sign_up_email.html").render({'user': user, 'activation_code': profile.activation_code})
+            html = get_template("main/authentication/sign_up_email.html").render({'user': user, 'activation_code': profile.activation_code})
             email.attach_alternative(html, "text/html")
             email.send()
 
@@ -74,7 +74,7 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
     
-    return render(request, 'main/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+    return render(request, 'main/authentication/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
 
@@ -98,9 +98,9 @@ def user_login(request):
                 return HttpResponse("Sorry, Your Account is Not Active") 
         else:
             print('log in failed')
-            return render(request, 'main/login.html', {'error': 'Sorry, unable to log you in.'})
+            return render(request, 'main/authentication/login.html', {'error': 'Sorry, unable to log you in.'})
     else:
-        return render(request, 'main/login.html', {})
+        return render(request, 'main/authentication/login.html', {})
 
 
 def activate(request):
@@ -121,14 +121,14 @@ def activate(request):
                 # changing the activation_code so the user won't be able to activate themselves when Admin disables them.
                 userProfile.activation_code = randint(1000, 9999)
                 userProfile.save()
-                return render(request, 'main/login.html', {'activation_success': 'Success! Your account is now activated!'})
+                return render(request, 'main/authentication/login.html', {'activation_success': 'Success! Your account is now activated!'})
             else: 
-                return render(request, 'main/activate.html', {'error': 'Sorry, unable to activate your account.'})
+                return render(request, 'main/authentication/activate.html', {'error': 'Sorry, unable to activate your account.'})
 
         else:
-            return render(request, 'main/activate.html', {'error': 'Sorry, unable to activate your account.'})
+            return render(request, 'main/authentication/activate.html', {'error': 'Sorry, unable to activate your account.'})
     else:
-        return render(request, 'main/activate.html', {})
+        return render(request, 'main/authentication/activate.html', {})
 
 
 def resend_username(request):
@@ -143,7 +143,7 @@ def resend_username(request):
         if user:
             subject = 'Your Username - Intelligent Q&A Forums'
             email_to = [user.email] 
-            with open(settings.BASE_DIR + "/main/templates/main/resend_username_email.txt") as temp:
+            with open(settings.BASE_DIR + "/main/templates/main/authentication/forgot-username/resend_username_email.txt") as temp:
                 resend_username_email = temp.read()
             email = EmailMultiAlternatives(
                 subject=subject, 
@@ -151,14 +151,14 @@ def resend_username(request):
                 from_email=settings.EMAIL_HOST_USER,
                 to=email_to
             )
-            html = get_template("main/resend_username_email.html").render({'user': user})
+            html = get_template("main/authentication/forgot-username/resend_username_email.html").render({'user': user})
             email.attach_alternative(html, "text/html")
             email.send()
         
-        return render(request, 'main/login.html', {'activation_success': 'If your email address is linked with an account, an email will be sent to you with your username.'})
+        return render(request, 'main/authentication/login.html', {'activation_success': 'If your email address is linked with an account, an email will be sent to you with your username.'})
 
     else:
-        return render(request, 'main/resend-username.html', {})
+        return render(request, 'main/authentication/forgot-username/resend-username.html', {})
 
 
 def reset_password(request):
@@ -180,7 +180,7 @@ def reset_password(request):
 
             subject = 'Reset your Password - Intelligent Q&A Forums'
             email_to = [userProfile.user.email] 
-            with open(settings.BASE_DIR + "/main/templates/main/reset_password_email.txt") as temp:
+            with open(settings.BASE_DIR + "/main/templates/main/authentication/forgot-password/reset_password_email.txt") as temp:
                 reset_password_email = temp.read()
             email = EmailMultiAlternatives(
                 subject=subject, 
@@ -188,14 +188,14 @@ def reset_password(request):
                 from_email=settings.EMAIL_HOST_USER,
                 to=email_to
             )
-            html = get_template("main/reset_password_email.html").render({'userProfile': userProfile})
+            html = get_template("main/authentication/forgot-password/reset_password_email.html").render({'userProfile': userProfile})
             email.attach_alternative(html, "text/html")
             email.send()
 
-        return render(request, 'main/reset-password-auth.html', {'reset_password_email_sent': 'If the email address is correct, a temp code will be sent to you.'})
+        return render(request, 'main/authentication/forgot-password/reset-password-auth.html', {'reset_password_email_sent': 'If the email address is correct, a temp code will be sent to you.'})
 
     else:
-        return render(request, 'main/reset-password.html', {})
+        return render(request, 'main/authentication/forgot-password/reset-password.html', {})
 
 def reset_password_auth(request):
     if request.method == 'POST':
@@ -210,14 +210,14 @@ def reset_password_auth(request):
             userProfile = UserProfile.objects.get(user=user)
 
             if email == userProfile.user.email and temp_code == userProfile.reset_password_code: 
-                return render(request, 'main/reset-password-confirm.html', {'reset_user_auth': 'Success! You can now reset your password!', 'user': user})
+                return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {'reset_user_auth': 'Success! You can now reset your password!', 'user': user})
             else: 
-                return render(request, 'main/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
+                return render(request, 'main/authentication/forgot-password/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
 
         else:
-            return render(request, 'main/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
+            return render(request, 'main/authentication/forgot-password/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
     else:
-        return render(request, 'main/reset-password-auth.html', {})
+        return render(request, 'main/authentication/forgot-password/reset-password-auth.html', {})
 
 
 def reset_password_confirm(request):
@@ -245,13 +245,13 @@ def reset_password_confirm(request):
                 except UserProfile.DoesNotExist:
                     userProfile = None 
                 user.save()
-                return render(request, 'main/login.html', {'activation_success': 'Success! Your password has been reset!'})
+                return render(request, 'main/authentication/login.html', {'activation_success': 'Success! Your password has been reset!'})
             else: 
-                return render(request, 'main/reset-password-confirm.html', {'error': 'Sorry, your passwords do not match'})
+                return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {'error': 'Sorry, your passwords do not match'})
         else:
-            return render(request, 'main/reset-password-confirm.html', {'error': 'Sorry, You cannot reset your password this time.'})
+            return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {'error': 'Sorry, You cannot reset your password this time.'})
     else:
-        return render(request, 'main/reset-password-confirm.html', {})
+        return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {})
 
     
 
@@ -264,7 +264,7 @@ def profileInfo(request, user):
     logged_in_user = request.user
     visited_user = User.objects.get(username=user)
     userProfile = UserProfile.objects.get(user=visited_user)
-    return render(request, 'main/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
+    return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
 def editprofileInfo(request, user):
     logged_in_user = request.user    
@@ -292,12 +292,12 @@ def editprofileInfo(request, user):
         print('GET REQUEST ')
         form = UserProfileUpdateForm(instance=request.user)
         # return render(request, 'main/profile_edit_form.html', {'form': form})
-        return render(request, 'main/profile_edit_form.html', {'user_form': form})
+        return render(request, 'main/user-profile/profile_edit_form.html', {'user_form': form})
 
 
 def deleteProfileAndUser(request):
     logged_in_user = request.user
-    return render(request, 'main/delete-user.html', {'logged_in_user': logged_in_user})
+    return render(request, 'main/user-profile/delete-user.html', {'logged_in_user': logged_in_user})
 
 def deleteProfileAndUserConfirm(request):
     logged_in_user = request.user 

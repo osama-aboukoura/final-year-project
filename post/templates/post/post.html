@@ -20,16 +20,16 @@
         {% endif %}
     </td>
     
-    {% include "post/widgets/name-photo-card.html" with user_profile=post.postedBy %}
+    {% include "main/widgets/name-photo-card.html" with user_profile=post.postedBy %}
 
     <td class='post-content'>
         <p>{{post.postContent}}</p>
 
         {% if user.is_authenticated %}
-            {% if user.username == post.postedBy.user.username or user.is_superuser %}
+            {% if user.username == post.postedBy.user.username %}
                 {% url 'post:edit-post' post.pk as the_edit_url %}
                 {% url 'post:delete-post' post.pk as the_delete_url %}
-                {% include "post/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
+                {% include "main/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
             {% endif %}
         {% endif %}
         
