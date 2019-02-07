@@ -12,8 +12,8 @@
     <hr/><br/>
     <form method='POST' enctype='multipart/form-data' class='new-post-form'>
         {% csrf_token %}
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
+        {{ user_update_form.as_p }}
+        {{ profile_update_form.as_p }}
         <input type='submit' value='Update' />
     </form>
 </div> 

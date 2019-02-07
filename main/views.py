@@ -9,7 +9,7 @@ from comment.models import Comment
 from reply.models import Reply
 from django.urls import reverse
 from django.urls import reverse_lazy
-from main.forms import UserForm, UserProfileForm, UserProfileUpdateForm
+from main.forms import UserForm, UserProfileForm, UserUpdateForm, UserProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -47,6 +47,7 @@ def register(request):
             profile.activation_code = randint(1000, 9999)
 
             if 'profile_picture' in request.FILES:
+                print ('profile_picture is in request.FILES')
                 profile.profile_picture = request.FILES['profile_picture']
                 
             registered = True
@@ -271,28 +272,23 @@ def editprofileInfo(request, user):
     user_to_edit = User.objects.get(username=user)
     userProfile = UserProfile.objects.get(user=user_to_edit)
 
-    # if user_to_edit != logged_in_user:
-    #     print('not the same user! ')
-    #     return render(request, 'main/page-not-found.html')
-
-
     if request.method == 'POST':
-        print('POST REQUEST ')
-        # form = UserProfileUpdateForm(request.POST, instance=request.user)
-        form = UserProfileUpdateForm(data=request.POST, files=request.FILES, instance=request.user)
+        user_to_edit.first_name = request.POST['first_name']
+        user_to_edit.last_name = request.POST['last_name']
+        user_to_edit.save()
 
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('main:profile', kwargs={'user': userProfile.user}))
-            # return render(request, 'main/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
-        else:
-            return render(request, 'main/page-not-found.html')
+        if 'profile_picture' in request.FILES:
+            userProfile.profile_picture = request.FILES['profile_picture']
+            userProfile.save() 
+        
+        return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
     else:
         print('GET REQUEST ')
-        form = UserProfileUpdateForm(instance=request.user)
+        user_update_form = UserUpdateForm(instance=request.user)
+        profile_update_form = UserProfileUpdateForm(instance=request.user)
         # return render(request, 'main/profile_edit_form.html', {'form': form})
-        return render(request, 'main/user-profile/profile_edit_form.html', {'user_form': form})
+        return render(request, 'main/user-profile/profile_edit_form.html', {'user_update_form': user_update_form, 'profile_update_form':profile_update_form})
 
 
 def deleteProfileAndUser(request):
