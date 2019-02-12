@@ -44,11 +44,11 @@ def register(request):
 
             profile = profile_form.save(commit=False)
             profile.user = user # sets the one to one relationship 
-            profile.activation_code = randint(1000, 9999)
+            profile.activationCode = randint(1000, 9999)
 
-            if 'profile_picture' in request.FILES:
-                print ('profile_picture is in request.FILES')
-                profile.profile_picture = request.FILES['profile_picture']
+            if 'profilePicture' in request.FILES:
+                print ('profilePicture is in request.FILES')
+                profile.profilePicture = request.FILES['profilePicture']
                 
             registered = True
             profile.save()
@@ -63,7 +63,7 @@ def register(request):
                 from_email=settings.EMAIL_HOST_USER,
                 to=email_to
             )
-            html = get_template("main/authentication/sign_up_email.html").render({'user': user, 'activation_code': profile.activation_code})
+            html = get_template("main/authentication/sign_up_email.html").render({'user': user, 'activationCode': profile.activationCode})
             email.attach_alternative(html, "text/html")
             email.send()
 
@@ -116,7 +116,7 @@ def user_login(request):
 def activate(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        activation_code = request.POST.get('activation_code')
+        activationCode = request.POST.get('activationCode')
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
@@ -125,11 +125,11 @@ def activate(request):
         if user:
             userProfile = UserProfile.objects.get(user=user)
 
-            if activation_code == userProfile.activation_code: 
+            if activationCode == userProfile.activationCode: 
                 user.is_active = True 
                 user.save()
-                # changing the activation_code so the user won't be able to activate themselves when Admin disables them.
-                userProfile.activation_code = randint(1000, 9999)
+                # changing the activationCode so the user won't be able to activate themselves when Admin disables them.
+                userProfile.activationCode = randint(1000, 9999)
                 userProfile.save()
                 return render(request, 'main/authentication/login.html', {'activation_success': 'Success! Your account is now activated!'})
             else: 
@@ -183,10 +183,10 @@ def reset_password(request):
         if user:
             userProfile = UserProfile.objects.get(user=user)
 
-            userProfile.reset_password_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
+            userProfile.resetPasswordCode = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
             userProfile.save() 
-            print ('userProfile.reset_password_code')
-            print (userProfile.reset_password_code)
+            print ('userProfile.resetPasswordCode')
+            print (userProfile.resetPasswordCode)
 
             subject = 'Reset your Password - Intelligent Q&A Forums'
             email_to = [userProfile.user.email] 
@@ -219,7 +219,7 @@ def reset_password_auth(request):
         if user:
             userProfile = UserProfile.objects.get(user=user)
 
-            if email == userProfile.user.email and temp_code == userProfile.reset_password_code: 
+            if email == userProfile.user.email and temp_code == userProfile.resetPasswordCode: 
                 return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {'reset_user_auth': 'Success! You can now reset your password!', 'user': user})
             else: 
                 return render(request, 'main/authentication/forgot-password/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
@@ -248,9 +248,9 @@ def reset_password_confirm(request):
             if password == password_confirm:
                 user.set_password(password)
                 try:
-                    # change the current reset_password_code so that it cannot be used twice 
+                    # change the current resetPasswordCode so that it cannot be used twice 
                     userProfile = UserProfile.objects.get(user=user)
-                    userProfile.reset_password_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
+                    userProfile.resetPasswordCode = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
                     userProfile.save() 
                 except UserProfile.DoesNotExist:
                     userProfile = None 
@@ -289,8 +289,8 @@ def edit_profile_info(request, user):
         user_to_edit.last_name = request.POST['last_name']
         user_to_edit.save()
 
-        if 'profile_picture' in request.FILES:
-            userProfile.profile_picture = request.FILES['profile_picture']
+        if 'profilePicture' in request.FILES:
+            userProfile.profilePicture = request.FILES['profilePicture']
             userProfile.save() 
         
         return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
@@ -318,31 +318,31 @@ def delete_profile_and_user_confirm(request):
             print ('1 post owner about to be deleted')
             # remove everyone's likes on every post posted by the user we're deleting 
             for userProfile in post.postLikes.all(): 
-                userProfile.num_of_likes -= 1 
+                userProfile.numberOfLikes -= 1 
                 userProfile.save()
-                print ('4 updating profile num_of_likes')
+                print ('4 updating profile numberOfLikes')
 
             # update the likes & posts count on every comment by all users participating in this post 
             for comment in post.comment_set.all():
-                comment.commentBy.num_of_posts_comments_replies -= 1
+                comment.commentBy.numOfPostsCommentsReplies -= 1
                 comment.commentBy.save() 
-                print ('5 updating profile num_of_posts_comments_replies')
+                print ('5 updating profile numOfPostsCommentsReplies')
 
                 for userProfile in comment.commentLikes.all(): 
-                    userProfile.num_of_likes -= 1 
+                    userProfile.numberOfLikes -= 1 
                     userProfile.save()
-                    print ('6 updating profile num_of_likes')
+                    print ('6 updating profile numberOfLikes')
 
                 # update the likes & posts count on every reply by all users replying to this comment 
                 for reply in comment.reply_set.all():
-                    reply.replyBy.num_of_posts_comments_replies -= 1
+                    reply.replyBy.numOfPostsCommentsReplies -= 1
                     reply.replyBy.save() 
-                    print ('7 updating profile num_of_posts_comments_replies')
+                    print ('7 updating profile numOfPostsCommentsReplies')
 
                     for userProfile in reply.replyLikes.all(): 
-                        userProfile.num_of_likes -= 1 
+                        userProfile.numberOfLikes -= 1 
                         userProfile.save()
-                        print ('8 updating profile num_of_likes')
+                        print ('8 updating profile numberOfLikes')
 
         else:
             print ('2 user to delete is not post owner')
@@ -352,11 +352,11 @@ def delete_profile_and_user_confirm(request):
 
                     # remove all users' likes on any comment posted by the user we're deleting 
                     for userProfile in comment.commentLikes.all(): 
-                        userProfile.num_of_likes -= 1 
+                        userProfile.numberOfLikes -= 1 
                         userProfile.save()
                     
                     for reply in comment.reply_set.all():
-                        reply.replyBy.num_of_posts_comments_replies -= 1
+                        reply.replyBy.numOfPostsCommentsReplies -= 1
                         reply.replyBy.save() 
                         postNumberOfCommentsToDecrement += 1 # remove all replies on this comment 
                 else:
@@ -365,7 +365,7 @@ def delete_profile_and_user_confirm(request):
                         if reply.replyBy.user == logged_in_user:
                             postNumberOfCommentsToDecrement += 1
                             for userProfile in reply.replyLikes.all(): 
-                                userProfile.num_of_likes -= 1 
+                                userProfile.numberOfLikes -= 1 
                                 userProfile.save()
                         
         post.postNumberOfComments = post.postNumberOfComments - postNumberOfCommentsToDecrement 

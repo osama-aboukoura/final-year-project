@@ -2,8 +2,8 @@
     <table class='name-and-photo-text'>
         <tr>
             <td align='center'>
-                {% if user_profile.profile_picture %}
-                    <img src="{{user_profile.profile_picture.url}}" width='70'/>
+                {% if user_profile.profilePicture %}
+                    <img src="{{user_profile.profilePicture.url}}" width='70'/>
                 {% else %}
                     <i class="fas fa-user-circle my-avatar"></i>
                 {% endif %}
@@ -19,11 +19,11 @@
             {% endif %}
         </a>
     </h3>
-    <p style='font-size:14px;'>Joined on {{user_profile.date_joined|date:"M d, Y"}}</p>
+    <p style='font-size:14px;'>Joined on {{user_profile.dateJoined|date:"M d, Y"}}</p>
     <table style='width:100%; color:gray'>
         <tr>
-            <td align='center'>{{user_profile.num_of_posts_comments_replies}} <i class="far fa-edit"></i></td>
-            <td align='center'>{{user_profile.num_of_likes}} <i class="far fa-thumbs-up"></i></td>
+            <td align='center'>{{user_profile.numOfPostsCommentsReplies}} <i class="far fa-edit"></i></td>
+            <td align='center'>{{user_profile.numberOfLikes}} <i class="far fa-thumbs-up"></i></td>
         </tr>
         <tr>
             <td  align='center'>Posts</td>

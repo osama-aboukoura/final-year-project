@@ -12,8 +12,8 @@
         {% csrf_token %}
         <label for='username'>Username:</label>
         <input type='text' name='username' placeholder='Enter your username'/><br/>
-        <label for='activation_code'>Activation Code:</label>
-        <input type='text' name='activation_code' placeholder='Enter your activation code'/><br/><br/>
+        <label for='activationCode'>Activation Code:</label>
+        <input type='text' name='activationCode' placeholder='Enter your activation code'/><br/><br/>
         {% if error %}
             <p class='error'>{{error}}</p>
         {% endif %}

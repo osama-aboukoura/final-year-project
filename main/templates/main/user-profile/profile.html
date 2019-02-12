@@ -15,21 +15,21 @@
         <hr/>
         <br/>
         <center>
-            {% if visited_user_profile.profile_picture %}
-                <img src="{{ visited_user_profile.profile_picture.url }}" width='180'/>
+            {% if visited_user_profile.profilePicture %}
+                <img src="{{ visited_user_profile.profilePicture.url }}" width='180'/>
             {% else %}
                 <i style='font-size:100px;' class="fas fa-user-circle my-avatar"></i>
             {% endif %}
             <h2>{{visited_user_profile.user.first_name}} {{visited_user_profile.user.last_name}}</h2>
             <h4>Username: {{visited_user_profile.user.username}}</h4>
-            <p>Joined on: {{visited_user_profile.date_joined|date:"M d, Y"}}</p>
+            <p>Joined on: {{visited_user_profile.dateJoined|date:"M d, Y"}}</p>
             <table>
                 <tr>
                     <th width='140px'>
-                        <h1>{{visited_user_profile.num_of_posts_comments_replies}}</h1>
+                        <h1>{{visited_user_profile.numOfPostsCommentsReplies}}</h1>
                     </th>
                     <th width='140px'>
-                        <h1>{{visited_user_profile.num_of_likes}}</h1>
+                        <h1>{{visited_user_profile.numberOfLikes}}</h1>
                     </th>
                 </tr>
                 <tr>

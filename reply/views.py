@@ -33,7 +33,7 @@ class Reply_Create(LoginRequiredMixin, CreateView):
         reply.replytoComment = comment
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
-        user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
+        user_profile.numOfPostsCommentsReplies = user_profile.numOfPostsCommentsReplies + 1
         reply.replyBy = user_profile
         user_profile.save()
         return super(Reply_Create, self).form_valid(form)
@@ -99,10 +99,10 @@ class Reply_Like(RedirectView):
         if logged_in_user.is_authenticated:
             if logged_in_user_profile in reply.replyLikes.all():
                 reply.replyLikes.remove(logged_in_user_profile)
-                logged_in_user_profile.num_of_likes = logged_in_user_profile.num_of_likes - 1
+                logged_in_user_profile.numberOfLikes = logged_in_user_profile.numberOfLikes - 1
             else:
                 reply.replyLikes.add(logged_in_user_profile)
-                logged_in_user_profile.num_of_likes = logged_in_user_profile.num_of_likes + 1
+                logged_in_user_profile.numberOfLikes = logged_in_user_profile.numberOfLikes + 1
         logged_in_user_profile.save()
         return redirect_url
 
@@ -124,16 +124,16 @@ class Reply_Delete(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         reply = self.get_object()
         author_profile = reply.replyBy
-        author_profile.num_of_posts_comments_replies = author_profile.num_of_posts_comments_replies - 1
+        author_profile.numOfPostsCommentsReplies = author_profile.numOfPostsCommentsReplies - 1
         
         # update the likes count for the reply author 
         if author_profile in reply.replyLikes.all():
-            author_profile.num_of_likes = author_profile.num_of_likes - 1
+            author_profile.numberOfLikes = author_profile.numberOfLikes - 1
 
         # update the likes count for each user that liked this reply. if the author has liked their own reply, it will be over written when we save author_profile
         for user_profile in reply.replyLikes.all():
             profile = UserProfile.objects.get(pk=user_profile.pk)
-            profile.num_of_likes = profile.num_of_likes - 1
+            profile.numberOfLikes = profile.numberOfLikes - 1
             profile.save()
 
         author_profile.save()
