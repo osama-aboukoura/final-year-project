@@ -10,7 +10,15 @@
             </td>
         </tr>
     </table>
-    <h3><a href="{% url 'main:profile' user_profile.user %}" >{{user_profile.user.first_name}} {{user_profile.user.last_name}}</a></h3>
+    <h3>
+        <a href="{% url 'main:profile' user_profile.user %}" >
+            {% if user_profile.user.first_name %}
+                {{user_profile.user.first_name}} {{user_profile.user.last_name}}
+            {% else %}
+                {{user_profile.user.username}}
+            {% endif %}
+        </a>
+    </h3>
     <p style='font-size:14px;'>Joined on {{user_profile.date_joined|date:"M d, Y"}}</p>
     <table style='width:100%; color:gray'>
         <tr>

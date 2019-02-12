@@ -270,7 +270,7 @@ def profileInfo(request, user):
         userProfile = None
 
     if userProfile == None and logged_in_user.is_superuser:
-        userProfile = UserProfile.objects.create()
+        userProfile = UserProfile.objects.create(user=logged_in_user)
         userProfile.save()
 
     return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})

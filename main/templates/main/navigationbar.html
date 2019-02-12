@@ -22,7 +22,14 @@
 
     {% if user.is_authenticated %}
         <div style="float:right" class="dropdown">
-            <button class="dropbtn wide-screen">Hey, <strong>{{user.first_name}}</strong>!&nbsp; <i class="fa fa-caret-down"></i></button>
+            <button class="dropbtn wide-screen">Hey,&nbsp;
+            <strong>
+                {% if user.first_name %}
+                    {{user.first_name}}
+                {% else %}
+                    User
+                {% endif %}
+            </strong>!&nbsp; <i class="fa fa-caret-down"></i></button>
             <button class="dropbtn narrow-screen"><i class="fas fa-ellipsis-h icon-only"></i></button>
             <div class="dropdown-content">
                 <a href="{% url 'main:profile' user %}" class='wide-screen'><i class="fas fa-user"></i>&nbsp; My Profile</a>
