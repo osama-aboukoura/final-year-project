@@ -78,7 +78,6 @@ def register(request):
     return render(request, 'main/authentication/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
-
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -379,23 +378,7 @@ def delete_profile_and_user_confirm(request):
         'user_deleted': 'Your account has been deleted!',
         'all_posts': Post.objects.all()
     })
-    # return reverse_lazy('main:index' , kwargs={)
-    # return HttpResponseRedirect(reverse('main:index'), kwargs={})
 
-    # user_to_edit = User.objects.get(username=user)
-    # userProfile = UserProfile.objects.get(user=user_to_edit)
-    # return render(request, 'main/profile.html', {'visited_user_profile': userProfile})
-
-# class ProfileUpdate(LoginRequiredMixin, UpdateView):
-#     login_url = '/login/'
-#     model = UserProfile 
-#     template_name = 'main/profile_edit_form.html'
-#     fields = ['user', 'first_name']  
-
-#     def get_success_url(self):
-#         profile = get_object_or_404(UserProfile, id= self.kwargs.get('pk'))
-#         user = profile.user
-#         return reverse_lazy('main:profile' , kwargs={'user': user})
 
 class Topics_View(generic.ListView):
     template_name = 'main/topics.html'
