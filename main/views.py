@@ -93,6 +93,15 @@ def user_login(request):
                 # if redirect_to:
                 #     print ('redirect_to')
                 #     print (redirect_to)
+
+                # creating a userProfile object for superuser when they log in for the first time
+                if user.is_superuser:
+                    try:
+                        userProfile = UserProfile.objects.get(user=user)
+                    except UserProfile.DoesNotExist:
+                        userProfile = UserProfile.objects.create(user=user)
+                        userProfile.save()
+
                 return HttpResponseRedirect(reverse('main:index'))
             else:
                 # DOESN'T WORK FOR SOME REASON!!!!!
@@ -268,11 +277,6 @@ def profileInfo(request, user):
         userProfile = UserProfile.objects.get(user=visited_user)
     except UserProfile.DoesNotExist:
         userProfile = None
-
-    if userProfile == None and logged_in_user.is_superuser:
-        userProfile = UserProfile.objects.create(user=logged_in_user)
-        userProfile.save()
-
     return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
 def editprofileInfo(request, user):
