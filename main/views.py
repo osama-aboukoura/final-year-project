@@ -264,7 +264,15 @@ def user_logout(request):
 def profileInfo(request, user):
     logged_in_user = request.user
     visited_user = User.objects.get(username=user)
-    userProfile = UserProfile.objects.get(user=visited_user)
+    try:
+        userProfile = UserProfile.objects.get(user=visited_user)
+    except UserProfile.DoesNotExist:
+        userProfile = None
+
+    if userProfile == None and logged_in_user.is_superuser:
+        userProfile = UserProfile.objects.create()
+        userProfile.save()
+
     return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
 def editprofileInfo(request, user):
