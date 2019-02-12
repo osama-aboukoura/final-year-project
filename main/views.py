@@ -270,7 +270,7 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('main:index'))
 
-def profileInfo(request, user):
+def profile_info(request, user):
     logged_in_user = request.user
     visited_user = User.objects.get(username=user)
     try:
@@ -279,7 +279,7 @@ def profileInfo(request, user):
         userProfile = None
     return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
-def editprofileInfo(request, user):
+def edit_profile_info(request, user):
     logged_in_user = request.user    
     user_to_edit = User.objects.get(username=user)
     userProfile = UserProfile.objects.get(user=user_to_edit)
@@ -303,11 +303,11 @@ def editprofileInfo(request, user):
         return render(request, 'main/user-profile/profile_edit_form.html', {'user_update_form': user_update_form, 'profile_update_form':profile_update_form})
 
 
-def deleteProfileAndUser(request):
+def delete_profile_and_user(request):
     logged_in_user = request.user
     return render(request, 'main/user-profile/delete-user.html', {'logged_in_user': logged_in_user})
 
-def deleteProfileAndUserConfirm(request):
+def delete_profile_and_user_confirm(request):
     logged_in_user = request.user 
     
     for post in Post.objects.all():
@@ -397,7 +397,7 @@ def deleteProfileAndUserConfirm(request):
 #         user = profile.user
 #         return reverse_lazy('main:profile' , kwargs={'user': user})
 
-class TopicsView(generic.ListView):
+class Topics_View(generic.ListView):
     template_name = 'main/topics.html'
     context_object_name = 'all_topics'
 
@@ -412,7 +412,7 @@ class TopicsView(generic.ListView):
                 allTopics[topic] = 1 
         return allTopics
 
-class PostsWithSameTopicView(generic.ListView):
+class Posts_With_Same_Topic_View(generic.ListView):
     template_name = 'main/topic.html'
     context_object_name = 'all_posts'
     
@@ -425,7 +425,7 @@ class PostsWithSameTopicView(generic.ListView):
                 allPostsOfSameTopic.append(post)
         return { 'topic': topic, 'posts': allPostsOfSameTopic }
 
-class IndexView(generic.ListView):
+class Index_View(generic.ListView):
     template_name = 'main/index.html'
     context_object_name = 'all_posts'
     paginate_by = 10
@@ -435,7 +435,7 @@ class IndexView(generic.ListView):
 
 
 
-def flaggedPostsView(request):
+def flagged_posts_view(request):
     logged_in_user = request.user
     if not logged_in_user.is_staff:
         return render(request, 'main/page-not-found.html')
@@ -466,7 +466,7 @@ def staff(request):
     users = User.objects.all() 
     return render(request, 'main/staff.html', {'users': users})
 
-def updateStaffStatus(request, user):
+def update_staff_status(request, user):
     logged_in_user = request.user
     if not logged_in_user.is_superuser:
         return render(request, 'main/page-not-found.html')
@@ -475,7 +475,7 @@ def updateStaffStatus(request, user):
     user.save()
     return HttpResponseRedirect('/staff/')
 
-def updateActiveStatus(request, user):
+def update_active_status(request, user):
     logged_in_user = request.user
     if not logged_in_user.is_superuser:
         return render(request, 'main/page-not-found.html')

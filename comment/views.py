@@ -18,7 +18,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template
 
 
-class CommentCreate(LoginRequiredMixin, CreateView):
+class Comment_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Comment 
     fields = ['commentContent']
@@ -38,7 +38,7 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
         comment.commentBy = user_profile
         user_profile.save()
-        return super(CommentCreate, self).form_valid(form)
+        return super(Comment_Create, self).form_valid(form)
     
     def form_invalid(self, form):
         print ('form invalidddd')
@@ -78,7 +78,7 @@ class CommentCreate(LoginRequiredMixin, CreateView):
 
         return '/' + str(self.kwargs['pk'])
 
-class CommentUpdate(LoginRequiredMixin, UpdateView):
+class Comment_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     slug_field = 'pk'
     slug_url_kwarg = 'pk'
@@ -89,7 +89,7 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
 
-class CommentLike(RedirectView):
+class Comment_Like(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
@@ -106,7 +106,7 @@ class CommentLike(RedirectView):
         logged_in_user_profile.save()
         return redirect_url
 
-class CommentLikesList(generic.DetailView):
+class Comment_Likes_List(generic.DetailView):
     model = Comment 
     template_name = 'comment/comment-likes-list.html'
     def get_context_data(self, **kwargs):
@@ -118,7 +118,7 @@ class CommentLikesList(generic.DetailView):
         return {'comment': comment, 'list_of_users': list_of_users}
 
 
-class CommentVoteUp(RedirectView):
+class Comment_Vote_Up(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
@@ -141,7 +141,7 @@ class CommentVoteUp(RedirectView):
             comment.save()
         return redirect_url
 
-class CommentVoteDown(RedirectView):
+class Comment_Vote_Down(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
@@ -164,7 +164,7 @@ class CommentVoteDown(RedirectView):
             comment.save()
         return redirect_url
 
-class CommentDelete(LoginRequiredMixin, DeleteView):
+class Comment_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Comment 
     success_url = reverse_lazy('main:index')
@@ -213,7 +213,7 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
-class CommentReport(RedirectView):
+class Comment_Report(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
@@ -225,11 +225,11 @@ class CommentReport(RedirectView):
         return redirect_url
 
 
-class CommentEnableDisablePage(generic.DeleteView):
+class Comment_Enable_Disable_Page(generic.DeleteView):
     model = Comment
     template_name = 'main/flagged-posts/disable-comment.html'
 
-class CommentEnableDisable(RedirectView):
+class Comment_Enable_Disable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         redirect_url = '/flagged-posts/'
@@ -237,11 +237,11 @@ class CommentEnableDisable(RedirectView):
         comment.save()
         return redirect_url
 
-class CommentRemoveFlagsPage(generic.DetailView):
+class Comment_Remove_Flags_Page(generic.DetailView):
     model = Comment 
     template_name = 'main/flagged-posts/remove-flags-comment.html'
 
-class CommentRemoveFlags(RedirectView):
+class Comment_Remove_Flags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         redirect_url = '/flagged-posts/'
@@ -251,7 +251,7 @@ class CommentRemoveFlags(RedirectView):
         comment.save()
         return redirect_url
 
-class AcceptAnswer(LoginRequiredMixin, RedirectView):
+class Accept_Answer(LoginRequiredMixin, RedirectView):
     login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))        

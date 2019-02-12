@@ -34,14 +34,13 @@
             <div class="dropdown-content">
                 <a href="{% url 'main:profile' user %}" class='wide-screen'><i class="fas fa-user"></i>&nbsp; My Profile</a>
                 <a href="{% url 'main:profile' user %}" class='narrow-screen'><i class="fas fa-user icon-only"></i></a>
-                <a href="{% url 'main:logout' %}" class='wide-screen'><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
-                <a href="{% url 'main:logout' %}" class='narrow-screen'><i class="fas fa-sign-out-alt icon-only"></i></a>
+                <a href="{% url 'main:user-logout' %}" class='wide-screen'><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
+                <a href="{% url 'main:user-logout' %}" class='narrow-screen'><i class="fas fa-sign-out-alt icon-only"></i></a>
             </div>
         </div> 
-        {% comment %} <li style="float:right"><a href="{% url 'main:logout' %}"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a></li> {% endcomment %}
     {% else %}
         <a style="float:right" href="{% url 'main:register' %}"><i class="fas fa-user-plus"></i>&nbsp; Sign Up</a>
-        <a style="float:right" href="{% url 'main:user_login' %}"><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
+        <a style="float:right" href="{% url 'main:user-login' %}"><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
     {% endif %}
 
 </div>

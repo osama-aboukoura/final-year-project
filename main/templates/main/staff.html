@@ -6,43 +6,61 @@
 {% include "main/navigationbar.html" %}
 
 <div class='wrapper'>
-    {% if True %}
-        <h1>Admin Panel</h1>
-        <hr/>
-        <p>Change the users' permissions on the site to either staff/regular users. Activate/Deactivate accounts.</p>
-        <table class="postsTable">
-            <tr>
-                <th width='15%'>Username</th>
-                <th width='25%'>Name &#38; Email</th>
-                <th width='10%'>Staff</th>
-                <th width='20%'>Update Staff Status</th>
-                <th width='10%'>Active</th>
-                <th width='20%'>Update Active Status</th>
-            </tr>
-            {% for user in users %}
-                {% if not user.is_superuser %}
-                    <tr>
-                        <td><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
-                        <td><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
-                        <td>
-                            {% if user.is_staff %}
-                                <p style='color:green'><i class="fas fa-check-circle"></i></p>
-                            {% else %}
-                                <p style='color:red'><i class="fas fa-times-circle"></i></p>
-                            {% endif %}
-                        </td>
-                        <td><a href="{% url 'main:update-staff' user.username %}">{% if user.is_staff %}Change to Regular User{% else %}Change to Staff{% endif %}</a></td>
-                        <td>
-                            {% if user.is_active %}
-                                <p style='color:green'><i class="fas fa-check-circle"></i></p>
-                            {% else %}
-                                <p style='color:red'><i class="fas fa-times-circle"></i></p>
-                            {% endif %}
-                        </td>
-                        <td><a href="{% url 'main:update-active' user.username %}">{% if user.is_active %}Change to Disabled{% else %}Change to Active{% endif %}</a></td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table>
-    {% endif %}
+    <h1>Admin Panel</h1>
+    <hr/>
+    <p>Change the users' permissions on the site to either staff/regular users. Activate/Deactivate accounts.</p>
+    <table class="postsTable">
+        <tr>
+            <th width='15%'>Username</th>
+            <th width='25%'>Name &#38; Email</th>
+            <th width='10%'>Staff</th>
+            <th width='20%'>Update Staff Status</th>
+            <th width='10%'>Active</th>
+            <th width='20%'>Update Active Status</th>
+        </tr>
+
+        {% comment %} ADMINS {% endcomment %}
+        {% for user in users %}
+            {% if user.is_superuser %}
+                <tr>
+                    <td><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
+                    <td><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
+                    <td>
+                        <p style='color:green'><i class="fas fa-check-circle"></i></p>
+                    </td>
+                    <td>(Admin)</td>
+                    <td>
+                        <p style='color:green'><i class="fas fa-check-circle"></i></p>
+                    </td>
+                    <td>(Admin)</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+
+        {% comment %} OTHER TYPES OF USERS {% endcomment %}
+        {% for user in users %}
+            {% if not user.is_superuser %}
+                <tr>
+                    <td><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
+                    <td><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
+                    <td>
+                        {% if user.is_staff %}
+                            <p style='color:green'><i class="fas fa-check-circle"></i></p>
+                        {% else %}
+                            <p style='color:red'><i class="fas fa-times-circle"></i></p>
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'main:update-staff' user.username %}">{% if user.is_staff %}Change to Regular User{% else %}Change to Staff{% endif %}</a></td>
+                    <td>
+                        {% if user.is_active %}
+                            <p style='color:green'><i class="fas fa-check-circle"></i></p>
+                        {% else %}
+                            <p style='color:red'><i class="fas fa-times-circle"></i></p>
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'main:update-active' user.username %}">{% if user.is_active %}Change to Disabled{% else %}Change to Active{% endif %}</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
 </div>

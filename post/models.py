@@ -21,7 +21,7 @@ class Post(models.Model):
     postClosed = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return reverse("post:showPost", kwargs={"pk": self.pk})
+        return reverse("post:show-post", kwargs={"pk": self.pk})
     
     def __str__(self):
         return "Post " + str(self.pk) 

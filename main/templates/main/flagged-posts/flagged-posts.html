@@ -11,7 +11,7 @@
         <table class="postsTable">
             <tr>
                 <th >Post</th>
-                <th width="130px">Discussion Started By</th>
+                <th width="130px">Posted By</th>
                 <th width="40px">Flags</th>
                 <th width="75px">Type</th>
                 <th width="180px">Action</th>
@@ -20,7 +20,7 @@
     {% if flagged.posts %}
         {% for post in flagged.posts %}
             <tr {% if post.postDisabled %}class='disabled'{% endif %}>
-                <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a>{% if post.postDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
+                <td><a href="{% url 'post:show-post' post.id %}">{{post.postTitle}}</a>{% if post.postDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
                 <td><a href="{% url 'main:profile' post.postedBy %}" >{{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}}</a></td>
                 <td>{{post.postFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Post</td>
@@ -52,7 +52,7 @@
     {% if flagged.comments %}
         {% for comment in flagged.comments %}
             <tr {% if comment.commentDisabled %}class='disabled'{% endif %}>
-                <td><a href="{% url 'post:showPost' comment.commentOnPost.pk %}">{{comment.commentContent}}</a>{% if comment.commentDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
+                <td><a href="{% url 'post:show-post' comment.commentOnPost.pk %}">{{comment.commentContent}}</a>{% if comment.commentDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
                 <td><a href="{% url 'main:profile' comment.commentBy %}" >{{comment.commentBy.user.first_name}} {{comment.commentBy.user.last_name}}</a></td>
                 <td>{{comment.commentFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Comment</td>
@@ -84,7 +84,7 @@
     {% if flagged.replies %}
         {% for reply in flagged.replies %}
             <tr {% if reply.replyDisabled %}class='disabled'{% endif %}>
-                <td><a href="{% url 'post:showPost' reply.replytoComment.commentOnPost.pk %}">{{reply.replyContent}}</a>{% if reply.replyDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
+                <td><a href="{% url 'post:show-post' reply.replytoComment.commentOnPost.pk %}">{{reply.replyContent}}</a>{% if reply.replyDisabled %}<strong><i> - Currently Disabled (Not shown in the forums)</i></strong>{% endif %}</td>
                 <td><a href="{% url 'main:profile' reply.replyBy %}" >{{reply.replyBy.user.first_name}} {{reply.replyBy.user.last_name}}</a></td>
                 <td>{{reply.replyFlags.count}}&nbsp;&nbsp;<i class="fas fa-flag"></i></td>
                 <td>Reply</td>

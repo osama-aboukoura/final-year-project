@@ -18,7 +18,7 @@
             {% for post in all_posts.posts %}
                 <tr>
                     <td>{% if post.postNumberOfVotes < 0 %}<i class="fas fa-angle-double-down"></i>{% else %}<i class="fas fa-angle-double-up"></i>{% endif %} <strong>{{post.postNumberOfVotes}}</strong></td>
-                    <td><a href="{% url 'post:showPost' post.id %}">{{post.postTitle}}</a></td>
+                    <td><a href="{% url 'post:show-post' post.id %}">{{post.postTitle}}</a></td>
                     <td><a href="{% url 'main:profile' post.postedBy %}" >{{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}}</a></td>
                     <td>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
                 </tr>

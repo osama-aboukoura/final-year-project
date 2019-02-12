@@ -10,7 +10,6 @@
     <p>This cannot be undone. Once you've pressed 'Yes' you will delete your account permanently!</p>
     <hr />
     <br />
-    <p>{{ logged_in_user.username }}</p>
     <a class='button blue' href="{% url 'main:profile' logged_in_user %}" >Go Back</a>
     <a class='button danger' href="{% url 'main:delete-profile-confirm' %}" >DELETE ACCOUNT PERMANENTLY</a>
 </div>

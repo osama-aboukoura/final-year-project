@@ -15,7 +15,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class ShowPostView(generic.DetailView):
+class Show_Post_View(generic.DetailView):
     model = Post 
     template_name = 'post/post-comment-reply.html'
     
@@ -38,11 +38,11 @@ class ShowPostView(generic.DetailView):
 # def addPostIfLoggedIn(request):
 #     user = request.user
 #     if user.is_authenticated:
-#         return PostCreate.as_view()(request)
+#         return Post_Create.as_view()(request)
 #     else:
-#         return HttpResponseRedirect(reverse('post:user_login'))
+#         return HttpResponseRedirect(reverse('post:user-login'))
 
-class PostCreate(LoginRequiredMixin, CreateView):
+class Post_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Post 
     fields = ['postTitle', 'postTopic', 'postContent']
@@ -54,15 +54,15 @@ class PostCreate(LoginRequiredMixin, CreateView):
         user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
         post.postedBy = user_profile
         user_profile.save()
-        return super(PostCreate, self).form_valid(form)
+        return super(Post_Create, self).form_valid(form)
 
-class PostUpdate(LoginRequiredMixin, UpdateView):
+class Post_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     model = Post 
     template_name = 'post/post_edit_form.html'
     fields = ['postTitle', 'postTopic', 'postContent']
 
-class PostLike(RedirectView):
+class Post_Like(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()        
@@ -79,7 +79,7 @@ class PostLike(RedirectView):
         user_profile.save()
         return redirect_url
 
-class PostLikesList(generic.DetailView):
+class Post_Likes_List(generic.DetailView):
     model = Post 
     template_name = 'post/post-likes-list.html'
     def get_context_data(self, **kwargs):
@@ -90,7 +90,7 @@ class PostLikesList(generic.DetailView):
             list_of_users.append(user)
         return {'post': post, 'list_of_users': list_of_users}
 
-class PostVoteUp(RedirectView):
+class Post_Vote_Up(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
@@ -112,7 +112,7 @@ class PostVoteUp(RedirectView):
             post.save()
         return redirect_url
 
-class PostVoteDown(RedirectView):
+class Post_Vote_Down(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
@@ -135,7 +135,7 @@ class PostVoteDown(RedirectView):
                 post.save()
         return redirect_url
 
-class PostDelete(LoginRequiredMixin, DeleteView):
+class Post_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Post 
 
@@ -200,7 +200,7 @@ class PostDelete(LoginRequiredMixin, DeleteView):
         post.delete()
         return HttpResponseRedirect(self.get_success_url())
         
-class PostReport(RedirectView):
+class Post_Report(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
@@ -210,11 +210,11 @@ class PostReport(RedirectView):
             post.postFlags.add(logged_in_user_profile)
         return redirect_url
 
-class PostEnableDisablePage(generic.DetailView):
+class Post_Enable_Disable_Page(generic.DetailView):
     model = Post 
     template_name = 'main/flagged-posts/disable-post.html'
 
-class PostEnableDisable(RedirectView):
+class Post_Enable_Disable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = '/flagged-posts/'
@@ -222,11 +222,11 @@ class PostEnableDisable(RedirectView):
         post.save()
         return redirect_url
 
-class PostRemoveFlagsPage(generic.DetailView):
+class Post_Remove_Flags_Page(generic.DetailView):
     model = Post 
     template_name = 'main/flagged-posts/remove-flags-post.html'
 
-class PostRemoveFlags(RedirectView):
+class Post_Remove_Flags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = '/flagged-posts/'
@@ -236,7 +236,7 @@ class PostRemoveFlags(RedirectView):
         post.save()
         return redirect_url
 
-class PostOpenComments(LoginRequiredMixin, RedirectView):
+class Post_Open_Comments(LoginRequiredMixin, RedirectView):
     login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))

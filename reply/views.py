@@ -19,7 +19,7 @@ from django.template.loader import get_template
 
 
 
-class ReplyCreate(LoginRequiredMixin, CreateView):
+class Reply_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Reply 
     fields = ['replyContent']
@@ -36,7 +36,7 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
         user_profile.num_of_posts_comments_replies = user_profile.num_of_posts_comments_replies + 1
         reply.replyBy = user_profile
         user_profile.save()
-        return super(ReplyCreate, self).form_valid(form)
+        return super(Reply_Create, self).form_valid(form)
     
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['post_pk'])
@@ -78,7 +78,7 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
         post.save()
         return '/' + str(post.pk)
 
-class ReplyUpdate(LoginRequiredMixin, UpdateView):
+class Reply_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     slug_field = 'pk'
     slug_url_kwarg = 'pk'
@@ -89,7 +89,7 @@ class ReplyUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
-class ReplyLike(RedirectView):
+class Reply_Like(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
@@ -106,7 +106,7 @@ class ReplyLike(RedirectView):
         logged_in_user_profile.save()
         return redirect_url
 
-class ReplyLikesList(generic.DetailView):
+class Reply_Likes_List(generic.DetailView):
     model = Reply 
     template_name = 'reply/reply-likes-list.html'
     def get_context_data(self, **kwargs):
@@ -117,7 +117,7 @@ class ReplyLikesList(generic.DetailView):
             list_of_users.append(user)
         return {'reply': reply, 'list_of_users': list_of_users}
 
-class ReplyDelete(LoginRequiredMixin, DeleteView):
+class Reply_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Reply 
 
@@ -146,7 +146,7 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
         post.save()
         return '/' + str(self.kwargs['post_pk'])
 
-class ReplyReport(RedirectView):
+class Reply_Report(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
@@ -158,11 +158,11 @@ class ReplyReport(RedirectView):
         return redirect_url
 
 
-class ReplyEnableDisablePage(generic.DeleteView):
+class Reply_Enable_Disable_Page(generic.DeleteView):
     model = Reply
     template_name = 'main/flagged-posts/disable-reply.html'
 
-class ReplyEnableDisable(RedirectView):
+class Reply_Enable_Disable(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
         redirect_url = '/flagged-posts/'
@@ -170,11 +170,11 @@ class ReplyEnableDisable(RedirectView):
         reply.save()
         return redirect_url
 
-class ReplyRemoveFlagsPage(generic.DetailView):
+class Reply_Remove_Flags_Page(generic.DetailView):
     model = Reply 
     template_name = 'main/flagged-posts/remove-flags-reply.html'
 
-class ReplyRemoveFlags(RedirectView):
+class Reply_Remove_Flags(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
         redirect_url = '/flagged-posts/'

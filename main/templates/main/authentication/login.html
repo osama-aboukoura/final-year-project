@@ -8,7 +8,7 @@
     <p><a style='float:right; margin-top:10px' class='button danger' href="{% url 'main:index' %}" > &#x226A; Back To The Posts</a></p>
     <div style='clear:both'></div>
     <hr/><br/><br/>
-    <form action="{% url 'main:user_login' %}" method='POST'>
+    <form action="{% url 'main:user-login' %}" method='POST'>
         {% csrf_token %}
         <label for='username'>Username:</label>
         <input type='text' name='username' placeholder='Enter your username'/><br/>
@@ -22,8 +22,8 @@
         {% else %}
             <div style='clear: both'></div>
             <p>Logging in for the first time? <a href="{% url 'main:activate' %}">Activate my account</a></p>
-            <p>Forgot your username? <a href="{% url 'main:resend_username' %}">Email me my username</a></p>
-            <p>Forgot your password? <a href="{% url 'main:reset_password' %}">Reset my password</a></p>
+            <p>Forgot your username? <a href="{% url 'main:resend-username' %}">Email me my username</a></p>
+            <p>Forgot your password? <a href="{% url 'main:reset-password' %}">Reset my password</a></p>
             <p>Don't have an account yet? <a href="{% url 'main:register' %}">Sign up here</a></p>
         {% endif %}
         <input type='submit' value='Login'/>
