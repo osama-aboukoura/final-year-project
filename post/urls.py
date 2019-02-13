@@ -18,7 +18,6 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/disable-post-confirm/$', views.Post_Enable_Disable.as_view(), name='disable-post-confirm'),
     url(r'^(?P<pk>[0-9]+)/remove-post-flags/$', views.Post_Remove_Flags_Page.as_view(), name='remove-post-flags'),
     url(r'^(?P<pk>[0-9]+)/remove-post-flags-confirm/$', views.Post_Remove_Flags.as_view(), name='remove-post-flags-confirm'),
-    url(r'^(?P<pk>[0-9]+)/open-comments/$', views.Post_Open_Comments.as_view(), name='open-comments'),
       
 ]
 
