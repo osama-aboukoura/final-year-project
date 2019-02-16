@@ -14,7 +14,6 @@ class Post(models.Model):
     postNumberOfVotes = models.IntegerField(default=0)
     postVotersUp = models.ManyToManyField(UserProfile, blank=True, related_name='post_votes_up')
     postVotersDown = models.ManyToManyField(UserProfile, blank=True, related_name='post_votes_down')
-    # postNumberOfFlags = models.IntegerField(default=0)
     postNumberOfComments = models.IntegerField(default=0)
     postFlags = models.ManyToManyField(UserProfile, blank=True, related_name='post_flags')
     postDisabled = models.BooleanField(default=False)
