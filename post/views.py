@@ -1,21 +1,16 @@
 from django.views import generic
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
 from main.models import UserProfile, User
 from .models import Post
 from comment.models import Comment
 from reply.models import Reply
-from django.urls import reverse
 from django.urls import reverse_lazy
 from main.forms import UserForm, UserProfileForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
-# from django.contrib.auth.decorators import user_passes_test
-from django.contrib.admin.views.decorators import staff_member_required
 
 class Show_Post_View(generic.DetailView):
     model = Post 
