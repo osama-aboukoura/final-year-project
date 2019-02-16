@@ -1,36 +1,29 @@
 from random import randint
 from django.views import generic
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import RedirectView
+from django.shortcuts import render
 from .models import UserProfile, User
 from post.models import Post 
 from comment.models import Comment
 from reply.models import Reply
 from django.urls import reverse
-from django.urls import reverse_lazy
 from main.forms import UserForm, UserProfileForm, UserUpdateForm, UserProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse
 from django.conf import settings
-from django.template import RequestContext
 from django.template.loader import get_template
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 import string
 import random
 
 def register(request):
     registered = False
     if request.method == 'POST':
-        print ('post request')
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileForm(data=request.POST)
 
         if user_form.is_valid() and  profile_form.is_valid():
-            print('form valid and profile form valid')
             user = user_form.save(commit=False)
 
             all_users = User.objects.all()
@@ -47,7 +40,6 @@ def register(request):
             profile.activationCode = randint(1000, 9999)
 
             if 'profilePicture' in request.FILES:
-                print ('profilePicture is in request.FILES')
                 profile.profilePicture = request.FILES['profilePicture']
                 
             registered = True
@@ -68,15 +60,13 @@ def register(request):
             email.send()
 
         else:
-            print('erros in form')
+            # print('erros in form')
             print(user_form.errors,profile_form.errors)
     else:
-        print ('get request')
         user_form = UserForm()
         profile_form = UserProfileForm()
     
     return render(request, 'main/authentication/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
-
 
 def user_login(request):
     if request.method == 'POST':
@@ -87,6 +77,7 @@ def user_login(request):
 
         if user: 
             if user.is_active:
+                print('log in successful')
                 login(request, user)
                 # redirect_to = request.get('next', '')
                 # if redirect_to:
@@ -111,7 +102,6 @@ def user_login(request):
     else:
         return render(request, 'main/authentication/login.html', {})
 
-
 def activate(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -125,6 +115,7 @@ def activate(request):
             userProfile = UserProfile.objects.get(user=user)
 
             if activationCode == userProfile.activationCode: 
+                print('user activated successfully')
                 user.is_active = True 
                 user.save()
                 # changing the activationCode so the user won't be able to activate themselves when Admin disables them.
@@ -138,7 +129,6 @@ def activate(request):
             return render(request, 'main/authentication/activate.html', {'error': 'Sorry, unable to activate your account.'})
     else:
         return render(request, 'main/authentication/activate.html', {})
-
 
 def resend_username(request):
     if request.method == 'POST':
@@ -163,12 +153,12 @@ def resend_username(request):
             html = get_template("main/authentication/forgot-username/resend_username_email.html").render({'user': user})
             email.attach_alternative(html, "text/html")
             email.send()
-        
+            print ('email sent')
+
         return render(request, 'main/authentication/login.html', {'activation_success': 'If your email address is linked with an account, an email will be sent to you with your username.'})
 
     else:
         return render(request, 'main/authentication/forgot-username/resend-username.html', {})
-
 
 def reset_password(request):
     if request.method == 'POST':
@@ -184,9 +174,6 @@ def reset_password(request):
 
             userProfile.resetPasswordCode = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
             userProfile.save() 
-            print ('userProfile.resetPasswordCode')
-            print (userProfile.resetPasswordCode)
-
             subject = 'Reset your Password - Intelligent Q&A Forums'
             email_to = [userProfile.user.email] 
             with open(settings.BASE_DIR + "/main/templates/main/authentication/forgot-password/reset_password_email.txt") as temp:
@@ -228,7 +215,6 @@ def reset_password_auth(request):
     else:
         return render(request, 'main/authentication/forgot-password/reset-password-auth.html', {})
 
-
 def reset_password_confirm(request):
     if request.method == 'POST':
         password = request.POST.get('password')
@@ -261,8 +247,6 @@ def reset_password_confirm(request):
             return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {'error': 'Sorry, You cannot reset your password this time.'})
     else:
         return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {})
-
-    
 
 @login_required
 def user_logout(request):
@@ -300,7 +284,6 @@ def edit_profile_info(request, user):
         profile_update_form = UserProfileUpdateForm(instance=request.user)
         # return render(request, 'main/profile_edit_form.html', {'form': form})
         return render(request, 'main/user-profile/profile_edit_form.html', {'user_update_form': user_update_form, 'profile_update_form':profile_update_form})
-
 
 def delete_profile_and_user(request):
     logged_in_user = request.user
@@ -379,7 +362,6 @@ def delete_profile_and_user_confirm(request):
         'all_posts': Post.objects.all()
     })
 
-
 class Topics_View(generic.ListView):
     template_name = 'main/topics.html'
     context_object_name = 'all_topics'
@@ -415,8 +397,6 @@ class Index_View(generic.ListView):
 
     def get_queryset(self):
         return Post.objects.all()
-
-
 
 def flagged_posts_view(request):
     logged_in_user = request.user

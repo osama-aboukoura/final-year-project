@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^topics/$', views.Topics_View.as_view(), name='topics'),
     url(r'^topics/(?P<topic>[A-Za-z]+)', views.Posts_With_Same_Topic_View.as_view(), name='topic'),
     
-    # any other page will load a 'page not found'. this should always be the last url
     url(r'^page-not-found/', views.pageNotFound, name='page-not-found'), 
 
 ]
