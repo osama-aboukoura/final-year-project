@@ -1,5 +1,5 @@
 from django.views import generic
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
 from main.models import UserProfile, User
@@ -11,36 +11,29 @@ from django.urls import reverse_lazy
 from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.utils.decorators import method_decorator
+# from django.contrib.auth.decorators import user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
 
 class Show_Post_View(generic.DetailView):
     model = Post 
     template_name = 'post/post-comment-reply.html'
+    def get(self, request, *args, **kwargs):
+        try:
+            return super(Show_Post_View, self).get(request, *args, **kwargs)
+        except Http404:
+            return HttpResponseRedirect("/page-not-found")
     
     def get_context_data(self, **kwargs):
-        context = {}
-        post = Post.objects.get(id=self.kwargs['pk'])
-        context['post'] = post
+        context = super(Show_Post_View, self).get_context_data(**kwargs)
         logged_in_user = self.request.user
         if logged_in_user.is_authenticated:
             logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
             context['logged_in_user_profile'] = logged_in_user_profile
-        
-        comments_on_post = post.comment_set.all()
-        
-        # print(context)
-
         return context
 
-
-# def addPostIfLoggedIn(request):
-#     user = request.user
-#     if user.is_authenticated:
-#         return Post_Create.as_view()(request)
-#     else:
-#         return HttpResponseRedirect(reverse('post:user-login'))
 
 class Post_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
@@ -48,11 +41,11 @@ class Post_Create(LoginRequiredMixin, CreateView):
     fields = ['postTitle', 'postTopic', 'postContent']
     
     def form_valid(self, form):
-        post = form.save(commit=False)
+        self.object = form.save(commit=False)
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         user_profile.numOfPostsCommentsReplies = user_profile.numOfPostsCommentsReplies + 1
-        post.postedBy = user_profile
+        self.object.postedBy = user_profile
         user_profile.save()
         return super(Post_Create, self).form_valid(form)
 
@@ -62,7 +55,8 @@ class Post_Update(LoginRequiredMixin, UpdateView):
     template_name = 'post/post_edit_form.html'
     fields = ['postTitle', 'postTopic', 'postContent']
 
-class Post_Like(RedirectView):
+class Post_Like(LoginRequiredMixin, RedirectView):
+    login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()        
@@ -90,7 +84,8 @@ class Post_Likes_List(generic.DetailView):
             list_of_users.append(user)
         return {'post': post, 'list_of_users': list_of_users}
 
-class Post_Vote_Up(RedirectView):
+class Post_Vote_Up(LoginRequiredMixin, RedirectView):
+    login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
@@ -112,7 +107,8 @@ class Post_Vote_Up(RedirectView):
             post.save()
         return redirect_url
 
-class Post_Vote_Down(RedirectView):
+class Post_Vote_Down(LoginRequiredMixin, RedirectView):
+    login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         redirect_url = post.get_absolute_url()
@@ -210,29 +206,43 @@ class Post_Report(RedirectView):
             post.postFlags.add(logged_in_user_profile)
         return redirect_url
 
+    
 class Post_Enable_Disable_Page(generic.DetailView):
     model = Post 
     template_name = 'main/flagged-posts/disable-post.html'
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            return super(Post_Enable_Disable_Page, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/page-not-found')
 
-class Post_Enable_Disable(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        redirect_url = '/flagged-posts/'
-        post.postDisabled = not post.postDisabled
-        post.save()
-        return redirect_url
+class Post_Enable_Disable(generic.DetailView):
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+            post.postDisabled = not post.postDisabled
+            post.save()
+            return redirect('/flagged-posts')
+        else:
+            return redirect('/page-not-found')
 
 class Post_Remove_Flags_Page(generic.DetailView):
     model = Post 
     template_name = 'main/flagged-posts/remove-flags-post.html'
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            return super(Post_Remove_Flags_Page, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/page-not-found')
 
-class Post_Remove_Flags(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        redirect_url = '/flagged-posts/'
-        post.postFlags.clear()
-        post.postNumberOfFlags = 0
-        post.postDisabled = False
-        post.save()
-        return redirect_url
-
+class Post_Remove_Flags(generic.DetailView):
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+            post.postFlags.clear()
+            # post.postNumberOfFlags = 0
+            post.postDisabled = False
+            post.save()
+            return redirect('/flagged-posts')
+        else:
+            return redirect('/page-not-found')

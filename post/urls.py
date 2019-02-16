@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from . import views
+# from django.contrib.admin.views.decorators import staff_member_required
 
 app_name = 'post'
 
