@@ -64,7 +64,7 @@
                 <button class='button danger' onclick="report('comment', {{comment.pk}})">Report <i class="fas fa-ban"></i></button>
                 {% if logged_in_user_profile in comment.commentFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this comment.</i></strong></span>{% endif %}
             {% else %}
-                <p>To reply to a comment, you must be logged in. <a class='button blue' href="{% url 'main:user-login' %}">Click here to Login</a></p>
+                <p>To reply to a comment, you must be logged in. <a class='button blue' href="{% url 'main:user-login' %}?next={{post.pk}}">Click here to Login</a></p>
             {% endif %}
             <p>{{comment.commentDate}}</p>
         </div>

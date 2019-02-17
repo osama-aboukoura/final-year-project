@@ -77,12 +77,7 @@ def user_login(request):
 
         if user: 
             if user.is_active:
-                print('log in successful')
                 login(request, user)
-                # redirect_to = request.get('next', '')
-                # if redirect_to:
-                #     print ('redirect_to')
-                #     print (redirect_to)
 
                 # creating a userProfile object for superuser when they log in for the first time
                 if user.is_superuser:
@@ -92,6 +87,14 @@ def user_login(request):
                         userProfile = UserProfile.objects.create(user=user)
                         userProfile.save()
 
+                # url to redirect to after logging in
+                url_to_redirect_to = request.POST.get('next_url')
+                print('POST')
+                print (url_to_redirect_to)
+                if url_to_redirect_to != 'None/':
+                    print ('url_to_redirect_to is not none')
+                    return HttpResponseRedirect('/' + url_to_redirect_to)
+
                 return HttpResponseRedirect(reverse('main:index'))
             else:
                 # DOESN'T WORK FOR SOME REASON!!!!!
@@ -100,7 +103,10 @@ def user_login(request):
             print('log in failed')
             return render(request, 'main/authentication/login.html', {'error': 'Sorry, unable to log you in.'})
     else:
-        return render(request, 'main/authentication/login.html', {})
+        url_to_redirect_to = request.GET.get('next')
+        print ('GET')
+        print (url_to_redirect_to)
+        return render(request, 'main/authentication/login.html', {'next_url': url_to_redirect_to})
 
 def activate(request):
     if request.method == 'POST':
@@ -115,7 +121,6 @@ def activate(request):
             userProfile = UserProfile.objects.get(user=user)
 
             if activationCode == userProfile.activationCode: 
-                print('user activated successfully')
                 user.is_active = True 
                 user.save()
                 # changing the activationCode so the user won't be able to activate themselves when Admin disables them.
@@ -153,7 +158,6 @@ def resend_username(request):
             html = get_template("main/authentication/forgot-username/resend_username_email.html").render({'user': user})
             email.attach_alternative(html, "text/html")
             email.send()
-            print ('email sent')
 
         return render(request, 'main/authentication/login.html', {'activation_success': 'If your email address is linked with an account, an email will be sent to you with your username.'})
 
@@ -279,10 +283,8 @@ def edit_profile_info(request, user):
         return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
     else:
-        print('GET REQUEST ')
         user_update_form = UserUpdateForm(instance=request.user)
         profile_update_form = UserProfileUpdateForm(instance=request.user)
-        # return render(request, 'main/profile_edit_form.html', {'form': form})
         return render(request, 'main/user-profile/profile_edit_form.html', {'user_update_form': user_update_form, 'profile_update_form':profile_update_form})
 
 def delete_profile_and_user(request):
