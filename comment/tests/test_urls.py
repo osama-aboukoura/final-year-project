@@ -21,8 +21,6 @@ class TestCommentUrls(TestCase):
             commentBy = self.userProfile, # ideally a different user would be adding this comment
             commentContent = 'They have special deals towards the end of the summer.'
         )
-        self.client.login(username='osamaaboukoura', password='password123') 
-
 
     def test_add_comment_url_resolves(self):
         self.set_up()

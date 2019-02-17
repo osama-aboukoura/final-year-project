@@ -1,5 +1,5 @@
 from django.views import generic
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
 from main.models import UserProfile, User
@@ -28,9 +28,6 @@ class Comment_Create(LoginRequiredMixin, CreateView):
         post = Post.objects.get(id=self.kwargs['pk'])
         if post.postClosed:
             return render(self.request, 'main/page-not-found.html')
-            # return HttpResponseRedirect(reverse('main:index'))
-
-            # return HttpResponse(render(request, ''))
 
         comment.commentOnPost = post
         logged_in_user = self.request.user        
@@ -213,55 +210,71 @@ class Comment_Delete(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
-class Comment_Report(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
+class Comment_Report(generic.DetailView):
+    def dispatch(self, request, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
-        redirect_url = post.get_absolute_url()
         logged_in_user = self.request.user 
-        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         if logged_in_user.is_authenticated:
+            logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
             comment.commentFlags.add(logged_in_user_profile)
-        return redirect_url
+        else:
+            return redirect('/page-not-found')
+        return redirect('/' + str(post.pk))
 
 
 class Comment_Enable_Disable_Page(generic.DeleteView):
     model = Comment
     template_name = 'main/flagged-posts/disable-comment.html'
-
-class Comment_Enable_Disable(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
-        redirect_url = '/flagged-posts/'
-        comment.commentDisabled = not comment.commentDisabled
-        comment.save()
-        return redirect_url
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            return super(Comment_Enable_Disable_Page, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/page-not-found')
+        
+class Comment_Enable_Disable(generic.DeleteView):
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+            comment.commentDisabled = not comment.commentDisabled
+            comment.save()
+            return redirect('/flagged-posts')
+        else:
+            return redirect('/page-not-found')
 
 class Comment_Remove_Flags_Page(generic.DetailView):
     model = Comment 
     template_name = 'main/flagged-posts/remove-flags-comment.html'
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            return super(Comment_Remove_Flags_Page, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/page-not-found')
 
-class Comment_Remove_Flags(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
-        redirect_url = '/flagged-posts/'
-        comment.commentFlags.clear()
-        comment.commentNumberOfFlags = 0
-        comment.commentDisabled = False
-        comment.save()
-        return redirect_url
+class Comment_Remove_Flags(generic.DeleteView):
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+            comment.commentFlags.clear()
+            comment.commentDisabled = False
+            comment.save()
+            return redirect('/flagged-posts')
+        else:
+            return redirect('/page-not-found')
 
-class Accept_Answer(LoginRequiredMixin, RedirectView):
-    login_url = '/login/'
-    def get_redirect_url(self, *args, **kwargs):
+class Accept_Answer(generic.DeleteView):
+    def dispatch(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))        
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
-        redirect_url = post.get_absolute_url()
+        if comment.commentBy == post.postedBy: 
+            return redirect('/page-not-found') # you cannot accept your comment on your own post
         logged_in_user = self.request.user    
         if logged_in_user == post.postedBy.user:
             comment.commentAccepted = True 
             post.postClosed = True 
+        else:
+            return redirect('/page-not-found') # you cannot accept an answer if you're not the post owner
         comment.save()
         post.save()
-        return redirect_url
+        return redirect('/' + str(post.pk))
         

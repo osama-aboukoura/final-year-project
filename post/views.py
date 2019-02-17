@@ -191,15 +191,16 @@ class Post_Delete(LoginRequiredMixin, DeleteView):
         post.delete()
         return HttpResponseRedirect(self.get_success_url())
         
-class Post_Report(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
+class Post_Report(generic.DetailView):
+    def dispatch(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        redirect_url = post.get_absolute_url()
         logged_in_user = self.request.user 
-        logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         if logged_in_user.is_authenticated:
+            logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
             post.postFlags.add(logged_in_user_profile)
-        return redirect_url
+        else:
+            return redirect('/page-not-found')
+        return redirect('/' + str(post.pk))
 
     
 class Post_Enable_Disable_Page(generic.DetailView):
@@ -235,9 +236,23 @@ class Post_Remove_Flags(generic.DetailView):
         if self.request.user.is_staff:
             post = get_object_or_404(Post, id=self.kwargs.get('pk'))
             post.postFlags.clear()
-            # post.postNumberOfFlags = 0
             post.postDisabled = False
             post.save()
             return redirect('/flagged-posts')
         else:
             return redirect('/page-not-found')
+
+class Post_Open_Comments(LoginRequiredMixin, RedirectView):
+    login_url = '/login/'
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = post.get_absolute_url()
+        logged_in_user = self.request.user    
+        if logged_in_user == post.postedBy.user:
+            post.postClosed = False
+            for comment in post.comment_set.all():
+                comment.commentAccepted = False
+                comment.save() 
+        post.save()
+        return redirect_url
+    
