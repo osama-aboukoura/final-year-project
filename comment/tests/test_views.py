@@ -50,7 +50,7 @@ class TestViews(TestCase):
     def test_add_comment_POST_view(self):
         self.set_up()
         response = self.client.post(reverse('comment:add-comment', args=['1']), {
-            'commentedBy': self.userProfile,
+            'commentBy': self.userProfile,
             'commentContent': 'Not very expensive'
         })
         comment = Comment.objects.get(pk=3)

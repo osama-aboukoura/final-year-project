@@ -1,5 +1,5 @@
 from django.views import generic
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import RedirectView
 from main.models import UserProfile, User
@@ -161,25 +161,38 @@ class Reply_Report(RedirectView):
 class Reply_Enable_Disable_Page(generic.DeleteView):
     model = Reply
     template_name = 'main/flagged-posts/disable-reply.html'
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            return super(Reply_Enable_Disable_Page, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/page-not-found')
 
-class Reply_Enable_Disable(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
-        redirect_url = '/flagged-posts/'
-        reply.replyDisabled = not reply.replyDisabled
-        reply.save()
-        return redirect_url
+class Reply_Enable_Disable(generic.DeleteView):
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+            reply.replyDisabled = not reply.replyDisabled
+            reply.save()
+            return redirect('/flagged-posts')
+        else:
+            return redirect('/page-not-found')
 
 class Reply_Remove_Flags_Page(generic.DetailView):
     model = Reply 
     template_name = 'main/flagged-posts/remove-flags-reply.html'
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            return super(Reply_Remove_Flags_Page, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/page-not-found')
 
 class Reply_Remove_Flags(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
-        redirect_url = '/flagged-posts/'
-        reply.replyFlags.clear()
-        reply.replyNumberOfFlags = 0
-        reply.replyDisabled = False
-        reply.save()
-        return redirect_url
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+            reply.replyFlags.clear()
+            reply.replyDisabled = False
+            reply.save()
+            return redirect('/flagged-posts')
+        else:
+            return redirect('/page-not-found')
