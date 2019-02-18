@@ -3,17 +3,17 @@
     <td class='vote-up-and-down'>
         {% if user.is_authenticated %}
             {% if logged_in_user_profile in comment.commentVotersUp.all  %}
-                <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up green-text"></i></a>
+                <a name='vote-up-comment' href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up green-text"></i></a>
             {% else %}
-                <a href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up"></i></a>
+                <a name='vote-up-comment' href="{% url 'comment:vote-up-comment' post.pk comment.pk %}"><i class="fas fa-angle-up"></i></a>
             {% endif %}
             
-            <p>{{comment.commentNumberOfVotes}}</p>
+            <p name='commentNumberOfVotes'>{{comment.commentNumberOfVotes}}</p>
             
             {% if logged_in_user_profile in comment.commentVotersDown.all  %}
-                <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down red-text"></i></a>
+                <a name='vote-down-comment' href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down red-text"></i></a>
             {% else %}
-                <a href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down"></i></a>
+                <a name='vote-down-comment' href="{% url 'comment:vote-down-comment' post.pk comment.pk %}"><i class="fas fa-angle-down"></i></a>
             {% endif %}
         {% else %}
             <p>{{comment.commentNumberOfVotes}}</p>
@@ -29,7 +29,7 @@
             {% if user.username == comment.commentBy.user.username %}
                 {% url 'comment:edit-comment' post.pk comment.pk as the_edit_url %}
                 {% url 'comment:delete-comment' post.pk comment.pk as the_delete_url %}
-                {% include "main/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url %}
+                {% include "main/widgets/edit-delete-dropdown.html" with edit_url=the_edit_url delete_url=the_delete_url type="comment-ellipsis"%}
             {% elif user.username == post.postedBy.user.username and post.postClosed == False %}
                 <a class='button accept-answer-button' href="{% url 'comment:accept-answer' post.pk comment.pk %}">Accept Answer</a>
             {% endif %}
@@ -41,7 +41,7 @@
 
         <div class='buttons-and-date-fixed-bottom'>
             {% comment %} <p onclick="showLikes('{{ comment.commentLikes.all|join:", " }}')" style='margin-bottom: -5px; padding: 0;'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %} {% endcomment %}
-            <a href="{% url 'comment:like-list-comment' comment.pk %}" class='likes'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %}
+            <a href="{% url 'comment:like-list-comment' comment.pk %}" name='comment-likes' class='likes'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %}
                 {% if comment.commentLikes.count > 2 and logged_in_user_profile in comment.commentLikes.all %}
                     (You and {{comment.commentLikes.count|add:'-1'}} others).
                 {% elif comment.commentLikes.count > 1 and logged_in_user_profile in comment.commentLikes.all  %}
@@ -54,15 +54,15 @@
 
             {% if user.is_authenticated %}
                 {% if logged_in_user_profile in comment.commentLikes.all %}
-                    <a class='comment-link' style='background:green' href='{{comment.pk}}/comment-like/'>Like <i class="fas fa-thumbs-up"></i></a>
+                    <a class='comment-link' name='comment-like-button' style='background:green' href='{{comment.pk}}/comment-like/'>Like <i class="fas fa-thumbs-up"></i></a>
                 {% else %}
-                    <a class='comment-link' href='{{comment.pk}}/comment-like/'>Like <i class="far fa-thumbs-up"></i></a>
+                    <a class='comment-link' name='comment-like-button' href='{{comment.pk}}/comment-like/'>Like <i class="far fa-thumbs-up"></i></a>
                 {% endif %}
                 {% if post.postClosed == False %}
                     <a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a>
                 {% endif %}
-                <button class='button danger' onclick="report('comment', {{comment.pk}})">Report <i class="fas fa-ban"></i></button>
-                {% if logged_in_user_profile in comment.commentFlags.all %}<span style='color:#CB4335'><strong><i>- You have reported this comment.</i></strong></span>{% endif %}
+                <button name='report-comment' class='button danger' onclick="report('comment', {{comment.pk}})">Report <i class="fas fa-ban"></i></button>
+                {% if logged_in_user_profile in comment.commentFlags.all %}<span style='color:#CB4335' name='reported-comment'><strong><i>- You have reported this comment.</i></strong></span>{% endif %}
             {% else %}
                 <p>To reply to a comment, you must be logged in. <a class='button blue' href="{% url 'main:user-login' %}?next={{post.pk}}">Click here to Login</a></p>
             {% endif %}

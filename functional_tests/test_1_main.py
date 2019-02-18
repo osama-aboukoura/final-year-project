@@ -48,6 +48,14 @@ class TestMain(StaticLiveServerTestCase):
         )
         self.post.postFlags.add(self.userProfile)
         self.post.save() 
+        self.post2 = Post.objects.create(
+            postedBy = self.userProfile,
+            postTitle = 'Man Utd lost again! Your thoughts?',
+            postTopic = 'Sports',
+            postContent = 'Manchester United keep losing one game after the other. Why?',
+        )
+        self.post2.postFlags.add(self.userProfile)
+        self.post2.save() 
         self.browser = webdriver.Chrome('functional_tests/chromedriver') # opens up Chrome browser
 
     def close_down(self):
@@ -64,7 +72,7 @@ class TestMain(StaticLiveServerTestCase):
 
     # test functions start here 
 
-    def test_signup_page(self):
+    def test_1_signup_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
         time.sleep(1)
@@ -81,7 +89,7 @@ class TestMain(StaticLiveServerTestCase):
         self.browser.find_element_by_name('password').send_keys('password123')
         time.sleep(0.5) 
         self.browser.find_element_by_name('register-button').click()
-        time.sleep(4) 
+        time.sleep(2) 
         self.assertEquals(
             self.browser.find_element_by_tag_name('h2').text, 
             "Thank You for Your Registeration!"
@@ -89,7 +97,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested registeration page')
 
-    def test_login_page(self):
+    def test_2_login_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
         time.sleep(1)
@@ -101,7 +109,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested login page')
 
-    def test_my_profile_page(self):
+    def test_3_my_profile_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
         time.sleep(1)
@@ -122,7 +130,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested my-profile page')
 
-    def test_staff_page(self):
+    def test_4_staff_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
         time.sleep(1)
@@ -142,7 +150,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested staff page')
 
-    def test_flagged_posts_page(self):
+    def test_5_flagged_posts_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
         time.sleep(1)
@@ -162,9 +170,13 @@ class TestMain(StaticLiveServerTestCase):
         time.sleep(1)
         self.browser.find_element_by_link_text("Remove Flags").click()
         time.sleep(1)
+        self.browser.find_element_by_name("delete-button").click()
+        time.sleep(1)
+        self.browser.find_element_by_name("delete-now").click()
+        time.sleep(1)
         self.assertEquals(
             self.browser.find_element_by_tag_name('h1').text, 
-            "Great News! There are no flagged posts."
+            "All Posts:"
         )
         self.close_down()
-        print('Tested flagged-posts page')
+        print('Tested flagged-posts page (Enable, Disable, Remove Flags, Delete Post).')

@@ -89,10 +89,7 @@ def user_login(request):
 
                 # url to redirect to after logging in
                 url_to_redirect_to = request.POST.get('next_url')
-                print('POST')
-                print (url_to_redirect_to)
                 if url_to_redirect_to != 'None/':
-                    print ('url_to_redirect_to is not none')
                     return HttpResponseRedirect('/' + url_to_redirect_to)
 
                 return HttpResponseRedirect(reverse('main:index'))
@@ -104,8 +101,6 @@ def user_login(request):
             return render(request, 'main/authentication/login.html', {'error': 'Sorry, unable to log you in.'})
     else:
         url_to_redirect_to = request.GET.get('next')
-        print ('GET')
-        print (url_to_redirect_to)
         return render(request, 'main/authentication/login.html', {'next_url': url_to_redirect_to})
 
 def activate(request):
@@ -299,37 +294,30 @@ def delete_profile_and_user_confirm(request):
         postNumberOfCommentsToDecrement = 0
 
         if post.postedBy.user == logged_in_user:
-            print ('1 post owner about to be deleted')
             # remove everyone's likes on every post posted by the user we're deleting 
             for userProfile in post.postLikes.all(): 
                 userProfile.numberOfLikes -= 1 
                 userProfile.save()
-                print ('4 updating profile numberOfLikes')
 
             # update the likes & posts count on every comment by all users participating in this post 
             for comment in post.comment_set.all():
                 comment.commentBy.numOfPostsCommentsReplies -= 1
                 comment.commentBy.save() 
-                print ('5 updating profile numOfPostsCommentsReplies')
 
                 for userProfile in comment.commentLikes.all(): 
                     userProfile.numberOfLikes -= 1 
                     userProfile.save()
-                    print ('6 updating profile numberOfLikes')
 
                 # update the likes & posts count on every reply by all users replying to this comment 
                 for reply in comment.reply_set.all():
                     reply.replyBy.numOfPostsCommentsReplies -= 1
                     reply.replyBy.save() 
-                    print ('7 updating profile numOfPostsCommentsReplies')
 
                     for userProfile in reply.replyLikes.all(): 
                         userProfile.numberOfLikes -= 1 
                         userProfile.save()
-                        print ('8 updating profile numberOfLikes')
 
         else:
-            print ('2 user to delete is not post owner')
             for comment in post.comment_set.all():
                 if comment.commentBy.user == logged_in_user:
                     postNumberOfCommentsToDecrement += 1  # remove this comment 
@@ -344,7 +332,6 @@ def delete_profile_and_user_confirm(request):
                         reply.replyBy.save() 
                         postNumberOfCommentsToDecrement += 1 # remove all replies on this comment 
                 else:
-                    print ('3 user is not comment owner')
                     for reply in comment.reply_set.all():
                         if reply.replyBy.user == logged_in_user:
                             postNumberOfCommentsToDecrement += 1

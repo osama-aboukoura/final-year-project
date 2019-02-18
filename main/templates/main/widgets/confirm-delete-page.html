@@ -15,6 +15,6 @@
     <form method='POST' style='margin-top:30px;'>
         {% csrf_token %}
         <a class='button blue' href={{back_url}}>Go Back</a>
-        <input class='button danger' type='submit' value='Delete Now' />
+        <input class='button danger' type='submit' name='delete-now' value='Delete Now' />
     </form>
 </div>
