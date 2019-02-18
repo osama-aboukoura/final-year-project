@@ -27,20 +27,20 @@
                 <td align='center' class='flagged-posts-buttons'>
                     <div class='buttons-div'>
                         <div class='button-div'>
-                            <a href="{% url 'post:delete-post' post.pk %}" style='background:#21618C'><i class="fas fa-trash-alt"></i></a>
+                            <a href="{% url 'post:delete-post' post.pk %}" style='background:#21618C' name='delete-button'><i class="fas fa-trash-alt"></i></a>
                             <span>Delete</span>
                         </div>
                         <div class='button-div'>
                             {% if post.postDisabled %}
-                                <a href="{% url 'post:disable-post' post.pk %}" style='background:green'><i class="far fa-check-circle"></i></a>
+                                <a href="{% url 'post:disable-post' post.pk %}" style='background:green' name='enable-button'><i class="far fa-check-circle"></i></a>
                                 <span>Enable </span>
                             {% else %}
-                                <a href="{% url 'post:disable-post' post.pk %}" style='background:#CB4335'><i class="fas fa-ban"></i></a>
+                                <a href="{% url 'post:disable-post' post.pk %}" style='background:#CB4335' name='disable-button'><i class="fas fa-ban"></i></a>
                                 <span>Disable </span>
                             {% endif %}
                         </div>
                         <div class='button-div'>
-                            <a href="{% url 'post:remove-post-flags' post.pk %}"  style='background:#DC7633'><i class="fas fa-flag"></i></a>
+                            <a href="{% url 'post:remove-post-flags' post.pk %}"  style='background:#DC7633' name='flags-button'><i class="fas fa-flag"></i></a>
                             <span>Remove Flags</span>
                         </div>
                     </div>
