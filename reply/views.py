@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -85,6 +85,17 @@ class Reply_Update(LoginRequiredMixin, UpdateView):
     model = Reply
     template_name = 'reply/reply_edit_form.html'
     fields = ['replyContent']
+
+    def get(self, request, *args, **kwargs):
+        try:
+            reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+            if (self.request.user == reply.replyBy.user):
+                return super(Reply_Update, self).get(request, *args, **kwargs)
+            else:
+                return HttpResponseRedirect("/page-not-found") # only author can edit
+        except Http404:
+            return HttpResponseRedirect("/page-not-found") # reply not available in database
+
 
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])

@@ -49,6 +49,15 @@ class Post_Update(LoginRequiredMixin, UpdateView):
     model = Post 
     template_name = 'post/post_edit_form.html'
     fields = ['postTitle', 'postTopic', 'postContent']
+    def get(self, request, *args, **kwargs):
+        try:
+            post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+            if (self.request.user == post.postedBy.user):
+                return super(Post_Update, self).get(request, *args, **kwargs)
+            else:
+                return HttpResponseRedirect("/page-not-found") # only author can edit
+        except Http404:
+            return HttpResponseRedirect("/page-not-found") # post not available in database
 
 class Post_Like(LoginRequiredMixin, RedirectView):
     login_url = '/login/'

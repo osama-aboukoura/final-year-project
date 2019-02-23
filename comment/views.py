@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -82,6 +82,16 @@ class Comment_Update(LoginRequiredMixin, UpdateView):
     model = Comment
     template_name = 'comment/comment_edit_form.html'
     fields = ['commentContent']
+    
+    def get(self, request, *args, **kwargs):
+        try:
+            comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+            if (self.request.user == comment.commentBy.user):
+                return super(Comment_Update, self).get(request, *args, **kwargs)
+            else:
+                return HttpResponseRedirect("/page-not-found") # only author can edit
+        except Http404:
+            return HttpResponseRedirect("/page-not-found") # comment not available in database
 
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
