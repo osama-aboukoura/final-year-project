@@ -132,6 +132,17 @@ class Reply_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Reply 
 
+    def get(self, request, *args, **kwargs):
+        try:
+            reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
+            if (self.request.user == reply.replyBy.user or self.request.user.is_staff):
+                return super(Reply_Delete, self).get(request, *args, **kwargs)
+            else:
+                return HttpResponseRedirect("/page-not-found") # only author or staff can delete
+        except Http404:
+            return HttpResponseRedirect("/page-not-found") # reply not available in database
+
+
     def delete(self, request, *args, **kwargs):
         reply = self.get_object()
         author_profile = reply.replyBy

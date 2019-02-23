@@ -139,6 +139,16 @@ class Post_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Post 
 
+    def get(self, request, *args, **kwargs):
+        try:
+            post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+            if (self.request.user == post.postedBy.user or self.request.user.is_staff):
+                return super(Post_Delete, self).get(request, *args, **kwargs)
+            else:
+                return HttpResponseRedirect("/page-not-found") # only author or staff can delete
+        except Http404:
+            return HttpResponseRedirect("/page-not-found") # post not available in database
+
     def get_success_url(self):
         return reverse_lazy('main:index')
 

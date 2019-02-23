@@ -176,6 +176,17 @@ class Comment_Delete(LoginRequiredMixin, DeleteView):
     model = Comment 
     success_url = reverse_lazy('main:index')
 
+    def get(self, request, *args, **kwargs):
+        try:
+            comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
+            if (self.request.user == comment.commentBy.user or self.request.user.is_staff):
+                return super(Comment_Delete, self).get(request, *args, **kwargs)
+            else:
+                return HttpResponseRedirect("/page-not-found") # only author or staff can delete
+        except Http404:
+            return HttpResponseRedirect("/page-not-found") # comment not available in database
+
+
     def delete(self, request, *args, **kwargs):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         post.postNumberOfComments -= 1 # decrement 1 for this comment
