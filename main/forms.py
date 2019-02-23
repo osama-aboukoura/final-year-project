@@ -9,6 +9,16 @@ class UserForm(forms.ModelForm):
         model = User 
         fields = ('first_name', 'last_name', 'username', 'email', 'password')
 
+    def clean_password(self):
+        password = self.cleaned_data["password"]
+        if not any(char.isdigit() for char in password):
+            raise forms.ValidationError('Passwrod must contain at least one digit')
+        if not any(char.isalpha() for char in password):
+            raise forms.ValidationError('Passwrod must contain at least one letter')
+        if len(password) < 8: 
+            raise forms.ValidationError('Passwrod must be at least 8 characters long')
+        return password
+
 # this class creates the form used in the templates when creating a profile for a new user 
 class UserProfileForm(forms.ModelForm):
     class Meta():
