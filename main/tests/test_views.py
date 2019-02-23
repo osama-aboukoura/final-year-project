@@ -39,15 +39,6 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 200) # successful request status code
         self.assertTemplateUsed(response, "main/authentication/login.html")
     
-    def test_user_login_POST_request(self):
-        self.set_up()
-        response = self.client.post(reverse('main:user-login'), {
-            'username': 'user1', 'password': 'password123'
-        })
-        self.assertEquals(response.status_code, 302) # redirect status code
-        # check if the ID of the logged in user in the current session is equal to self.userInstance.pk
-        self.assertEquals(int(self.client.session['_auth_user_id']), self.userInstance.pk)
-    
     def test_user_activate_GET_request(self):
         self.set_up()
         response = self.client.get(reverse('main:activate'))
