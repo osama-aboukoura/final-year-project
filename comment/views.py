@@ -24,7 +24,7 @@ class Comment_Create(LoginRequiredMixin, CreateView):
     fields = ['commentContent']
     
     def form_valid(self, form):
-        comment = form.save(commit=False)
+        comment = form.save(commit=False) # don't save it in the database yet
         post = Post.objects.get(id=self.kwargs['pk'])
         if post.postClosed:
             return render(self.request, 'main/page-not-found.html')

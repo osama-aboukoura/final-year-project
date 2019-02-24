@@ -25,7 +25,7 @@ class Reply_Create(LoginRequiredMixin, CreateView):
     fields = ['replyContent']
     
     def form_valid(self, form):
-        reply = form.save(commit=False)
+        reply = form.save(commit=False) # don't save it in the database yet
         comment = Comment.objects.get(id=self.kwargs['comment_pk'])
         post = Post.objects.get(id=self.kwargs['post_pk'])
         if post.postClosed:

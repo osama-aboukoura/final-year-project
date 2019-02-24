@@ -14,6 +14,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
+from .validators import validate_password
 import string
 import random
 
@@ -24,18 +25,13 @@ def register(request):
         profile_form = UserProfileForm(data=request.POST)
 
         if user_form.is_valid() and  profile_form.is_valid():
-            user = user_form.save(commit=False)
-
-            all_users = User.objects.all()
-            for _user in all_users:
-                if _user.email == user.email: 
-                    return render(request, 'main/authentication/registration.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered, 'error': 'Email address already used.'})
+            user = user_form.save(commit=False) # don't save it in the database yet 
 
             user.set_password(user.password)
             user.is_active = False
             user.save()
 
-            profile = profile_form.save(commit=False)
+            profile = profile_form.save(commit=False) # don't save it in the database yet
             profile.user = user # sets the one to one relationship 
             profile.activationCode = randint(1000, 9999)
 
@@ -59,9 +55,9 @@ def register(request):
             email.attach_alternative(html, "text/html")
             email.send()
 
-        else:
-            # print('erros in form')
-            print(user_form.errors,profile_form.errors)
+        # else:
+        #     # print('erros in form')
+        #     print(user_form.errors,profile_form.errors)
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
@@ -205,6 +201,8 @@ def reset_password_auth(request):
             userProfile = UserProfile.objects.get(user=user)
 
             if email == userProfile.user.email and temp_code == userProfile.resetPasswordCode: 
+                userProfile.resetPasswordCode = "".join(random.choices(string.ascii_uppercase + string.digits, k=15)) # changing for security reasons
+                userProfile.save()
                 return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {'reset_user_auth': 'Success! You can now reset your password!', 'user': user})
             else: 
                 return render(request, 'main/authentication/forgot-password/reset-password-auth.html', {'error': 'Sorry, unable to reset your password'})
@@ -230,14 +228,14 @@ def reset_password_confirm(request):
 
         if user:
             if password == password_confirm:
-                user.set_password(password)
+
                 try:
-                    # change the current resetPasswordCode so that it cannot be used twice 
-                    userProfile = UserProfile.objects.get(user=user)
-                    userProfile.resetPasswordCode = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
-                    userProfile.save() 
-                except UserProfile.DoesNotExist:
-                    userProfile = None 
+                    validate_password(password) 
+                except:
+                    return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', 
+                    {'error': 'Error, your password should\n - Contain at least 1 letter\n - Contain at least 1 letter\n Be 8 characters long'})
+
+                user.set_password(password)
                 user.save()
                 return render(request, 'main/authentication/login.html', {'activation_success': 'Success! Your password has been reset!'})
             else: 
@@ -267,20 +265,24 @@ def edit_profile_info(request, user):
     userProfile = UserProfile.objects.get(user=user_to_edit)
 
     if request.method == 'POST':
-        user_to_edit.first_name = request.POST['first_name']
-        user_to_edit.last_name = request.POST['last_name']
-        user_to_edit.save()
-
-        if 'profilePicture' in request.FILES:
-            userProfile.profilePicture = request.FILES['profilePicture']
-            userProfile.save() 
+        user_update_form = UserUpdateForm(data=request.POST)
+        profile_update_form = UserProfileUpdateForm(data=request.POST)
         
-        return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
+        if user_update_form.is_valid() and  profile_update_form.is_valid():
+            user_to_edit.first_name = request.POST['first_name']
+            user_to_edit.last_name = request.POST['last_name']
+            user_to_edit.save()
+
+            if 'profilePicture' in request.FILES:
+                userProfile.profilePicture = request.FILES['profilePicture']
+                userProfile.save() 
+            
+            return render(request, 'main/user-profile/profile.html', {'visited_user_profile': userProfile, 'logged_in_user': logged_in_user})
 
     else:
         user_update_form = UserUpdateForm(instance=request.user)
         profile_update_form = UserProfileUpdateForm(instance=request.user)
-        return render(request, 'main/user-profile/profile_edit_form.html', {'user_update_form': user_update_form, 'profile_update_form':profile_update_form})
+    return render(request, 'main/user-profile/profile_edit_form.html', {'user_update_form': user_update_form, 'profile_update_form':profile_update_form})
 
 def delete_profile_and_user(request):
     logged_in_user = request.user

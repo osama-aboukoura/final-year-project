@@ -36,7 +36,7 @@ class Post_Create(LoginRequiredMixin, CreateView):
     fields = ['postTitle', 'postTopic', 'postContent']
     
     def form_valid(self, form):
-        self.object = form.save(commit=False)
+        self.object = form.save(commit=False) # don't save it in the database yet
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         user_profile.numOfPostsCommentsReplies = user_profile.numOfPostsCommentsReplies + 1
