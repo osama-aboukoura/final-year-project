@@ -14,6 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django import forms
 from django.contrib import messages
 from django.shortcuts import render
+from .nmf import classify_post_topics
 
 class Show_Post_View(generic.DetailView):
     model = Post 
@@ -55,7 +56,7 @@ class Post_Create(LoginRequiredMixin, CreateView):
             return HttpResponseRedirect("/add-post/") 
     
     def form_valid(self, form):
-        print('FORM VALID')
+        # print('FORM VALID')
         self.object = form.save(commit=False) # don't save it in the database yet
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
@@ -64,6 +65,8 @@ class Post_Create(LoginRequiredMixin, CreateView):
         checkbox = self.request.POST.get('postAutoClassification')
         if (checkbox == "on"):
             self.object.postTopic = 'AUTO'
+        listOfTopics = classify_post_topics(str(self.object.postTitle) + " " + str(self.object.postContent))
+        self.object.postTopic = '-'.join(listOfTopics)
         user_profile.save()
         return super(Post_Create, self).form_valid(form)
 
