@@ -1,1 +1,52 @@
-{% include "main/widgets/form.html" with form_title='Add a New Post' %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'newPost/style.css' %}" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
+{% include "main/navigationbar.html" %}
+
+<div class='wrapper'>
+    <h2>Add a New Post</h2>
+    <hr/>
+    <form action='' method='post' class='new-post-form'>
+        {% csrf_token %}
+        <center>
+        {% for message in messages %}
+            <div class='error-messages-box'>
+                {{ message }}
+             </div>
+        {% endfor %}
+        <table class='form-table'>
+            <tr>
+                <td valign='top' class='new-post-label'><label>Post Title:</label></td>
+                <td class='new-post-field'>
+                    <input type="text" name="postTitle" maxlength="80" required>
+                </td>
+            </tr>
+            <tr id='postTopicID'>
+                <td valign='top' class='new-post-label'><label class='postTopic'>Post Topic:</label></td>
+                <td class='new-post-field'>
+                    <input type="text" name="postTopic" maxlength="30">
+                </td>
+            </tr>
+            <tr>
+                <td valign='top' class='new-post-label'><label>Post:</label></td>
+                <td class='new-post-field'>
+                    <textarea name="postContent" cols="40" rows="10" required></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td valign='top' class='new-post-label'><label>Do The Magic:</label</td>
+                <td class=''>
+                    <input id='checkboxAuto' type="checkbox" name="postAutoClassification" onclick='toggleCheckBox()'>
+                    <b>Automatically Classify My Post</b>
+                </td>
+            </tr>
+        </table>
+        <center/>
+        <button type='submit' class='submit-button'>Submit</button>
+    </form>
+</div>
+
+<script type='text/javascript' src="{% static 'newPost/javascript.js' %}"></script>
+

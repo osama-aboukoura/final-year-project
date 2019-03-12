@@ -52,6 +52,15 @@
     background-color:rgb(48, 142, 204);
 }
 
+.error-messages-box {
+    background-color: #F2DEDE;
+    color: #A94442;
+    border: 1px solid #A94442;
+    border-radius: 6px;
+    padding: 5px 15px;
+    margin: 8px 10px;
+}
+
 @media(min-width: 1450px){
     .new-post-form { width: 45%; }
 }

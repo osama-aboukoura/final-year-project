@@ -11,6 +11,9 @@ from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django import forms
+from django.contrib import messages
+from django.shortcuts import render
 
 class Show_Post_View(generic.DetailView):
     model = Post 
@@ -34,13 +37,33 @@ class Post_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Post 
     fields = ['postTitle', 'postTopic', 'postContent']
+
+    # always runs before the form_valid function 
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        postTopic = self.request.POST.get('postTopic')
+        checkbox  = self.request.POST.get('postAutoClassification')
+
+        if (postTopic == "" and checkbox != "on"):
+            form.add_error('postTopic', 'Error') # making the form invalid 
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            print('FORM INVALID')
+            messages.error(request, "Error: Either tick the checkbox to automatically classify "
+                            + "the topic of the post, or manually fill out the 'Post Topic' field.")
+            return HttpResponseRedirect("/add-post/") 
     
     def form_valid(self, form):
+        print('FORM VALID')
         self.object = form.save(commit=False) # don't save it in the database yet
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         user_profile.numOfPostsCommentsReplies = user_profile.numOfPostsCommentsReplies + 1
         self.object.postedBy = user_profile
+        checkbox = self.request.POST.get('postAutoClassification')
+        if (checkbox == "on"):
+            self.object.postTopic = 'AUTO'
         user_profile.save()
         return super(Post_Create, self).form_valid(form)
 

@@ -5,7 +5,7 @@ from main.models import UserProfile
 class Post(models.Model):
     postedBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     postTitle = models.CharField(max_length=80, verbose_name=('Post Title'))
-    postTopic = models.CharField(max_length=30, verbose_name=('Post Topic'))
+    postTopic = models.CharField(max_length=150, verbose_name=('Post Topic'), blank=True)
     postContent = models.TextField(verbose_name=('Post'))
     postImage = models.ImageField(null=True, blank=True)
     postLastUpdated = models.DateTimeField(auto_now=True, auto_now_add=False)
@@ -18,6 +18,7 @@ class Post(models.Model):
     postFlags = models.ManyToManyField(UserProfile, blank=True, related_name='post_flags')
     postDisabled = models.BooleanField(default=False)
     postClosed = models.BooleanField(default=False)
+    postAutoClassification = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("post:show-post", kwargs={"pk": self.pk})
