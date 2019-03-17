@@ -1,2 +1,10 @@
-Hey, {{user.first_name}}!
-Someone commented on your post.
+Hey there,
+A New Comment on One of Our Intelligent Q&#38;A Posts!
+{{comment_by.first_name}} {{comment_by.last_name}} has added a new comment on a post you have either started or commented on.
+Post Title: {{post.postTitle}} - ({{post.postTopic}}
+Post: {{post.postContent}}
+Comment by {{comment_by.first_name}}: {{comment.commentContent}}
+
+Have you received this email in error?
+You are receiving this email because you are signed up for the Intelligent Q&#38;A Forums. 
+If you are not the intended recipient and you believe you are receiving this in error, please delete this email and inform the sender immediately.

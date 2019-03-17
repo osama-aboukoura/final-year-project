@@ -8,7 +8,7 @@
 <div class='wrapper'>
     <h1>Are you sure you want to {% if comment.commentDisabled %}enable{% else %}disable{% endif %} this comment?</h1>
     <div class='post-title'>
-        <h2>{{comment.commentContent}}</h2>
+        <h2 style='word-break: break-all;'>{{comment.commentContent}}</h2>
         <p class='discussion-postedBy-and-date'>By: {{comment.commentBy}} on {{comment.commentDate}}</p>
     </div>
 

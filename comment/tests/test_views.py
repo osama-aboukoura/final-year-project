@@ -8,6 +8,8 @@ import json
 
 class TestViews(TestCase):
 
+    # a set up function that gets called in other functions 
+    # creates 2 users, their userProfiles, a post and 2 comments, and logs in one user 
     def set_up(self):
         self.client = Client()
 
@@ -42,11 +44,13 @@ class TestViews(TestCase):
 
         self.client.login(username='osamaaboukoura', password='password123') 
 
+    # unit test to check a GET request for adding a comment
     def test_add_comment_GET_view(self):
         self.set_up()
         response = self.client.get(reverse('comment:add-comment', args=['1']))
         self.assertTemplateUsed(response, 'comment/comment_form.html')
     
+    # unit test to check a POST request for adding a comment
     def test_add_comment_POST_view(self):
         self.set_up()
         response = self.client.post(reverse('comment:add-comment', args=['1']), {
@@ -56,7 +60,8 @@ class TestViews(TestCase):
         comment = Comment.objects.get(pk=3)
         self.assertEquals(comment.commentContent, 'Not very expensive') 
         self.assertEquals(response.status_code, 302) # redirect status code
-        
+
+    # unit test to check deleting a comment
     def test_delete_comment_view(self):
         self.set_up()
         response = self.client.delete(reverse('comment:delete-comment', kwargs={
@@ -67,13 +72,15 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 302)
         self.assertEquals(Comment.objects.count(), 1) # one comment left after deletion 
     
+    # unit test to check a GET request for updating a comment
     def test_update_comment_GET_view(self):
         self.set_up()
         response = self.client.get(reverse('comment:edit-comment', kwargs={
             'post_pk': self.post.pk, 'pk': self.comment.pk
         }))
         self.assertTemplateUsed(response, "comment/comment_edit_form.html")
-    
+
+    # unit test to check a POST request for updating a comment
     def test_update_comment_POST_view(self):
         self.set_up()
         self.client.post(reverse('comment:edit-comment', kwargs={
@@ -84,6 +91,7 @@ class TestViews(TestCase):
         self.comment.refresh_from_db()
         self.assertEquals(self.comment.commentContent, 'IT IS VERY EXPENSIVE!') 
 
+    # unit test to check the like functionality (like and view likes)
     def test_comment_like(self):
         self.set_up()
         # adding a like 
@@ -100,6 +108,7 @@ class TestViews(TestCase):
         }))
         self.assertEquals(self.comment.commentLikes.count(), 0) # comment has 0 likes now
 
+    # unit test to check the vote up functionality
     def test_comment_vote_up(self):
         self.set_up()
         # adding a vote up
@@ -117,6 +126,7 @@ class TestViews(TestCase):
         self.assertEquals(self.comment.commentVotersUp.count(), 0) # comment has 1 vote up now
         self.assertEquals(self.comment.commentNumberOfVotes, 0) 
     
+    # unit test to check the vote down functionality
     def test_comment_vote_down(self):
         self.set_up()
         # adding a vote down
@@ -134,6 +144,7 @@ class TestViews(TestCase):
         self.assertEquals(self.comment.commentVotersDown.count(), 0) # comment has 0 vote down now
         self.assertEquals(self.comment.commentNumberOfVotes, 0) 
         
+    # unit test to check the report comment functionality
     def test_comment_report(self):
         self.set_up()
         self.client.get(reverse('comment:report-comment', kwargs={
@@ -142,11 +153,13 @@ class TestViews(TestCase):
         self.comment.refresh_from_db()
         self.assertEquals(self.comment.commentFlags.count(), 1)
 
+    # unit test to check the disabling page for a comment by a basic user 
     def test_comment_disable_page_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('comment:disable-comment', kwargs={'pk': self.comment.pk}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/disable-comment.html") # not used because user isn't staff
 
+    # unit test to check the disabling page for a comment by a staff member
     def test_comment_disable_page_by_staff_member(self):
         self.set_up()
         self.user.is_staff = True
@@ -154,11 +167,13 @@ class TestViews(TestCase):
         response = self.client.get(reverse('comment:disable-comment', kwargs={'pk': self.comment.pk}))
         self.assertTemplateUsed(response, "main/flagged-posts/disable-comment.html")
     
+    # unit test to check the disabling a comment by a basic user 
     def test_comment_disable_confirm_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('comment:disable-comment-confirm', kwargs={'pk': self.comment.pk}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/disable-comment-confirm.html") 
     
+    # unit test to check the disabling a comment by a staff member
     def test_comment_disable_confirm_by_staff_member(self):
         self.set_up()
         self.user.is_staff = True
@@ -167,11 +182,13 @@ class TestViews(TestCase):
         self.comment.refresh_from_db()
         self.assertEquals(self.comment.commentDisabled, True)
 
+    # unit test to check the page for removing a flag on a comment by a basic user 
     def test_comment_remove_flags_page_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('comment:remove-comment-flags', kwargs={'pk': self.comment.pk}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/remove-flags-comment.html") # not used because user isn't staff
 
+    # unit test to check the page for removing a flag on a comment by a staff member 
     def test_comment_remove_flags_page_by_staff_member(self):
         self.set_up()
         self.user.is_staff = True
@@ -179,11 +196,13 @@ class TestViews(TestCase):
         response = self.client.get(reverse('comment:remove-comment-flags', kwargs={'pk': self.comment.pk}))
         self.assertTemplateUsed(response, "main/flagged-posts/remove-flags-comment.html")
     
+    # unit test to check removing a flag on a comment by a basic user 
     def test_comment_remove_flags_confirm_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('comment:remove-comment-flags-confirm', kwargs={'pk': self.comment.pk}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/disable-comment-confirm.html") 
     
+    # unit test to check removing a flag on a comment by a staff member 
     def test_comment_remove_flags_confirm_by_staff_member(self):
         self.set_up()
         self.user.is_staff = True
@@ -197,6 +216,7 @@ class TestViews(TestCase):
         self.comment.refresh_from_db()
         self.assertEquals(self.comment.commentFlags.count(), 0)
 
+    # unit test to check accepting a comment by a different user  
     def test_post_owner_can_accept_comments_by_another_user(self):
         self.set_up()
         self.client.get(reverse('comment:accept-answer', kwargs={
@@ -204,7 +224,8 @@ class TestViews(TestCase):
         }))
         self.comment2.refresh_from_db()
         self.assertTrue(self.comment2.commentAccepted) # assert TRUE because they can accpet.
-    
+
+    # unit test to check accepting a comment by a post owner  
     def test_post_owner_cannot_accept_comments_they_made_themselves(self):
         self.set_up()
         self.client.get(reverse('comment:accept-answer', kwargs={

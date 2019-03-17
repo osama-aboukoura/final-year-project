@@ -23,7 +23,7 @@
     {% include "main/widgets/name-photo-card.html" with user_profile=comment.commentBy %}
 
     <td class='post-content'>
-        <p>{{comment.commentContent}}</p>
+        <p style='word-break: break-all;'>{{comment.commentContent}}</p>
 
         {% if user.is_authenticated %}
             {% if user.username == comment.commentBy.user.username %}

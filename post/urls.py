@@ -6,6 +6,8 @@ app_name = 'post'
 
 urlpatterns = [
 
+    # URL links and their corresponding function in the views 
+
     url(r'^(?P<pk>[0-9]+)/$', views.Show_Post_View.as_view(), name='show-post'),
     url(r'^add-post/$', views.Post_Create.as_view(), name='add-post'),
     url(r'^(?P<pk>[0-9]+)/edit-post/$', views.Post_Update.as_view(), name='edit-post'),

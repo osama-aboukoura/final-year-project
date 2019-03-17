@@ -16,15 +16,28 @@ from django.contrib import messages
 from django.shortcuts import render
 from .nmf import classify_post_topics
 
+# shows a post only if it's not disabled 
 class Show_Post_View(generic.DetailView):
     model = Post 
     template_name = 'post/post-comment-reply.html'
     def get(self, request, *args, **kwargs):
+        logged_in_user = self.request.user
+        try:
+            post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+
+            # only staff and admin can view disabled posts 
+            if (post.postDisabled and not logged_in_user.is_staff):
+                return HttpResponseRedirect("/page-not-found") 
+                
+        except Http404:
+            return HttpResponseRedirect("/page-not-found") # post not available in database
+
         try:
             return super(Show_Post_View, self).get(request, *args, **kwargs)
         except Http404:
             return HttpResponseRedirect("/page-not-found")
     
+    # context data needed for the template 
     def get_context_data(self, **kwargs):
         context = super(Show_Post_View, self).get_context_data(**kwargs)
         logged_in_user = self.request.user
@@ -33,7 +46,7 @@ class Show_Post_View(generic.DetailView):
             context['logged_in_user_profile'] = logged_in_user_profile
         return context
 
-
+# creates a post and allows classification either automatically or manually 
 class Post_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Post 
@@ -56,7 +69,6 @@ class Post_Create(LoginRequiredMixin, CreateView):
             return HttpResponseRedirect("/add-post/") 
     
     def form_valid(self, form):
-        # print('FORM VALID')
         self.object = form.save(commit=False) # don't save it in the database yet
         logged_in_user = self.request.user
         user_profile = get_object_or_404(UserProfile, user=logged_in_user)
@@ -64,12 +76,19 @@ class Post_Create(LoginRequiredMixin, CreateView):
         self.object.postedBy = user_profile
         checkbox = self.request.POST.get('postAutoClassification')
         if (checkbox == "on"):
-            self.object.postTopic = 'AUTO'
-            listOfTopics = classify_post_topics(str(self.object.postTitle) + " " + str(self.object.postContent))
+            # the post to classify is the title plus the content to get as much info as possible 
+            postToAutoClassify = str(self.object.postTitle) + " " + str(self.object.postContent)
+            
+            # calling the classifying algorithm 
+            listOfTopics = classify_post_topics(postToAutoClassify)
+
+            # converting the list result to a string with dashes
             self.object.postTopic = '-'.join(listOfTopics)
+
         user_profile.save()
         return super(Post_Create, self).form_valid(form)
 
+# updates a post after authenticating the user 
 class Post_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     model = Post 
@@ -85,6 +104,7 @@ class Post_Update(LoginRequiredMixin, UpdateView):
         except Http404:
             return HttpResponseRedirect("/page-not-found") # post not available in database
 
+# likes a post 
 class Post_Like(LoginRequiredMixin, RedirectView):
     login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
@@ -103,6 +123,7 @@ class Post_Like(LoginRequiredMixin, RedirectView):
         user_profile.save()
         return redirect_url
 
+# shows a list of users who liked a post 
 class Post_Likes_List(generic.DetailView):
     model = Post 
     template_name = 'post/post-likes-list.html'
@@ -114,6 +135,7 @@ class Post_Likes_List(generic.DetailView):
             list_of_users.append(user)
         return {'post': post, 'list_of_users': list_of_users}
 
+# adds a vote up to the post 
 class Post_Vote_Up(LoginRequiredMixin, RedirectView):
     login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
@@ -137,6 +159,7 @@ class Post_Vote_Up(LoginRequiredMixin, RedirectView):
             post.save()
         return redirect_url
 
+# adds a vote down to the post 
 class Post_Vote_Down(LoginRequiredMixin, RedirectView):
     login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):
@@ -161,6 +184,7 @@ class Post_Vote_Down(LoginRequiredMixin, RedirectView):
                 post.save()
         return redirect_url
 
+# deletes a post and all the comments and replies related 
 class Post_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Post 
@@ -178,6 +202,7 @@ class Post_Delete(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('main:index')
 
+    # updating the likes counts and total number of posts for all users involved 
     def delete(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         post_author_profile = post.postedBy
@@ -236,6 +261,7 @@ class Post_Delete(LoginRequiredMixin, DeleteView):
         post.delete()
         return HttpResponseRedirect(self.get_success_url())
         
+# reports a post 
 class Post_Report(generic.DetailView):
     def dispatch(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
@@ -247,7 +273,7 @@ class Post_Report(generic.DetailView):
             return redirect('/page-not-found')
         return redirect('/' + str(post.pk))
 
-    
+# prompts the user to confirm they want to disable/enable a post 
 class Post_Enable_Disable_Page(generic.DetailView):
     model = Post 
     template_name = 'main/flagged-posts/disable-post.html'
@@ -257,6 +283,7 @@ class Post_Enable_Disable_Page(generic.DetailView):
         else:
             return redirect('/page-not-found')
 
+# enables and disables a post 
 class Post_Enable_Disable(generic.DetailView):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_staff:
@@ -267,6 +294,7 @@ class Post_Enable_Disable(generic.DetailView):
         else:
             return redirect('/page-not-found')
 
+# prompts the user to confirm they want to remove flags from a post
 class Post_Remove_Flags_Page(generic.DetailView):
     model = Post 
     template_name = 'main/flagged-posts/remove-flags-post.html'
@@ -276,6 +304,7 @@ class Post_Remove_Flags_Page(generic.DetailView):
         else:
             return redirect('/page-not-found')
 
+# removes flags (reports) from a post 
 class Post_Remove_Flags(generic.DetailView):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_staff:
@@ -287,6 +316,7 @@ class Post_Remove_Flags(generic.DetailView):
         else:
             return redirect('/page-not-found')
 
+# resests the accepted comment on the post and allows the post owner to accept a different answer
 class Post_Open_Comments(LoginRequiredMixin, RedirectView):
     login_url = '/login/'
     def get_redirect_url(self, *args, **kwargs):

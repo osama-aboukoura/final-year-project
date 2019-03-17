@@ -5,6 +5,8 @@ app_name = 'comment'
 
 urlpatterns = [
 
+    # URL links and their corresponding function in the views 
+
     url(r'^(?P<pk>[0-9]+)/add-comment/$', views.Comment_Create.as_view(), name='add-comment'),
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/edit-comment/$', views.Comment_Update.as_view(), name='edit-comment'),
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/delete-comment/$', views.Comment_Delete.as_view(), name='delete-comment'),

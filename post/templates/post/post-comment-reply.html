@@ -6,7 +6,7 @@
 {% include "main/navigationbar.html" %}
 
 <div class='post-topic'>
-    <h3><a href="{% url 'main:topic' post.postTopic %}">{{post.postTopic}}</a></h3>
+    <h3 style='word-break: break-all'><a href="{% url 'main:topic' post.postTopic %}">{{post.postTopic}}</a></h3>
 </div>
 <div class='wrapper'>
 
@@ -16,7 +16,7 @@
                 <a class='button green repoen-comments-button' href="{% url 'post:open-comments' post.pk %}">Re-open Post Comments</a>
             {% endif %}
         {% endif %}
-        <h1>{{post.postTitle}}</h1>
+        <h1 style='word-break: break-all'>{{post.postTitle}}</h1>
         {% if post.postClosed %}
             <h2 style='color:#CB4335;'>[CLOSED. Author has accepted one of the answers]</h2>
         {% endif %}

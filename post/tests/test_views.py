@@ -7,6 +7,8 @@ import json
 
 class TestViews(TestCase):
 
+    # a set up function that gets called in other functions 
+    # creates a user, their userProfile and a post, and logs in the user 
     def set_up(self):
         self.client = Client()
         self.userInstance = User.objects.create(
@@ -27,22 +29,26 @@ class TestViews(TestCase):
         )
         self.client.login(username='osamaaboukoura', password='password123') 
 
+    # unit test to check a GET request for showing a post
     def test_show_post_with_id_1_GET_view(self):
         self.set_up()
         response = self.client.get(reverse('post:show-post', args=['1']))
         self.assertEquals(response.status_code, 200) # successful request status code
         self.assertTemplateUsed(response, "post/post-comment-reply.html")
-    
+
+    # unit test to check a GET request for showing a post that doesn't exist
     def test_show_post_with_id_2_GET_view(self):
         self.set_up()
         response = self.client.get(reverse('post:show-post', args=['2'])) # post 2 doesn't exist
         self.assertEquals(response.status_code, 302) # redirect status code
     
+    # unit test to check a GET request for adding a post
     def test_add_post_GET_view(self):
         self.set_up()
         response = self.client.get(reverse('post:add-post'))
         self.assertTemplateUsed(response, "post/post_form.html")
     
+    # unit test to check a POST request for adding a post
     def test_add_post_POST_view(self):
         self.set_up()
         response = self.client.post(reverse('post:add-post'), {
@@ -54,7 +60,8 @@ class TestViews(TestCase):
         post = Post.objects.get(pk=2)
         self.assertEquals(post.postTitle, 'Bitcoin Investment?') 
         self.assertEquals(response.status_code, 302) # redirect status code
-        
+
+    # unit test to check for deleting a post 
     def test_delete_post_view(self):
         response = self.client.delete(reverse('post:delete-post', args=['1']), json.dumps({
             'id': 1
@@ -62,11 +69,13 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 302)
         self.assertEquals(Post.objects.count(), 0) # zero posts after deletion 
     
+    # unit test to check a GET request for updating a post
     def test_update_post_GET_view(self):
         self.set_up()
         response = self.client.get(reverse('post:edit-post', args=['1']))
         self.assertTemplateUsed(response, "post/post_edit_form.html")
     
+    # unit test to check a POST request for updating a post
     def test_update_post_POST_view(self):
         self.set_up()
         self.client.post(reverse('post:edit-post', kwargs={'pk': 1}), {
@@ -77,6 +86,7 @@ class TestViews(TestCase):
         self.postInstance.refresh_from_db()
         self.assertEquals(self.postInstance.postTitle, 'Holiday in Paris?') 
 
+    # unit test to check the like functionality (like and view likes)
     def test_post_like(self):
         self.set_up()
         # adding a like 
@@ -89,6 +99,7 @@ class TestViews(TestCase):
         self.client.get(reverse('post:like-post', kwargs={'pk': 1}))
         self.assertEquals(self.postInstance.postLikes.count(), 0) # post has 0 likes now
 
+    # unit test to check the vote up functionality
     def test_post_vote_up(self):
         self.set_up()
         # adding a vote up
@@ -102,6 +113,7 @@ class TestViews(TestCase):
         self.assertEquals(self.postInstance.postVotersUp.count(), 0) # post has 1 vote up now
         self.assertEquals(self.postInstance.postNumberOfVotes, 0) 
     
+    # unit test to check the vote down functionality
     def test_post_vote_down(self):
         self.set_up()
         # adding a vote down
@@ -114,18 +126,21 @@ class TestViews(TestCase):
         self.postInstance.refresh_from_db()
         self.assertEquals(self.postInstance.postVotersDown.count(), 0) # post has 0 vote down now
         self.assertEquals(self.postInstance.postNumberOfVotes, 0) 
-        
+
+    # unit test to check the report post functionality
     def test_post_report(self):
         self.set_up()
         self.client.get(reverse('post:report-post', kwargs={'pk': 1}))
         self.postInstance.refresh_from_db()
         self.assertEquals(self.postInstance.postFlags.count(), 1)
 
+    # unit test to check the disabling page for a post by a basic user
     def test_post_disable_page_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('post:disable-post', kwargs={'pk': 1}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/disable-post.html") # not used because user isn't staff
 
+    # unit test to check the disabling page for a post by a staff member
     def test_post_disable_page_by_staff_member(self):
         self.set_up()
         self.userInstance.is_staff = True
@@ -133,11 +148,13 @@ class TestViews(TestCase):
         response = self.client.get(reverse('post:disable-post', kwargs={'pk': 1}))
         self.assertTemplateUsed(response, "main/flagged-posts/disable-post.html")
     
+    # unit test to check the disabling a post by a basic user 
     def test_post_disable_confirm_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('post:disable-post-confirm', kwargs={'pk': 1}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/disable-post-confirm.html") 
     
+    # unit test to check the disabling a post by a staff member
     def test_post_disable_confirm_by_staff_member(self):
         self.set_up()
         self.userInstance.is_staff = True
@@ -146,11 +163,13 @@ class TestViews(TestCase):
         self.postInstance.refresh_from_db()
         self.assertEquals(self.postInstance.postDisabled, True)
 
+    # unit test to check the page for removing a flag on a post by a basic user 
     def test_post_remove_flags_page_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('post:remove-post-flags', kwargs={'pk': 1}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/remove-flags-post.html") # not used because user isn't staff
 
+    # unit test to check the page for removing a flag on a post by a staff member 
     def test_post_remove_flags_page_by_staff_member(self):
         self.set_up()
         self.userInstance.is_staff = True
@@ -158,11 +177,13 @@ class TestViews(TestCase):
         response = self.client.get(reverse('post:remove-post-flags', kwargs={'pk': 1}))
         self.assertTemplateUsed(response, "main/flagged-posts/remove-flags-post.html")
     
+    # unit test to check removing a flag on a post by a basic user 
     def test_post_remove_flags_confirm_by_regular_user(self):
         self.set_up()
         response = self.client.get(reverse('post:remove-post-flags-confirm', kwargs={'pk': 1}))
         self.assertTemplateNotUsed(response, "main/flagged-posts/disable-post-confirm.html") 
     
+    # unit test to check removing a flag on a post by a staff member 
     def test_post_remove_flags_confirm_by_staff_member(self):
         self.set_up()
         self.userInstance.is_staff = True

@@ -5,6 +5,8 @@ app_name = 'reply'
 
 urlpatterns = [
 
+    # URL links and their corresponding function in the views 
+
     url(r'^(?P<post_pk>[0-9]+)/(?P<comment_pk>[0-9]+)/add-reply/$', views.Reply_Create.as_view(), name='add-reply'),
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/edit-reply/$', views.Reply_Update.as_view(), name='edit-reply'),
     url(r'^(?P<post_pk>[0-9]+)/(?P<pk>[0-9]+)/delete-reply/$', views.Reply_Delete.as_view(), name='delete-reply'),

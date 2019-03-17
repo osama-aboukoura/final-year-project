@@ -3,7 +3,7 @@
     {% include "main/widgets/name-photo-card.html" with user_profile=reply.replyBy %}
 
     <td class='post-content'>
-        <p>{{reply.replyContent}}</p>
+        <p style='word-break: break-all;'>{{reply.replyContent}}</p>
 
         {% if user.is_authenticated %}
             {% if user.username == reply.replyBy.user.username %}

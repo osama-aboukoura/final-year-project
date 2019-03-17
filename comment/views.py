@@ -17,7 +17,7 @@ from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template
 
-
+# creates a comment 
 class Comment_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Comment 
@@ -37,10 +37,7 @@ class Comment_Create(LoginRequiredMixin, CreateView):
         user_profile.save()
         return super(Comment_Create, self).form_valid(form)
     
-    def form_invalid(self, form):
-        print ('form invalidddd')
-        return self.render_to_response(self.get_context_data(form=form))
-
+    # sends an email to those who contributed on the post once the comment is successfully made
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['pk'])
         post.postNumberOfComments += 1
@@ -75,6 +72,7 @@ class Comment_Create(LoginRequiredMixin, CreateView):
 
         return '/' + str(self.kwargs['pk'])
 
+# updates a comment on a post 
 class Comment_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     slug_field = 'pk'
@@ -96,6 +94,7 @@ class Comment_Update(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
 
+# like a comment 
 class Comment_Like(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
@@ -113,6 +112,7 @@ class Comment_Like(RedirectView):
         logged_in_user_profile.save()
         return redirect_url
 
+# shows a list of users who like a specific comment 
 class Comment_Likes_List(generic.DetailView):
     model = Comment 
     template_name = 'comment/comment-likes-list.html'
@@ -124,7 +124,7 @@ class Comment_Likes_List(generic.DetailView):
             list_of_users.append(user)
         return {'comment': comment, 'list_of_users': list_of_users}
 
-
+# adds a vote up on a comment 
 class Comment_Vote_Up(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
@@ -148,6 +148,7 @@ class Comment_Vote_Up(RedirectView):
             comment.save()
         return redirect_url
 
+# adds a vote down on a comment 
 class Comment_Vote_Down(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
@@ -171,6 +172,7 @@ class Comment_Vote_Down(RedirectView):
             comment.save()
         return redirect_url
 
+# deletes a comment and all replies to that comment
 class Comment_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Comment 
@@ -186,7 +188,7 @@ class Comment_Delete(LoginRequiredMixin, DeleteView):
         except Http404:
             return HttpResponseRedirect("/page-not-found") # comment not available in database
 
-
+    # changes the likes counts and total number of posts for users involved 
     def delete(self, request, *args, **kwargs):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         post.postNumberOfComments -= 1 # decrement 1 for this comment
@@ -224,6 +226,7 @@ class Comment_Delete(LoginRequiredMixin, DeleteView):
         comment.delete()
         return HttpResponseRedirect(self.get_success_url())
 
+    # context data needed in the html 
     def get_context_data(self, **kwargs):
         comment = Comment.objects.get(id=self.kwargs['pk'])
         return {'post_pk': self.kwargs['post_pk'], 'comment': comment}
@@ -231,6 +234,7 @@ class Comment_Delete(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
+# reports a comment 
 class Comment_Report(generic.DetailView):
     def dispatch(self, request, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
@@ -243,7 +247,7 @@ class Comment_Report(generic.DetailView):
             return redirect('/page-not-found')
         return redirect('/' + str(post.pk))
 
-
+# prompts the user to confirm they want to disable/enable a comment on a post 
 class Comment_Enable_Disable_Page(generic.DeleteView):
     model = Comment
     template_name = 'main/flagged-posts/disable-comment.html'
@@ -253,6 +257,7 @@ class Comment_Enable_Disable_Page(generic.DeleteView):
         else:
             return redirect('/page-not-found')
         
+# enables and disables a comment 
 class Comment_Enable_Disable(generic.DeleteView):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_staff:
@@ -263,6 +268,7 @@ class Comment_Enable_Disable(generic.DeleteView):
         else:
             return redirect('/page-not-found')
 
+# prompts the user to confirm they want to remove flags from a comment
 class Comment_Remove_Flags_Page(generic.DetailView):
     model = Comment 
     template_name = 'main/flagged-posts/remove-flags-comment.html'
@@ -272,6 +278,7 @@ class Comment_Remove_Flags_Page(generic.DetailView):
         else:
             return redirect('/page-not-found')
 
+# removes flags (reports) from a comment 
 class Comment_Remove_Flags(generic.DeleteView):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_staff:
@@ -283,6 +290,7 @@ class Comment_Remove_Flags(generic.DeleteView):
         else:
             return redirect('/page-not-found')
 
+# accepts a comment as an answer to the post 
 class Accept_Answer(generic.DeleteView):
     def dispatch(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))        

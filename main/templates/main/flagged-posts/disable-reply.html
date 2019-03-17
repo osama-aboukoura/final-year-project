@@ -8,7 +8,7 @@
 <div class='wrapper'>
     <h1>Are you sure you want to {% if reply.replyDisabled %}enable{% else %}disable{% endif %} this reply?</h1>
     <div class='post-title'>
-        <h2>{{reply.replyContent}}</h2>
+        <h2 style='word-break: break-all;'>{{reply.replyContent}}</h2>
         <p class='discussion-postedBy-and-date'>By: {{reply.replyBy}} on {{reply.replyDate}}</p>
     </div>
 

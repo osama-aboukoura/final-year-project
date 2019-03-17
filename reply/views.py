@@ -18,7 +18,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template
 
 
-
+# creates a reply and emails everyone who replied to the same comment and the comment and post author
 class Reply_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Reply 
@@ -78,6 +78,7 @@ class Reply_Create(LoginRequiredMixin, CreateView):
         post.save()
         return '/' + str(post.pk)
 
+# updates a reply to a comment after authenticating the user 
 class Reply_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     slug_field = 'pk'
@@ -96,10 +97,11 @@ class Reply_Update(LoginRequiredMixin, UpdateView):
         except Http404:
             return HttpResponseRedirect("/page-not-found") # reply not available in database
 
-
+    # send the user back to the post page after updating the reply 
     def get_success_url(self):
         return '/' + str(self.kwargs['post_pk'])
     
+# like a reply and change the total number of likes the user has made 
 class Reply_Like(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
@@ -117,6 +119,7 @@ class Reply_Like(RedirectView):
         logged_in_user_profile.save()
         return redirect_url
 
+# shows a list of users who liked a reply 
 class Reply_Likes_List(generic.DetailView):
     model = Reply 
     template_name = 'reply/reply-likes-list.html'
@@ -128,6 +131,7 @@ class Reply_Likes_List(generic.DetailView):
             list_of_users.append(user)
         return {'reply': reply, 'list_of_users': list_of_users}
 
+# deletes a reply and updates the likes count and total number of posts of all involved users 
 class Reply_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Reply 
@@ -168,6 +172,7 @@ class Reply_Delete(LoginRequiredMixin, DeleteView):
         post.save()
         return '/' + str(self.kwargs['post_pk'])
 
+# reports a reply after authentication
 class Reply_Report(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))
@@ -179,7 +184,7 @@ class Reply_Report(RedirectView):
             reply.replyFlags.add(logged_in_user_profile)
         return redirect_url
 
-
+# prompts the user to confirm they want to disable/enable a reply on a comment 
 class Reply_Enable_Disable_Page(generic.DeleteView):
     model = Reply
     template_name = 'main/flagged-posts/disable-reply.html'
@@ -189,6 +194,7 @@ class Reply_Enable_Disable_Page(generic.DeleteView):
         else:
             return redirect('/page-not-found')
 
+# enables and disables a reply 
 class Reply_Enable_Disable(generic.DeleteView):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_staff:
@@ -199,6 +205,7 @@ class Reply_Enable_Disable(generic.DeleteView):
         else:
             return redirect('/page-not-found')
 
+# prompts the user to confirm they want to remove flags from a reply
 class Reply_Remove_Flags_Page(generic.DetailView):
     model = Reply 
     template_name = 'main/flagged-posts/remove-flags-reply.html'
@@ -208,6 +215,7 @@ class Reply_Remove_Flags_Page(generic.DetailView):
         else:
             return redirect('/page-not-found')
 
+# removes flags (reports) from a reply 
 class Reply_Remove_Flags(RedirectView):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_staff:

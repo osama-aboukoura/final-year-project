@@ -8,7 +8,7 @@
 <div class='wrapper'>
     <h1>Are you sure you want to {% if post.postDisabled %}enable{% else %}disable{% endif %} this post?</h1>
     <div class='post-title'>
-        <h2>{{post.postTitle}}</h2>
+        <h2 style='word-break: break-all;'>{{post.postTitle}}</h2>
         <p class='discussion-postedBy-and-date'>By: {{post.postedBy}} on {{post.postDate}}</p>
     </div>
 

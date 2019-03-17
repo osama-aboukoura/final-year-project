@@ -4,6 +4,9 @@ from comment.models import Comment
 from main.models import User, UserProfile
 
 class TestModels(TestCase):
+    
+    # a set up function that gets called in other functions 
+    # creates a user, a userProfile, a post and a comment
     def set_up(self):
         self.user = User.objects.create(username = 'osamaaboukoura', email = 'osama.aboukoura@kcl.ac.uk')
         self.user.set_password('password123')
@@ -23,10 +26,12 @@ class TestModels(TestCase):
             commentContent = 'They have special deals towards the end of the summer.'
         )
 
+    # unit test to check the uniqueness of the primary key for each comment 
     def test_comment_given_a_unique_id_1_on_creation(self):
         self.set_up()
         self.assertEquals(self.comment.pk, 1) # the first id given is 1 then it auto increments
     
+    # unit test 2 to check the uniqueness of the primary key for each comment 
     def test_comment_given_a_unique_id_2_on_creation(self):
         self.set_up()
         comment = Comment.objects.create(
@@ -36,7 +41,8 @@ class TestModels(TestCase):
         )
         comment.save()
         self.assertEquals(comment.pk, 2) # the first id given is 1 then it auto increments
-    
+
+    # unit test to check the string representation of a comment 
     def test_comment_string_representation(self):
         self.set_up()
         self.assertEquals(str(self.comment), "Comment 1 on Post 1") 

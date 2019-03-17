@@ -3,6 +3,9 @@ from post.models import Post
 from main.models import User, UserProfile
 
 class TestModels(TestCase):
+    
+    # a set up function that gets called in other functions 
+    # creates a user, a userProfile, a post and a comment
     def set_up(self):
         self.userInstance = User.objects.create(username = 'osamaaboukoura', email = 'osama.aboukoura@kcl.ac.uk')
         self.userInstance.set_password('password123')
@@ -14,11 +17,13 @@ class TestModels(TestCase):
             postTopic = 'Travel',
             postContent = 'How much would a 7-nights holiday cost in Istanbul, Turkey?',
         )
-        
+
+    # unit test to check the uniqueness of the primary key for each post 
     def test_post_given_a_unique_id_1_on_creation(self):
         self.set_up()
         self.assertEquals(self.postInstance.pk, 1) # the first id given is 1 then it auto increments
     
+    # unit test 2 to check the uniqueness of the primary key for each post 
     def test_post_given_a_unique_id_2_on_creation(self):
         self.set_up()
         post = Post.objects.create(
@@ -29,7 +34,8 @@ class TestModels(TestCase):
         )
         post.save()
         self.assertEquals(post.pk, 2) # the first id given is 1 then it auto increments
-    
+
+    # unit test to check the string representation of a post 
     def test_post_string_representation(self):
         self.set_up()
         self.assertEquals(str(self.postInstance), "Post 1") 

@@ -5,7 +5,8 @@ from comment.models import Comment
 from comment.views import *
 
 class TestCommentUrls(TestCase):
-
+    # a set up function that gets called in other functions 
+    # creates a user, a userProfile, a post and a comment
     def set_up(self):
         self.client = Client()
         self.user = User.objects.create(username = 'osamaaboukoura', email = 'osama.aboukoura@kcl.ac.uk')
@@ -22,6 +23,10 @@ class TestCommentUrls(TestCase):
             commentContent = 'They have special deals towards the end of the summer.'
         )
 
+
+    # the following tests check if each url resolves correctly 
+    # and calls the right function in the views 
+    
     def test_add_comment_url_resolves(self):
         self.set_up()
         url = reverse('comment:add-comment', kwargs={'pk': self.post.pk})

@@ -4,6 +4,9 @@ from post.views import *
 
 class TestPostUrls(SimpleTestCase):
 
+    # the following tests check if each url resolves correctly 
+    # and calls the right function in the views 
+
     def test_show_post_url_resolves(self):
         url = reverse('post:show-post', args=[1])
         self.assertEquals(resolve(url).func.view_class, Show_Post_View)
