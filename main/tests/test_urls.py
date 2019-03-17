@@ -3,6 +3,9 @@ from django.urls import reverse, resolve
 from main.views import *
 
 class TestUrls(SimpleTestCase):
+
+    # the following tests check if each url resolves correctly 
+    # and calls the right function in the views 
     
     def test_register_url_resolves(self):
         url = reverse('main:register')

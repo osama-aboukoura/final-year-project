@@ -35,7 +35,6 @@
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                    {% comment %} <a href="?page=1">&laquo; first</a> {% endcomment %}
                     <a href="?page={{ page_obj.previous_page_number }}"><i class="far fa-arrow-alt-circle-left"></i></a>
                 {% endif %}
                 <span class="current">
@@ -43,7 +42,6 @@
                 </span>
                 {% if page_obj.has_next %}
                     <a href="?page={{ page_obj.next_page_number }}"><i class="far fa-arrow-alt-circle-right"></i></a>
-                    {% comment %} <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> {% endcomment %}
                 {% endif %}
             </span>
         </div>

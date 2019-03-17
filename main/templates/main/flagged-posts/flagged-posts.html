@@ -17,6 +17,7 @@
                 <th width="180px">Action</th>
             </tr>
     {% endif %}
+    {% comment %} FLAGGED POSTS {% endcomment %}
     {% if flagged.posts %}
         {% for post in flagged.posts %}
             <tr {% if post.postDisabled %}class='disabled'{% endif %}>
@@ -48,7 +49,7 @@
             </tr>
         {% endfor %}
     {% endif %}
-
+    {% comment %} FLAGGED COMMENTS {% endcomment %}
     {% if flagged.comments %}
         {% for comment in flagged.comments %}
             <tr {% if comment.commentDisabled %}class='disabled'{% endif %}>
@@ -80,7 +81,7 @@
             </tr>
         {% endfor %}
     {% endif %}
-
+    {% comment %} FLAGGED REPLIES {% endcomment %}
     {% if flagged.replies %}
         {% for reply in flagged.replies %}
             <tr {% if reply.replyDisabled %}class='disabled'{% endif %}>

@@ -12,6 +12,7 @@ class TestMain(StaticLiveServerTestCase):
     
     # helper functions start here 
 
+    # creates a basic user with its userProfile and stores the records in the database
     def create_regular_user(self):
         self.user = User.objects.create( 
             username = 'user1', 
@@ -23,6 +24,7 @@ class TestMain(StaticLiveServerTestCase):
         self.user.save() 
         self.userProfile = UserProfile.objects.create (user = self.user)
     
+    # creates an admin with its userProfile and stores the records in the database
     def create_super_user(self):
         self.super_user = User.objects.create( 
             username = 'user2', 
@@ -36,6 +38,8 @@ class TestMain(StaticLiveServerTestCase):
         self.super_user.save() 
         self.super_userProfile = UserProfile.objects.create (user = self.super_user)
     
+    # a set up function that gets called in other functions
+    # creates a user, an admin, 2 posts and opens up the browser
     def set_up(self):
         self.client = Client()
         self.create_regular_user()
@@ -58,9 +62,11 @@ class TestMain(StaticLiveServerTestCase):
         self.post2.save() 
         self.browser = webdriver.Chrome('functional_tests/chromedriver') # opens up Chrome browser
 
+    # closes the browser at the end of a test
     def close_down(self):
         self.browser.close()
 
+    # takes a username and password for a user and logs them in using the login form
     def login_procedure(self, username, password):
         self.browser.find_element_by_link_text("Login").click()
         time.sleep(1)
@@ -70,8 +76,10 @@ class TestMain(StaticLiveServerTestCase):
         time.sleep(0.5) 
         self.browser.find_element_by_name('login-button').click()
 
+
     # test functions start here 
 
+    # tests the sign up form by creating a user
     def test_1_signup_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -97,6 +105,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested registeration page')
 
+    # tests the login form by attempting to log a user in
     def test_2_login_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -109,6 +118,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested login page')
 
+    # tests functionalities on the profile page (show and edit)
     def test_3_my_profile_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -130,6 +140,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested my-profile page')
 
+    # tests functionalities on the staff page (change staff status and activate/deactivate)
     def test_4_staff_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -150,6 +161,7 @@ class TestMain(StaticLiveServerTestCase):
         self.close_down()
         print('Tested staff page')
 
+    # tests functionalities on the flagged posts page (enable/disable delete and remove flags)
     def test_5_flagged_posts_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)

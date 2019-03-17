@@ -22,10 +22,10 @@ def classify_post_topics(postContent):
     nmf_model = NMF(n_components=15,random_state=42)
     nmf_model.fit(dtm)
 
-    # for index,topic in enumerate(nmf_model.components_):
-    #     print(f'THE TOP 15 WORDS FOR TOPIC #{index}')
-    #     print([tfidf.get_feature_names()[i] for i in topic.argsort()[-15:]])
-    #     print('\n')
+    for index,topic in enumerate(nmf_model.components_):
+        print(f'THE TOP 15 WORDS FOR TOPIC #{index}')
+        print([tfidf.get_feature_names()[i] for i in topic.argsort()[-15:]])
+        print('\n')
 
     topic_results = nmf_model.transform(dtm)
     quora['Topic'] = topic_results.argmax(axis=1)

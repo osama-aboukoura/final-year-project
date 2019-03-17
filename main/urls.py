@@ -5,6 +5,8 @@ app_name = 'main'
 
 urlpatterns = [
 
+    # URL links and their corresponding function in the views 
+
     url(r'^register/$', views.register, name='register'),
     url(r'^login/$', views.user_login, name='user-login'),
     url(r'^logout/$', views.user_logout, name='user-logout'),
@@ -22,10 +24,10 @@ urlpatterns = [
     url(r'^update-staff/(?P<user>[A-Za-z0-9]+)', views.update_staff_status, name='update-staff'),
     url(r'^update-active/(?P<user>[A-Za-z0-9]+)', views.update_active_status, name='update-active'),
 
-    # links for class-based views 
+    # URL links for class-based views 
     url(r'^$', views.Index_View.as_view(), name='index'),
     url(r'^topics/$', views.Topics_View.as_view(), name='topics'),
-    url(r'^topics/(?P<topic>[A-Za-z]+)', views.Posts_With_Same_Topic_View.as_view(), name='topic'),
+    url(r'^topics/(?P<topic>[A-Za-z0-9]+)', views.Posts_With_Same_Topic_View.as_view(), name='topic'),
     
     url(r'^page-not-found/', views.pageNotFound, name='page-not-found'), 
 

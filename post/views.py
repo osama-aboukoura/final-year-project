@@ -65,8 +65,8 @@ class Post_Create(LoginRequiredMixin, CreateView):
         checkbox = self.request.POST.get('postAutoClassification')
         if (checkbox == "on"):
             self.object.postTopic = 'AUTO'
-        listOfTopics = classify_post_topics(str(self.object.postTitle) + " " + str(self.object.postContent))
-        self.object.postTopic = '-'.join(listOfTopics)
+            listOfTopics = classify_post_topics(str(self.object.postTitle) + " " + str(self.object.postContent))
+            self.object.postTopic = '-'.join(listOfTopics)
         user_profile.save()
         return super(Post_Create, self).form_valid(form)
 

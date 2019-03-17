@@ -12,6 +12,7 @@ class TestPost(StaticLiveServerTestCase):
     
     # helper functions start here 
 
+    # creates a basic user with its userProfile and stores the records in the database
     def create_regular_user(self):
         self.user = User.objects.create( 
             username = 'user1', 
@@ -23,6 +24,7 @@ class TestPost(StaticLiveServerTestCase):
         self.user.save() 
         self.userProfile = UserProfile.objects.create (user = self.user)
     
+    # creates an admin with its userProfile and stores the records in the database
     def create_super_user(self):
         self.super_user = User.objects.create( 
             username = 'user2', 
@@ -36,6 +38,8 @@ class TestPost(StaticLiveServerTestCase):
         self.super_user.save() 
         self.super_userProfile = UserProfile.objects.create (user = self.super_user, numOfPostsCommentsReplies=1)
     
+    # a set up function that gets called in other functions
+    # creates a user, an admin, a post and opens up the browser
     def set_up(self):
         self.client = Client()
         self.create_regular_user()
@@ -49,9 +53,11 @@ class TestPost(StaticLiveServerTestCase):
         self.post.save() 
         self.browser = webdriver.Chrome('functional_tests/chromedriver') # opens up Chrome browser
 
+    # closes the browser at the end of a test
     def close_down(self):
         self.browser.close()
 
+    # takes a username and password for a user and logs them in using the login form
     def login_procedure(self, username, password):
         self.browser.find_element_by_link_text("Login").click()
         time.sleep(1)
@@ -61,8 +67,10 @@ class TestPost(StaticLiveServerTestCase):
         time.sleep(0.5) 
         self.browser.find_element_by_name('login-button').click()
 
+
     # test functions start here 
 
+    # tests the post adding form by creating a post
     def test_1_create_post_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -87,6 +95,7 @@ class TestPost(StaticLiveServerTestCase):
         self.close_down()
         print('Tested create-post page')
 
+    # tests the post editing form by editing an existing post
     def test_2_edit_post_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -113,6 +122,7 @@ class TestPost(StaticLiveServerTestCase):
         self.close_down()
         print('Tested update-post page')
 
+    # tests the post like functionality (like and view likes)
     def test_3_like_post_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -136,6 +146,7 @@ class TestPost(StaticLiveServerTestCase):
         self.close_down()
         print('Tested post likes')
 
+    # tests the post voting functionality (vote up/down)
     def test_4_vote_up_and_down_post(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -161,6 +172,7 @@ class TestPost(StaticLiveServerTestCase):
         self.close_down()
         print('Tested post votes')
 
+    # tests the post report functionality
     def test_5_report_post_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)

@@ -11,6 +11,7 @@ class UserForm(forms.ModelForm):
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['username'].help_text = None # help text: "Required. 150 characters or fewer...etc"
 
+    # adding validators to the form fields 
     email = forms.EmailField(validators=[validate_email])
     password = forms.CharField(widget=forms.PasswordInput(), validators=[validate_password])
     first_name = forms.CharField(validators=[validate_name])
@@ -34,6 +35,7 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta():
         model = User 
+        # fields to display to the user
         fields = ('first_name', 'last_name',)
 
 # creates the form used in the templates when editing a profile for a user 

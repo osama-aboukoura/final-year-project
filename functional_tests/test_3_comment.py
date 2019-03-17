@@ -13,6 +13,7 @@ class TestComment(StaticLiveServerTestCase):
     
     # helper functions start here 
 
+    # creates a basic user with its userProfile and stores the records in the database
     def create_regular_user(self):
         self.user = User.objects.create( 
             username = 'user1', 
@@ -24,6 +25,7 @@ class TestComment(StaticLiveServerTestCase):
         self.user.save() 
         self.userProfile = UserProfile.objects.create (user = self.user, numOfPostsCommentsReplies=1)
     
+    # creates an admin with its userProfile and stores the records in the database
     def create_super_user(self):
         self.super_user = User.objects.create( 
             username = 'user2', 
@@ -37,6 +39,8 @@ class TestComment(StaticLiveServerTestCase):
         self.super_user.save() 
         self.super_userProfile = UserProfile.objects.create (user = self.super_user, numOfPostsCommentsReplies=1)
     
+    # a set up function that gets called in other functions
+    # creates a user, an admin, a post, a comment and opens up the browser
     def set_up(self):
         self.client = Client()
         self.create_regular_user()
@@ -54,9 +58,11 @@ class TestComment(StaticLiveServerTestCase):
         )
         self.browser = webdriver.Chrome('functional_tests/chromedriver') # opens up Chrome browser
 
+    # closes the browser at the end of a test
     def close_down(self):
         self.browser.close()
 
+    # takes a username and password for a user and logs them in using the login form
     def login_procedure(self, username, password):
         self.browser.find_element_by_link_text("Login").click()
         time.sleep(1)
@@ -66,8 +72,10 @@ class TestComment(StaticLiveServerTestCase):
         time.sleep(0.5) 
         self.browser.find_element_by_name('login-button').click()
 
+
     # test functions start here 
 
+    # tests the comment adding form by creating a comment on an existing post
     def test_1_create_comment_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -90,6 +98,7 @@ class TestComment(StaticLiveServerTestCase):
         self.close_down()
         print('Tested create-comment page')
 
+    # tests the comment editing form by editing an existing comment
     def test_2_edit_comment_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -113,7 +122,7 @@ class TestComment(StaticLiveServerTestCase):
         self.close_down()
         print('Tested update-comment page')
 
-
+    # tests the comment like functionality (like and view likes)
     def test_3_like_comment_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -136,7 +145,8 @@ class TestComment(StaticLiveServerTestCase):
         )
         self.close_down()
         print('Tested comment likes')
-    
+
+    # tests the comment voting functionality (vote up/down)
     def test_4_vote_up_and_down_comment(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -162,6 +172,7 @@ class TestComment(StaticLiveServerTestCase):
         self.close_down()
         print('Tested comment votes')
 
+    # tests the comment report functionality
     def test_5_report_comment_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)

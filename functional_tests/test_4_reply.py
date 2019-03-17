@@ -14,6 +14,7 @@ class TestReply(StaticLiveServerTestCase):
     
     # helper functions start here 
 
+    # creates a basic user with its userProfile and stores the records in the database
     def create_regular_user(self):
         self.user = User.objects.create( 
             username = 'user1', 
@@ -25,6 +26,7 @@ class TestReply(StaticLiveServerTestCase):
         self.user.save() 
         self.userProfile = UserProfile.objects.create (user = self.user, numOfPostsCommentsReplies=1)
     
+    # creates an admin with its userProfile and stores the records in the database
     def create_super_user(self):
         self.super_user = User.objects.create( 
             username = 'user2', 
@@ -38,6 +40,8 @@ class TestReply(StaticLiveServerTestCase):
         self.super_user.save() 
         self.super_userProfile = UserProfile.objects.create (user = self.super_user, numOfPostsCommentsReplies=1)
     
+    # a set up function that gets called in other functions
+    # creates a user, an admin, a post, a comment, a reply and opens up the browser
     def set_up(self):
         self.client = Client()
         self.create_regular_user()
@@ -60,9 +64,11 @@ class TestReply(StaticLiveServerTestCase):
         )
         self.browser = webdriver.Chrome('functional_tests/chromedriver') # opens up Chrome browser
 
+    # closes the browser at the end of a test
     def close_down(self):
         self.browser.close()
 
+    # takes a username and password for a user and logs them in using the login form
     def login_procedure(self, username, password):
         self.browser.find_element_by_link_text("Login").click()
         time.sleep(1)
@@ -72,8 +78,10 @@ class TestReply(StaticLiveServerTestCase):
         time.sleep(0.5) 
         self.browser.find_element_by_name('login-button').click()
 
+
     # test functions start here 
 
+    # tests the reply adding form by creating a reply on an existing comment
     def test_1_create_reply_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -96,7 +104,8 @@ class TestReply(StaticLiveServerTestCase):
         self.close_down()
         print('Tested create-reply page')
 
-    def test_2_edit_comment_page(self):
+    # tests the reply editing form by editing an existing reply
+    def test_2_edit_reply_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
         time.sleep(1)
@@ -118,7 +127,7 @@ class TestReply(StaticLiveServerTestCase):
         self.close_down()
         print('Tested update-reply page')
 
-
+    # tests the reply like functionality (like and view likes)
     def test_3_like_reply_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
@@ -142,6 +151,7 @@ class TestReply(StaticLiveServerTestCase):
         self.close_down()
         print('Tested reply likes')
     
+    # tests the reply report functionality
     def test_4_report_comment_page(self):
         self.set_up()
         self.browser.get(self.live_server_url)
