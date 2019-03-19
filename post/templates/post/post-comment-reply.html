@@ -8,7 +8,7 @@
 <div class='post-topic'>
     <h3 style='word-break: break-all'><a href="{% url 'main:topic' postTopicNoSpaces %}">{{post.postTopic}}{% if post.postAutoClassification == True %} - (Automatically Classified){% endif %}</a></h3>
     {% if post.postTopicRelatedWords %}
-        <p style='margin-bottom:0; padding: 0px 10px; color:gray;'>Words that appear frequently in this topic:</p>
+        <p style='margin-bottom:0; padding: 0px 10px; color:gray;'>Words that appear frequently in this topic according to our dataset:</p>
         <h4 style='margin-top:0; padding: 0px 10px; color:gray;'>{{post.postTopicRelatedWords}}</h4>
     {% endif %}
 </div>

@@ -8,7 +8,7 @@
 <div class='wrapper'>
     <h2>Add a New Post</h2>
     <hr/>
-    <form method='post' class='new-post-form' enctype='multipart/form-data'>
+    <form name="postForm" method='post' class='new-post-form' enctype='multipart/form-data'>
         {% csrf_token %}
         <center>
         {% for message in messages %}
@@ -56,3 +56,19 @@
 
 <script type='text/javascript' src="{% static 'newPost/javascript.js' %}"></script>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js">
+</script>
+
+<script>
+    // this script is to show the loader while the classification algorithm runs 
+    $(function(){
+        $("button").click(function(){
+            var postTitle = document.forms["postForm"]["postTitle"].value;
+            var postContent = document.forms["postForm"]["postContent"].value;
+            var postcheckbox = document.forms["postForm"]["postAutoClassification"].checked;
+            if (postTitle.length > 0 && postContent.length > 0 && postcheckbox){
+                $(this).after("<div class='loadingLayer'><div class='loadingDiv'><div class='loader'></div><h3>Loading... This may take up to 1 minute.</h3></div></div>").fadeIn();  
+            }
+        });
+    });
+</script>
