@@ -25,6 +25,12 @@
     <td class='post-content'>
         <p style='word-break: break-all;'>{{post.postContent}}</p>
 
+        {% if post.postImage %}
+            <div class='postImageContainer'>
+                <img class='postImage' src='{{ post.postImage.url }}' />   
+            </div>
+        {% endif %}
+
         {% if user.is_authenticated %}
             {% if user.username == post.postedBy.user.username %}
                 {% url 'post:edit-post' post.pk as the_edit_url %}

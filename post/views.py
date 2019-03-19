@@ -44,13 +44,14 @@ class Show_Post_View(generic.DetailView):
         if logged_in_user.is_authenticated:
             logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
             context['logged_in_user_profile'] = logged_in_user_profile
+        context['postTopicNoSpaces'] = self.object.postTopic.replace(" ", "")
         return context
 
 # creates a post and allows classification either automatically or manually 
 class Post_Create(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Post 
-    fields = ['postTitle', 'postTopic', 'postContent']
+    fields = ['postTitle', 'postTopic', 'postContent', 'postImage']
 
     # always runs before the form_valid function 
     def post(self, request, *args, **kwargs):
@@ -76,14 +77,19 @@ class Post_Create(LoginRequiredMixin, CreateView):
         self.object.postedBy = user_profile
         checkbox = self.request.POST.get('postAutoClassification')
         if (checkbox == "on"):
+            self.object.postAutoClassification = True
+
             # the post to classify is the title plus the content to get as much info as possible 
             postToAutoClassify = str(self.object.postTitle) + " " + str(self.object.postContent)
             
             # calling the classifying algorithm 
-            listOfTopics = classify_post_topics(postToAutoClassify)
+            topic = classify_post_topics(postToAutoClassify)
 
-            # converting the list result to a string with dashes
-            self.object.postTopic = '-'.join(listOfTopics)
+            self.object.postTopic = topic.topicName
+            self.object.postTopicRelatedWords = topic.topicWords
+
+        if 'postImage' in self.request.POST:
+            self.object.postImage = self.request.POST.get('postImage')
 
         user_profile.save()
         return super(Post_Create, self).form_valid(form)
@@ -93,8 +99,9 @@ class Post_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     model = Post 
     template_name = 'post/post_edit_form.html'
-    fields = ['postTitle', 'postTopic', 'postContent']
+    fields = ['postTitle', 'postTopic', 'postContent', 'postImage']
     def get(self, request, *args, **kwargs):
+        # print (self.request.POST)
         try:
             post = get_object_or_404(Post, id=self.kwargs.get('pk'))
             if (self.request.user == post.postedBy.user):
@@ -103,6 +110,12 @@ class Post_Update(LoginRequiredMixin, UpdateView):
                 return HttpResponseRedirect("/page-not-found") # only author can edit
         except Http404:
             return HttpResponseRedirect("/page-not-found") # post not available in database
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if 'postImage' in request.FILES:
+            self.object.postImage = request.FILES['postImage']
+        return super().post(request, *args, **kwargs)
 
 # likes a post 
 class Post_Like(LoginRequiredMixin, RedirectView):

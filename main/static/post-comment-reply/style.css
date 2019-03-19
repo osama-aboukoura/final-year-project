@@ -131,6 +131,24 @@
     padding: 10px 10px 110px 10px;
 }
 
+
+.postImage {
+    border: 1px solid gray; 
+    margin-bottom:20px;
+    border-radius: 4px;
+    transition: transform .2s; 
+    width: 30%;
+}
+.postImage:hover {
+    transform: scale(2);
+    overflow: hidden;
+}
+.postImageContainer{
+    display: contents;
+}
+.postImageContainer:hover ~ .buttons-and-date-fixed-bottom { opacity: 0.1; }
+
+
 .accept-answer-button {
     position: absolute;
     top: 10px;
@@ -205,6 +223,7 @@
     color: gray;
     bottom: -10;
     left: 10;
+    transition: transform .2s;
 }
 
 .comment-link {
@@ -229,4 +248,8 @@
 }
 @media (max-width: 820px) {
     .accepted-comment-text { display: none; }
+    .postImage { width: 50%; }
+}
+@media (max-width: 600px) {
+    .postImage { width: 70%; }
 }

@@ -8,7 +8,7 @@
 <div class='wrapper'>
     <h2>{{form_title}}</h2>
     <hr/>
-    <form action='' method='post' class='new-post-form'>
+    <form action='' method='post' class='new-post-form' enctype="multipart/form-data">
         {% csrf_token %}
         <center>
         <table class='form-table'>

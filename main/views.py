@@ -370,11 +370,13 @@ class Topics_View(generic.ListView):
         allposts = Post.objects.all()
         allTopics = {}
         for post in allposts:
-            topic = post.postTopic
+            topicWithSpaces = post.postTopic
+            topic = post.postTopic.replace(" ", "") # removing the white spaces 
             if topic in allTopics: 
-                allTopics[topic] += 1 
+                allTopics[topic][0] += 1 
             else: 
-                allTopics[topic] = 1 
+                allTopics[topic] = [1 , topicWithSpaces]
+        print (allTopics)
         return allTopics
 
 # shows a list of all the posts that share the same topic 
@@ -383,13 +385,15 @@ class Posts_With_Same_Topic_View(generic.ListView):
     context_object_name = 'all_posts'
     
     def get_queryset(self):
-        topic = self.kwargs['topic']
+        topic = self.kwargs['topic'] # no spaces in between words 
         allPosts = Post.objects.all()
         allPostsOfSameTopic = []
+        topicToDisplay = ''
         for post in allPosts:
-            if post.postTopic == topic:
+            if post.postTopic.replace(" ", "") == topic:
                 allPostsOfSameTopic.append(post)
-        return { 'topic': topic, 'posts': allPostsOfSameTopic }
+                topicToDisplay = post.postTopic
+        return { 'topic': topicToDisplay, 'posts': allPostsOfSameTopic }
 
 # shows a list of all posts on the site 
 class Index_View(generic.ListView):
@@ -397,8 +401,20 @@ class Index_View(generic.ListView):
     context_object_name = 'all_posts'
     paginate_by = 10
 
+    # def get_queryset(self):
+    #     return Post.objects.all()
+    
     def get_queryset(self):
-        return Post.objects.all()
+        posts = Post.objects.all()
+        print (posts)
+        return {'all_posts': posts}
+
+    def get_context_data(self, **kwargs):
+        posts = Post.objects.all()
+        for post in posts:
+            post.postTopicNoSpaces = post.postTopic.replace(" ", "")
+            print (post, post.postTopic, post.postTopicNoSpaces)
+        return {'all_posts': posts}
 
 # shows a list of all flagged posts, comments and replies (after checking if the user is authorised)
 def flagged_posts_view(request):
@@ -456,3 +472,4 @@ def update_active_status(request, user):
 # displays a page-not-found page (used when anything goes wrong)
 def pageNotFound(request):
     return render(request, 'main/page-not-found.html')
+

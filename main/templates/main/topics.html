@@ -15,8 +15,8 @@
             </tr>
         {% for key, value in all_topics.items %}
             <tr>
-                <td><a href="{{key}}">{{key}}</a></td>
-                <td>{{value}}</td>
+                <td><a href="{{key}}">{{value.1}}</a></td>
+                <td>{{value.0}}</td>
             </tr>
         {% endfor %}
         </table>

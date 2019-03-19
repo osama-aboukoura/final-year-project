@@ -8,7 +8,7 @@
 <div class='wrapper'>
     <h2>Add a New Post</h2>
     <hr/>
-    <form action='' method='post' class='new-post-form'>
+    <form method='post' class='new-post-form' enctype='multipart/form-data'>
         {% csrf_token %}
         <center>
         {% for message in messages %}
@@ -33,6 +33,12 @@
                 <td valign='top' class='new-post-label'><label>Post:</label></td>
                 <td class='new-post-field'>
                     <textarea name="postContent" cols="40" rows="10" maxlength="350" required></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td valign='top' class='new-post-label'><label>Add an Image:</label></td>
+                <td class='new-post-field'>
+                    <input type="file" name="postImage"></input>
                 </td>
             </tr>
             <tr>

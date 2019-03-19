@@ -2,6 +2,11 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import NMF
 
+class Topic: 
+    def __init__(self, name, relatedWords): 
+        self.topicName = name
+        self.topicWords = relatedWords  
+
 # AUTOMATIC CLASSIFICATION ALGORITHM
 def classify_post_topics(postContent):
 
@@ -9,7 +14,7 @@ def classify_post_topics(postContent):
     new_post = pd.DataFrame([postContent], columns=['Question'])
     
     # our unlabelled dataset 
-    quora = pd.read_csv('quora_questions.csv')
+    quora = pd.read_csv('cleaned_data.csv')
 
     print(quora.head())
 
@@ -19,7 +24,7 @@ def classify_post_topics(postContent):
     tfidf = TfidfVectorizer(max_df=0.95, min_df=2, stop_words='english')
     dtm = tfidf.fit_transform(quora['Question'])
 
-    nmf_model = NMF(n_components=15,random_state=42)
+    nmf_model = NMF(n_components=9,random_state=42)
     nmf_model.fit(dtm)
 
     for index,topic in enumerate(nmf_model.components_):
@@ -36,11 +41,15 @@ def classify_post_topics(postContent):
     print ('topic number:', topic_number)
 
     print ('topics:')
-    topic_of_words = [tfidf.get_feature_names()[i] for i in nmf_model.components_[topic_number].argsort()[-10:]]
+    topic_of_words = [tfidf.get_feature_names()[i] for i in nmf_model.components_[topic_number].argsort()[-15:]]
 
     print(topic_of_words)
-    
+
+    topics = ["Generic Questions","Finance","Politics","Philosophical Discussions",
+                    "Education", "Social Discussions", "Asian Culture and Events",
+                    "Marriage and Relationships","Healthy Life Style"]
+
     print('end of nmf function')
 
-    return topic_of_words
+    return Topic(topics[topic_number], '-'.join(topic_of_words))
 
