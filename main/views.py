@@ -17,6 +17,7 @@ from django.core.mail import EmailMultiAlternatives
 from .validators import validate_password
 import string
 import random
+from django.core.paginator import Paginator
 
 # registers a new user, sends them an email and saves their profile in the database
 def register(request):
@@ -383,38 +384,37 @@ class Topics_View(generic.ListView):
 class Posts_With_Same_Topic_View(generic.ListView):
     template_name = 'main/topic.html'
     context_object_name = 'all_posts'
-    
-    def get_queryset(self):
-        topic = self.kwargs['topic'] # no spaces in between words 
-        allPosts = Post.objects.all()
+    model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        topic = self.kwargs['topic'] # no spaces in between words
         allPostsOfSameTopic = []
-        topicToDisplay = ''
-        for post in allPosts:
+        topicToDisplay = '' 
+        for post in context['all_posts']:
             if post.postTopic.replace(" ", "") == topic:
                 allPostsOfSameTopic.append(post)
                 topicToDisplay = post.postTopic
-        return { 'topic': topicToDisplay, 'posts': allPostsOfSameTopic }
+
+        paginator = Paginator(allPostsOfSameTopic, 8) # 8 posts in one page 
+        page = self.request.GET.get('page')
+        context['topic'] = topicToDisplay
+        context['posts'] = paginator.get_page(page)
+        return context
 
 # shows a list of all posts on the site 
 class Index_View(generic.ListView):
     template_name = 'main/index.html'
     context_object_name = 'all_posts'
-    paginate_by = 10
-
-    # def get_queryset(self):
-    #     return Post.objects.all()
-    
-    def get_queryset(self):
-        posts = Post.objects.all()
-        print (posts)
-        return {'all_posts': posts}
+    model = Post
+    paginate_by = 8
 
     def get_context_data(self, **kwargs):
-        posts = Post.objects.all()
-        for post in posts:
+        context = super().get_context_data(**kwargs)
+        for post in context['all_posts']:
             post.postTopicNoSpaces = post.postTopic.replace(" ", "")
-            print (post, post.postTopic, post.postTopicNoSpaces)
-        return {'all_posts': posts}
+        return context
+    
 
 # shows a list of all flagged posts, comments and replies (after checking if the user is authorised)
 def flagged_posts_view(request):
