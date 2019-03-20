@@ -6,7 +6,7 @@ from main.models import UserProfile
 class Post(models.Model):
     postedBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     postTitle = models.CharField(max_length=80, verbose_name=('Post Title'))
-    postTopic = models.CharField(max_length=150, verbose_name=('Post Topic'), blank=True)
+    postTopic = models.CharField(max_length=60, verbose_name=('Post Topic'), blank=True)
     postTopicRelatedWords = models.TextField(max_length=150, blank=True)
     postContent = models.TextField(max_length=350, verbose_name=('Post'))
     postImage = models.ImageField(null=True, blank=True)

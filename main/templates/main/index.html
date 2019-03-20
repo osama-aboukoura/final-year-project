@@ -13,20 +13,20 @@
         <h1>All Posts:</h1>
         <table class="postsTable">
             <tr>
-                <th></th>
-                <th>Post</th>
-                <th>Topic</th>
-                <th>Discussion Started By</th>
-                <th>Comments</th>
+                <th width='5%'></th>
+                <th width='34%'>Post</th>
+                <th width='24%'>Topic</th>
+                <th width='24%'>Discussion Started By</th>
+                <th width='13%'>Comments</th>
             </tr>
             {% for post in all_posts %}
                 {% if not post.postDisabled %}
                     <tr>
-                        <td>{% if post.postNumberOfVotes < 0 %}<i class="fas fa-angle-double-down"></i>{% else %}<i class="fas fa-angle-double-up"></i>{% endif %} <strong>{{post.postNumberOfVotes}}</strong></td>
-                        <td><a href="{% url 'post:show-post' post.id %}">{{post.postTitle}}</a></td>
-                        <td><a href="{% url 'main:topic' post.postTopicNoSpaces %}">{{post.postTopic}}</a></td>
-                        <td><a href="{% url 'main:profile' post.postedBy %}" >{{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}}</a></td>
-                        <td>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
+                        <td class='text-wrap'>{% if post.postNumberOfVotes < 0 %}<i class="fas fa-angle-double-down"></i>{% else %}<i class="fas fa-angle-double-up"></i>{% endif %} <strong>{{post.postNumberOfVotes}}</strong></td>
+                        <td class='text-wrap'><a href="{% url 'post:show-post' post.id %}">{{post.postTitle}}</a></td>
+                        <td class='text-wrap'><a href="{% url 'main:topic' post.postTopicNoSpaces %}">{{post.postTopic}}</a></td>
+                        <td class='text-wrap'><a href="{% url 'main:profile' post.postedBy %}" >{{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}}</a></td>
+                        <td class='text-wrap'>{{post.postNumberOfComments}}&nbsp;&nbsp;<i class="far fa-comment-alt"></i></td>
                     </tr>
                 {% endif %}
             {% endfor %}

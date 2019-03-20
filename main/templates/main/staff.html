@@ -11,7 +11,7 @@
     <p>Change the users' permissions on the site to either staff/regular users. Activate/Deactivate accounts.</p>
     <table class="postsTable">
         <tr>
-            <th width='15%'>Username</th>
+            <th width='15%' class='text-wrap'>Username</th>
             <th width='25%'>Name &#38; Email</th>
             <th width='10%'>Staff</th>
             <th width='20%'>Update Staff Status</th>
@@ -23,16 +23,16 @@
         {% for user in users %}
             {% if user.is_superuser %}
                 <tr>
-                    <td><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
-                    <td><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
-                    <td>
+                    <td class='text-wrap'><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
+                    <td class='text-wrap'><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
+                    <td class='text-wrap'>
                         <p style='color:green'><i class="fas fa-check-circle"></i></p>
                     </td>
-                    <td>(Admin)</td>
-                    <td>
+                    <td class='text-wrap'>(Admin)</td>
+                    <td class='text-wrap'>
                         <p style='color:green'><i class="fas fa-check-circle"></i></p>
                     </td>
-                    <td>(Admin)</td>
+                    <td class='text-wrap'>(Admin)</td>
                 </tr>
             {% endif %}
         {% endfor %}
@@ -41,8 +41,8 @@
         {% for user in users %}
             {% if not user.is_superuser %}
                 <tr>
-                    <td><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
-                    <td><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
+                    <td class='text-wrap'><a href="{% url 'main:profile' user %}" >{{user.username}}</a></td>
+                    <td class='text-wrap'><div><b>{{user.first_name}} {{user.last_name}}</b></div><div><i>{{user.email}}</i></div></td>
                     <td>
                         {% if user.is_staff %}
                             <p style='color:green'><i class="fas fa-check-circle"></i></p>

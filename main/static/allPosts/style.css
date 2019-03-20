@@ -39,6 +39,8 @@
     text-decoration: underline;
 }
 
+.text-wrap { word-break: break-all }
+
 .pagination {
     border: 1px dotted gray;
     padding: 10px;
@@ -77,6 +79,19 @@
     display: inline-table;
 }
 
+@media (max-width: 670px) {
+    .buttons-div { padding: 0; }
+    .buttons-div a { margin: 0; }
+}
+@media (max-width: 570px) {
+    .button-div { width: 55%; margin: 10px; }
+    .buttons-div a { font-size: 1.6em; }
+}
+@media (max-width: 500px) {
+    .button-div span { display: none }
+}
+
+/* The code below is used for the pop up messages on button hover and it is taken from:  */
 /* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top */
 .button-div span {
     position: absolute;
