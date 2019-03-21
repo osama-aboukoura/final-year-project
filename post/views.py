@@ -14,7 +14,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django import forms
 from django.contrib import messages
 from django.shortcuts import render
+from django.conf import settings
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template
 from .nmf import classify_post_topics
+from main.views import send_report_email_to_staff
+
 
 # shows a post only if it's not disabled 
 class Show_Post_View(generic.DetailView):
@@ -274,17 +279,27 @@ class Post_Delete(LoginRequiredMixin, DeleteView):
         post.delete()
         return HttpResponseRedirect(self.get_success_url())
         
-# reports a post 
-class Post_Report(generic.DetailView):
-    def dispatch(self, request, *args, **kwargs):
+# reports a post and notifies all staff members via email
+class Post_Report(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        redirect_url = post.get_absolute_url()
         logged_in_user = self.request.user 
         if logged_in_user.is_authenticated:
             logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
-            post.postFlags.add(logged_in_user_profile)
+            if logged_in_user_profile not in post.postFlags.all(): # disallows the same user to notify staff twice on the same post
+                post.postFlags.add(logged_in_user_profile)
+
+                send_report_email_to_staff(
+                    discussion_type = 'post',
+                    discussion = post.postContent, 
+                    discussion_by = post.postedBy,
+                    logged_in_user = logged_in_user
+                )
+                
         else:
             return redirect('/page-not-found')
-        return redirect('/' + str(post.pk))
+        return redirect_url
 
 # prompts the user to confirm they want to disable/enable a post 
 class Post_Enable_Disable_Page(generic.DetailView):

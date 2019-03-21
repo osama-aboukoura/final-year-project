@@ -250,6 +250,9 @@
     .accepted-comment-text { display: none; }
     .postImage { width: 50%; }
 }
+@media (max-width: 720px) {
+    h1 { padding-top: 50px }
+}
 @media (max-width: 600px) {
     .postImage { width: 70%; }
 }

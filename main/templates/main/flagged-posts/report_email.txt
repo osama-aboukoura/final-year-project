@@ -1,0 +1,10 @@
+Dear Member of Staff,
+
+A {{discussion_type}} on Our Intelligent Q&A has been reported!
+As a member of staff, you have the ability to either delete this {{discussion_type}}, disable it or remove any flags.
+{{discussion_type|title}} By: {{discussion_by}}
+{{discussion_type|title}}: {{discussion}}
+
+Have you received this email in error?
+You are receiving this email because you are signed up for the Intelligent Q&A Forums. 
+If you are not the intended recipient and you believe you are receiving this in error, please delete this email and inform the sender immediately.

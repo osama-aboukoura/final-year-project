@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 # raises a validation error if the given string was less than 2 characters long
 def validate_name(name):
-    if len(name) < 2: 
-        raise ValidationError('This name field must be at least 2 characters long.')
+    if len(name) < 2 or len(name) > 12: 
+        raise ValidationError('This name field must be between 2 characters and 12 characters long.')
     return name
 
 # raises a validation error if the given email already exists in the database 

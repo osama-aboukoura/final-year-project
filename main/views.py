@@ -249,10 +249,10 @@ def reset_password_confirm(request):
     else:
         return render(request, 'main/authentication/forgot-password/reset-password-confirm.html', {})
 
-@login_required
+# logs out a logged in user
 def user_logout(request):
-    # logs out a logged in user
-    logout(request)
+    if (request.user != None):
+        logout(request)
     return HttpResponseRedirect(reverse('main:index'))
 
 # displays the user's profile page 
@@ -473,3 +473,27 @@ def update_active_status(request, user):
 def pageNotFound(request):
     return render(request, 'main/page-not-found.html')
 
+# sends an email to staff members when a post/comment/reply is reported
+def send_report_email_to_staff(discussion_type, discussion, discussion_by, logged_in_user):
+    subject = 'A ' + discussion_type.capitalize() + ' Has Been Reported! - Intelligent Q&A Forums'
+    email_to = []
+    userProfiles = UserProfile.objects.all()
+    for userProfile in userProfiles:
+        if userProfile.user.is_staff and userProfile.user != logged_in_user: # don't email yourself if you're staff
+            email_to.append(userProfile.user.email)
+
+    with open(settings.BASE_DIR + "/main/templates/main/flagged-posts/report_email.txt") as temp:
+        report_email = temp.read()
+    email = EmailMultiAlternatives(
+        subject=subject, 
+        body=report_email,
+        from_email=settings.EMAIL_HOST_USER,
+        to=email_to
+    )
+    html = get_template("main/flagged-posts/report_email.html").render({
+        'discussion_type': discussion_type, 
+        'discussion': discussion, 
+        'discussion_by': discussion_by
+    })
+    email.attach_alternative(html, "text/html")
+    email.send()

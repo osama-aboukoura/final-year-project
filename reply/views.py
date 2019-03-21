@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template
+from main.views import send_report_email_to_staff
 
 
 # creates a reply and emails everyone who replied to the same comment and the comment and post author
@@ -181,7 +182,18 @@ class Reply_Report(RedirectView):
         logged_in_user = self.request.user 
         logged_in_user_profile = get_object_or_404(UserProfile, user=logged_in_user)
         if logged_in_user.is_authenticated:
-            reply.replyFlags.add(logged_in_user_profile)
+            if logged_in_user_profile not in reply.replyFlags.all(): # disallows the same user to notify staff twice on the same reply
+                reply.replyFlags.add(logged_in_user_profile)
+
+                send_report_email_to_staff(
+                    discussion_type = 'reply',
+                    discussion = reply.replyContent, 
+                    discussion_by = reply.replyBy,
+                    logged_in_user = logged_in_user
+                )
+
+        else:
+            return redirect('/page-not-found')
         return redirect_url
 
 # prompts the user to confirm they want to disable/enable a reply on a comment 
