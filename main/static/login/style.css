@@ -38,7 +38,7 @@ input[type=text], input[type=password], input[type=email] {
     resize: vertical;
 }
 
-input[type=submit] {
+input[type=submit], .login-button {
     position: absolute;
     bottom: 20px;
     right: 22px;
@@ -71,6 +71,10 @@ input[type=submit]:hover {
     padding: 5px 20px;
     float:left
 }
+
+.login-box > form > p > a { color: #3E7A9B; text-decoration: none; }
+.login-box > form > p > a:visited { color: #3E7A9B; }
+.login-box > form > p > a:hover { text-decoration: underline; }
 
 @media (max-width: 1050px) {
     .login-box{ width: 60%; } 

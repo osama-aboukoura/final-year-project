@@ -6,6 +6,11 @@
 <div class='register-box'>
     {% if registered %}
         <h2>Thank You for Your Registeration!</h2>
+        <ul>
+            <li>Your account has been created.</li>
+            <li>An email with your username and activation code has been sent to you.</li>
+            <li>You will need to activate your account before you log in for the first time.</li>
+        </ul>
         <a class='button blue' href="{% url 'main:user-login' %}">Log in and start</a>
     {% else %}
         <h1 style='float:left'>Register</h1>

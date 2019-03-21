@@ -14,9 +14,16 @@
         <input type='text' name='username' placeholder='Enter your username'/><br/>
         <label for='activationCode'>Activation Code:</label>
         <input type='text' name='activationCode' placeholder='Enter your activation code'/><br/><br/>
+        {% if activation_success %}
+            <p class='success'>{{activation_success}}</p>
+        {% endif %}
         {% if error %}
             <p class='error'>{{error}}</p>
         {% endif %}
-        <input type='submit' value='Activate'/>
+        {% if activation_success %}
+            <a class='button blue login-button' href="{% url 'main:user-login' %}">Go to Log In</a>
+        {% else %}
+            <input type='submit' value='Activate'/>
+        {% endif %} 
     </form>
 </div>

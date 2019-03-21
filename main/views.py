@@ -118,7 +118,7 @@ def activate(request):
                 # changing the activationCode so the user won't be able to activate themselves when Admin disables them.
                 userProfile.activationCode = randint(1000, 9999)
                 userProfile.save()
-                return render(request, 'main/authentication/login.html', {'activation_success': 'Success! Your account is now activated!'})
+                return render(request, 'main/authentication/activate.html', {'activation_success': 'Success! Your account is now activated!'})
             else: 
                 return render(request, 'main/authentication/activate.html', {'error': 'Sorry, unable to activate your account.'})
 

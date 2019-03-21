@@ -21,15 +21,12 @@
         {% if error %}
             <p class='error'>{{error}}</p>
         {% endif %}
-        {% if activation_success %}
-            <p class='success'>{{activation_success}}</p>
-        {% else %}
-            <div style='clear: both'></div>
-            <p>Logging in for the first time? <a href="{% url 'main:activate' %}">Activate my account</a></p>
-            <p>Forgot your username? <a href="{% url 'main:resend-username' %}">Email me my username</a></p>
-            <p>Forgot your password? <a href="{% url 'main:reset-password' %}">Reset my password</a></p>
-            <p>Don't have an account yet? <a href="{% url 'main:register' %}">Sign up here</a></p>
-        {% endif %}
+        
+        <div style='clear: both'></div>
+        <p>Logging in for the first time? <a href="{% url 'main:activate' %}">Activate my account</a></p>
+        <p>Forgot your username? <a href="{% url 'main:resend-username' %}">Email me my username</a></p>
+        <p>Forgot your password? <a href="{% url 'main:reset-password' %}">Reset my password</a></p>
+        <p>Don't have an account yet? <a href="{% url 'main:register' %}">Sign up here</a></p>
         <input type='submit' name='login-button' value='Login'/>
     </form>
 </div>
