@@ -70,3 +70,17 @@
 </table>
 
 <script type='text/javascript' src="{% static 'allPosts/post.js' %}"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js">
+</script>
+
+<script>
+    // hides the buttons under the image when the image is hovered over
+    $(".postImageContainer").hover(function() {
+        $(this).siblings(".buttons-and-date-fixed-bottom").css("opacity", "0.1");
+    }, function() {
+        $(this).siblings(".buttons-and-date-fixed-bottom").css("opacity", "1");
+    });
+</script>
+
+

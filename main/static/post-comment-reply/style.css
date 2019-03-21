@@ -146,8 +146,6 @@
 .postImageContainer{
     display: contents;
 }
-.postImageContainer:hover ~ .buttons-and-date-fixed-bottom { opacity: 0.1; }
-
 
 .accept-answer-button {
     position: absolute;

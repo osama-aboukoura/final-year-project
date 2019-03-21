@@ -67,7 +67,7 @@
             var postContent = document.forms["postForm"]["postContent"].value;
             var postcheckbox = document.forms["postForm"]["postAutoClassification"].checked;
             if (postTitle.length > 0 && postContent.length > 0 && postcheckbox){
-                $(this).after("<div class='loadingLayer'><div class='loadingDiv'><div class='loader'></div><h3>Loading... This may take up to 1 minute.</h3></div></div>").fadeIn();  
+                $(this).after("<div class='loadingLayer'><div class='loadingDiv'><div class='loader'></div><h3>Classifying you post... This may take up to 1 minute.</h3></div></div>").fadeIn();  
             }
         });
     });
