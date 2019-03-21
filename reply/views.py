@@ -136,6 +136,7 @@ class Reply_Likes_List(generic.DetailView):
 class Reply_Delete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
     model = Reply 
+    success_url = reverse_lazy('main:index')
 
     def get(self, request, *args, **kwargs):
         try:
@@ -167,13 +168,18 @@ class Reply_Delete(LoginRequiredMixin, DeleteView):
         reply.delete()
         return HttpResponseRedirect(self.get_success_url())
 
+    # context data needed in the html 
+    def get_context_data(self, **kwargs):
+        reply = Reply.objects.get(id=self.kwargs['pk'])
+        return {'post_pk': self.kwargs['post_pk'], 'reply': reply}
+
     def get_success_url(self):
         post = Post.objects.get(id=self.kwargs['post_pk'])
         post.postNumberOfComments -= 1
         post.save()
         return '/' + str(self.kwargs['post_pk'])
 
-# reports a reply after authentication
+# reports a reply and notifies all staff members via email
 class Reply_Report(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         reply = get_object_or_404(Reply, id=self.kwargs.get('pk'))

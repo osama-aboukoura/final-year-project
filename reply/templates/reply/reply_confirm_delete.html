@@ -1,2 +1,2 @@
-{% url 'post:show-post' post.pk as go_back_url %}
+{% url 'post:show-post' post_pk as go_back_url %}
 {% include "main/widgets/confirm-delete-page.html" with type='reply' title=reply.replyContent author_first_name=reply.replyBy.user.first_name author_last_name=reply.replyBy.user.last_name date=reply.replyDate back_url=go_back_url %}
