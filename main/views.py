@@ -91,7 +91,7 @@ def user_login(request):
 
                 return HttpResponseRedirect(reverse('main:index'))
             else:
-                return HttpResponse("Sorry, Your Account is Not Active") 
+                return render(request, 'main/authentication/login.html', {'error': 'Sorry, unable to log you in.'})
         else:
             return render(request, 'main/authentication/login.html', {'error': 'Sorry, unable to log you in.'})
     else:
