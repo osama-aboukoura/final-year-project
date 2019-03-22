@@ -20,7 +20,7 @@
             <tr>
                 <td valign='top' class='new-post-label'><label>Post Title:</label></td>
                 <td class='new-post-field'>
-                    <input type="text" name="postTitle" maxlength="80" required>
+                    <input type="text" name="postTitle" value='{{postTitle}}' maxlength="80" required>
                 </td>
             </tr>
             <tr id='postTopicID'>
@@ -32,7 +32,7 @@
             <tr>
                 <td valign='top' class='new-post-label'><label>Post:</label></td>
                 <td class='new-post-field'>
-                    <textarea name="postContent" cols="40" rows="10" maxlength="350" required></textarea>
+                    <textarea name="postContent" cols="40" rows="10" maxlength="350" required>{{postContent}}</textarea>
                 </td>
             </tr>
             <tr>

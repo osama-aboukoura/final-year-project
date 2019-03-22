@@ -93,7 +93,6 @@ def user_login(request):
             else:
                 return HttpResponse("Sorry, Your Account is Not Active") 
         else:
-            print('log in failed')
             return render(request, 'main/authentication/login.html', {'error': 'Sorry, unable to log you in.'})
     else:
         url_to_redirect_to = request.GET.get('next')

@@ -61,7 +61,9 @@ class Post_Create(LoginRequiredMixin, CreateView):
     # always runs before the form_valid function 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
+        postTitle = self.request.POST.get('postTitle')
         postTopic = self.request.POST.get('postTopic')
+        postContent = self.request.POST.get('postContent')
         checkbox  = self.request.POST.get('postAutoClassification')
 
         if (postTopic == "" and checkbox != "on"):
@@ -69,11 +71,10 @@ class Post_Create(LoginRequiredMixin, CreateView):
         if form.is_valid():
             return self.form_valid(form)
         else:
-            print('FORM INVALID')
             messages.error(request, "Error: Either tick the checkbox to automatically classify "
                             + "the topic of the post, or manually fill out the 'Post Topic' field.")
-            return HttpResponseRedirect("/add-post/") 
-    
+            return render(request, "post/post_form.html", {'postTitle': postTitle, 'postContent': postContent})
+
     def form_valid(self, form):
         self.object = form.save(commit=False) # don't save it in the database yet
         logged_in_user = self.request.user
@@ -106,7 +107,6 @@ class Post_Update(LoginRequiredMixin, UpdateView):
     template_name = 'post/post_edit_form.html'
     fields = ['postTitle', 'postTopic', 'postContent', 'postImage']
     def get(self, request, *args, **kwargs):
-        # print (self.request.POST)
         try:
             post = get_object_or_404(Post, id=self.kwargs.get('pk'))
             if (self.request.user == post.postedBy.user):
