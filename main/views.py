@@ -377,7 +377,6 @@ class Topics_View(generic.ListView):
                 allTopics[topic][0] += 1 
             else: 
                 allTopics[topic] = [1 , topicWithSpaces]
-        print (allTopics)
         return allTopics
 
 # shows a list of all the posts that share the same topic 

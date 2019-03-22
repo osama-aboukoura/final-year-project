@@ -59,7 +59,7 @@ class TestViews(TestCase):
         })
         self.assertEquals(response.status_code, 200) # successful request status code
         self.assertEquals(self.userInstance.is_active, True) # user is now active 
-        self.assertTemplateUsed(response, "main/authentication/login.html")
+        self.assertTemplateUsed(response, "main/authentication/activate.html")
 
     # unit test to check a GET request for resending the username
     def test_resend_username_GET_request(self):

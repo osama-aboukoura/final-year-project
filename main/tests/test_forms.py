@@ -17,13 +17,13 @@ class TestForms(TestCase):
     def test_user_create_form_invalid(self):
         form = UserForm(data={
             'first_name': 'Osama',
-            'last_name': '', # this shouldn't cause an error. not a compulsory field.
+            'last_name': '', # this should cause an error: invalid last name.
             'username': 'osamaaboukoura',
             'email': 'osama.aboukoura@', # this should cause an error: invalid email.
             'password': 'Password123'
         })
         self.assertFalse(form.is_valid()) # an invalid form 
-        self.assertEquals(len(form.errors), 1) # total number of errors in the form.
+        self.assertEquals(len(form.errors), 2) # total number of errors in the form.
 
     # unit test to create a userProfile
     def test_userProfile_create_form_valid(self):
