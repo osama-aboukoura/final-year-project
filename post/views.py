@@ -7,16 +7,11 @@ from .models import Post
 from comment.models import Comment
 from reply.models import Reply
 from django.urls import reverse_lazy
-from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django import forms
 from django.contrib import messages
 from django.shortcuts import render
-from django.conf import settings
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import get_template
 from .nmf import classify_post_topics
 from main.views import send_report_email_to_staff
 

@@ -6,15 +6,12 @@ from main.models import UserProfile, User
 from post.models import Post
 from reply.models import Reply
 from .models import Comment
-from django.urls import reverse
 from django.urls import reverse_lazy
-from main.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from main.views import send_report_email_to_staff
 
