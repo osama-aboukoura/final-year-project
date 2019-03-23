@@ -3,5 +3,5 @@ Welcome to Intelligent Q&#38;A Forums!
 Thank you for signing up.
 Your username:
 {{user.username}}
-To activate your account please enter the following activation code in the activation page (http://localhost:8000/activate/):
+To activate your account please enter the following activation code in the activation page (http://osamaaboukoura.pythonanywhere.com/activate/):
 Activation Code: {{activationCode}}

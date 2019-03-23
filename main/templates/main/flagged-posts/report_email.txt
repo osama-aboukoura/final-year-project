@@ -5,6 +5,8 @@ As a member of staff, you have the ability to either delete this {{discussion_ty
 {{discussion_type|title}} By: {{discussion_by}}
 {{discussion_type|title}}: {{discussion}}
 
+Follow the link to view the reported {{discussion_type}} on the site: (http://osamaaboukoura.pythonanywhere.com/flagged-posts/)
+
 Have you received this email in error?
 You are receiving this email because you are signed up for the Intelligent Q&A Forums. 
 If you are not the intended recipient and you believe you are receiving this in error, please delete this email and inform the sender immediately.
