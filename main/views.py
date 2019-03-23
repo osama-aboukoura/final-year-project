@@ -354,11 +354,15 @@ def delete_profile_and_user_confirm(request):
 
     logout(request)
     logged_in_user.delete() 
+
+    all_posts = Post.objects.all()
+    for post in all_posts:
+        post.postTopicNoSpaces = post.postTopic.replace(" ", "")
     
     return render(request, 'main/index.html', {
         'logged_in_user': logged_in_user, 
         'user_deleted': 'Your account has been deleted!', # a toast message 
-        'all_posts': Post.objects.all()
+        'all_posts': all_posts
     })
 
 # shows a list of the topics discussed on the site
