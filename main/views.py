@@ -471,10 +471,6 @@ def update_active_status(request, user):
     user.save()
     return HttpResponseRedirect('/staff/')
 
-# displays a page-not-found page (used when anything goes wrong)
-def pageNotFound(request):
-    return render(request, 'main/page-not-found.html')
-
 # sends an email to staff members when a post/comment/reply is reported
 def send_report_email_to_staff(discussion_type, discussion, discussion_by, logged_in_user):
     subject = 'A ' + discussion_type.capitalize() + ' Has Been Reported! - Intelligent Q&A Forums'
@@ -499,3 +495,15 @@ def send_report_email_to_staff(discussion_type, discussion, discussion_by, logge
     })
     email.attach_alternative(html, "text/html")
     email.send()
+
+# displays a page-not-found page when the user tries to access a page they're not supposed to
+def pageNotFound(request):
+    return render(request, 'main/page-not-found.html')
+
+# handling client side error
+def error_404(request):
+    return render(request,'main/page-not-found.html')
+
+# handling internal server error
+def error_500(request):
+    return render(request,'main/page-not-found.html')

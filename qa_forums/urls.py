@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from main.views import pageNotFound
+from django.conf.urls import handler404, handler500
+from main import views
 
 urlpatterns = [
 
@@ -19,3 +21,7 @@ urlpatterns = [
 
 # urls for any images uploaded by user
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+
+# handling errors in urls
+handler404 = views.error_404
+handler500 = views.error_500
