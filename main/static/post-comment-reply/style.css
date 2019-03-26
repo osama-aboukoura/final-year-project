@@ -16,6 +16,16 @@
     text-decoration: underline;
 }
 
+.post-disabled-message {
+    width: 76%;
+    margin: 0 auto;
+    padding: 5px 2%;
+    background-color: #F1948A;
+    color: black;
+    border: 1px solid red;
+    font: bold;
+}
+
 .post-title {
     position: relative;
     width: 100%;
@@ -243,6 +253,7 @@
 
 @media (max-width: 1050px) {
     .post-topic { width: 100%; }
+    .post-disabled-message { width: 96%; }
 }
 @media (max-width: 820px) {
     .accepted-comment-text { display: none; }
