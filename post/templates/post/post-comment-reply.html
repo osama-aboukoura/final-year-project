@@ -6,18 +6,22 @@
 {% include "main/navigationbar.html" %}
 
 <div class='post-topic'>
-    <h3 style='word-break: break-all'><a href="{% url 'main:topic' postTopicNoSpaces %}">{{post.postTopic}}{% if post.postAutoClassification == True %} - (Automatically Classified){% endif %}</a></h3>
+    <h3 style='word-break: break-all'>
+        <a href="{% url 'main:topic' postTopicNoSpaces %}">
+            {{post.postTopic}}{% if post.postAutoClassification == True %} - (Automatically Classified){% endif %}
+        </a>
+    </h3>
     {% if post.postTopicRelatedWords %}
         <p style='margin-bottom:0; padding: 0px 10px; color:gray;'>Words that appear frequently in this topic according to our dataset:</p>
         <h4 style='margin-top:0; padding: 0px 10px; color:gray;'>{{post.postTopicRelatedWords}}</h4>
     {% endif %}
 </div>
+
 {% if post.postDisabled %}
     <div class='post-disabled-message'>This post is currently disabled and is not accessible to basic-type users. Only Staff members can view it.</div>
 {% endif %}
 
 <div class='wrapper'>
-
     <div class='post-title'>
         {% if user.is_authenticated %}
             {% if user.username == post.postedBy.user.username and post.postClosed == True %}
@@ -28,7 +32,12 @@
         {% if post.postClosed %}
             <h2 style='color:#CB4335;'>[CLOSED. Author has accepted one of the answers]</h2>
         {% endif %}
-        <p class='discussion-postedBy-and-date'>Discussion started by: <a class='discussion-started-by' href="{% url 'main:profile' post.postedBy.user %}" >{{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}}</a> on {{post.postDate}}{% if post.postLastUpdated > post.postDate %} - latest update on {{post.postLastUpdated}}{% endif %}</p>
+        <p class='discussion-postedBy-and-date'>Discussion started by: 
+            <a class='discussion-started-by' href="{% url 'main:profile' post.postedBy.user %}" >
+                {{post.postedBy.user.first_name}} {{post.postedBy.user.last_name}}
+            </a> on {{post.postDate}}
+            {% if post.postLastUpdated > post.postDate %} - latest update on {{post.postLastUpdated}}{% endif %}
+        </p>
     </div>
     <hr />
 
