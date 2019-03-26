@@ -58,7 +58,7 @@
     border: 1px solid gray;
     border-radius: 10px;
     margin: 15px 0px;
-    padding: 5px 50px 5px 0px;
+    padding: 5px 5px 5px 0px;
     max-width: 100%
 }
 .post { width: 100%; }
@@ -138,10 +138,10 @@
 .post-content {
     position: relative;
     vertical-align: top;
-    padding: 10px 10px 140px 10px;
+    padding: 10px 2px 140px 10px;
 }
 .post-content-text {
-    padding-right: 80px;
+    padding-right: 120px;
 }
 
 .postImage {
@@ -162,7 +162,7 @@
 .accept-answer-button {
     position: absolute;
     top: 10px;
-    right: -30px;
+    right: 10px;
     background-color: green;
 }
 
@@ -176,7 +176,7 @@
 .ellipsis-top-right {
     position: absolute;
     top: -10px;
-    right: -30px;
+    right: 15px;
 }
 
 .drop-down:hover .drop-down-top-right-corner {
@@ -187,7 +187,7 @@
     display: none;
     position: absolute;
     top: 10px;
-    right: -30px;
+    right: 15px;
     background-color: white;
     width: 120px;
     box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.3);
@@ -269,8 +269,11 @@
     .link-spaces { display: block; margin-top: 14px; }
     .button-spaces { display: block; margin: 10px 0; }
     .post-content { padding: 10px 10px 240px 10px; }
-    .post-content-text { padding: 0; }
+    .post-content-text { padding-right: 40px; }
     .accept-answer-button { position: static; }
     .name-and-photo-card { width: 140px; }
     .vote-up-and-down { font-size: 35px; width: 40px; }
+}
+@media (max-width: 400px) {
+    .post-content { padding: 10px 10px 300px 10px; }
 }

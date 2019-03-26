@@ -62,9 +62,9 @@
                     <span class='link-spaces'><a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a></span>
                 {% endif %}
                 <span class='button-spaces'><button name='report-comment' class='button danger' onclick="report('comment', {{comment.pk}})">Report <i class="fas fa-ban"></i></button></span>
-                {% if logged_in_user_profile in comment.commentFlags.all %}<span style='color:#CB4335' name='reported-comment'><strong><i>- You have reported this comment.</i></strong></span>{% endif %}
+                {% if logged_in_user_profile in comment.commentFlags.all %}<p style='color:#CB4335' name='reported-comment'><strong><i>- You have reported this comment.</i></strong></p>{% endif %}
             {% else %}
-                <p>To reply to a comment, you must be logged in. <a class='button blue' href="{% url 'main:user-login' %}?next={{post.pk}}">Click here to Login</a></p>
+                <p>To reply to a comment, you must be logged in.</p><p><a class='button blue' href="{% url 'main:user-login' %}?next={{post.pk}}">Click here to Login</a></p>
             {% endif %}
             <p>{{comment.commentDate}}</p>
         </div>

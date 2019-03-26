@@ -31,7 +31,7 @@
                     <span class='link-spaces'><a class='comment-link' name='reply-like-button' href='{{reply.pk}}/reply-like/'>Like <i class="far fa-thumbs-up"></i></a></span>
                 {% endif %}
                 <span class='button-spaces'><button name='report-reply' class='button danger' onclick="report('reply', {{reply.pk}})">Report <i class="fas fa-ban"></i></button></span>
-                {% if logged_in_user_profile in reply.replyFlags.all %}<span style='color:#CB4335' name='reported-reply'><strong><i>- You have reported this reply.</i></strong></span>{% endif %}
+                {% if logged_in_user_profile in reply.replyFlags.all %}<p style='color:#CB4335' name='reported-reply'><strong><i>- You have reported this reply.</i></strong></p>{% endif %}
             {% endif %}
             <p>{{reply.replyDate}}</p>
         </div>

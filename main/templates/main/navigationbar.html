@@ -42,8 +42,10 @@
             </div>
         </div> 
     {% else %}
-        <a style="float:right" href="{% url 'main:register' %}"><i class="fas fa-user-plus"></i>&nbsp; Sign Up</a>
-        <a style="float:right" href="{% url 'main:user-login' %}"><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
+        <a style="float:right" href="{% url 'main:register' %}" class='wide-screen'><i class="fas fa-user-plus"></i>&nbsp; Sign Up</a>
+        <a style="float:right" href="{% url 'main:user-login' %}" class='wide-screen'><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
+        <a style="float:right" href="{% url 'main:register' %}" class='narrow-screen'><i class="fas fa-user-plus icon-only"></i>&nbsp;</a>
+        <a style="float:right" href="{% url 'main:user-login' %}" class='narrow-screen'><i class="fas fa-sign-in-alt icon-only"></i>&nbsp;</a>
     {% endif %}
 
 </div>
