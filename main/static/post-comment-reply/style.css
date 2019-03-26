@@ -138,7 +138,7 @@
 .post-content {
     position: relative;
     vertical-align: top;
-    padding: 10px 90px 110px 10px;
+    padding: 10px 90px 140px 10px;
 }
 
 
@@ -249,7 +249,7 @@
     background-color: #85C1E9
 }
 
-
+.text-wrap { word-break: break-all }
 
 @media (max-width: 1050px) {
     .post-topic { width: 100%; }
@@ -264,4 +264,10 @@
 }
 @media (max-width: 600px) {
     .postImage { width: 70%; }
+    .link-spaces { display: block; margin-top: 14px; }
+    .button-spaces { display: block; margin: 10px 0; }
+    .post-content { padding: 10px 10px 240px 10px; }
+    .accept-answer-button { position: static; }
+    .name-and-photo-card { width: 140px; }
+    .vote-up-and-down { font-size: 35px; width: 40px; }
 }

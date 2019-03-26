@@ -23,8 +23,7 @@
     {% include "main/widgets/name-photo-card.html" with user_profile=comment.commentBy %}
 
     <td class='post-content'>
-        <p style='word-break: break-all;'>{{comment.commentContent}}</p>
-
+        
         {% if user.is_authenticated %}
             {% if user.username == comment.commentBy.user.username %}
                 {% url 'comment:edit-comment' post.pk comment.pk as the_edit_url %}
@@ -35,12 +34,13 @@
             {% endif %}
         {% endif %}
 
+        <p style='word-break: break-all;'>{{comment.commentContent}}</p>
+
         {% if comment.commentAccepted %}
             <span class='accepted-comment'><span class='accepted-comment-text'>Author has accepted this comment &nbsp;&nbsp;</span><i style='font-size: 2em' class="fas fa-user-check"></i></span>
         {% endif %}
 
         <div class='buttons-and-date-fixed-bottom'>
-            {% comment %} <p onclick="showLikes('{{ comment.commentLikes.all|join:", " }}')" style='margin-bottom: -5px; padding: 0;'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %} {% endcomment %}
             <a href="{% url 'comment:like-list-comment' comment.pk %}" name='comment-likes' class='likes'>{{comment.commentLikes.count}} Like{% if comment.commentLikes.count > 1 or comment.commentLikes.count == 0 %}s{% endif %}
                 {% if comment.commentLikes.count > 2 and logged_in_user_profile in comment.commentLikes.all %}
                     (You and {{comment.commentLikes.count|add:'-1'}} others).
@@ -54,14 +54,14 @@
 
             {% if user.is_authenticated %}
                 {% if logged_in_user_profile in comment.commentLikes.all %}
-                    <a class='comment-link' name='comment-like-button' style='background:green' href='{{comment.pk}}/comment-like/'>Like <i class="fas fa-thumbs-up"></i></a>
+                    <span class='link-spaces'><a class='comment-link' name='comment-like-button' style='background:green' href='{{comment.pk}}/comment-like/'>Like <i class="fas fa-thumbs-up"></i></a></span>
                 {% else %}
-                    <a class='comment-link' name='comment-like-button' href='{{comment.pk}}/comment-like/'>Like <i class="far fa-thumbs-up"></i></a>
+                    <span class='link-spaces'><a class='comment-link' name='comment-like-button' href='{{comment.pk}}/comment-like/'>Like <i class="far fa-thumbs-up"></i></a></span>
                 {% endif %}
                 {% if post.postClosed == False %}
-                    <a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a>
+                    <span class='link-spaces'><a class='button blue' href='{{comment.pk}}/add-reply/'>Reply <i class="fas fa-reply"></i></a></span>
                 {% endif %}
-                <button name='report-comment' class='button danger' onclick="report('comment', {{comment.pk}})">Report <i class="fas fa-ban"></i></button>
+                <span class='button-spaces'><button name='report-comment' class='button danger' onclick="report('comment', {{comment.pk}})">Report <i class="fas fa-ban"></i></button></span>
                 {% if logged_in_user_profile in comment.commentFlags.all %}<span style='color:#CB4335' name='reported-comment'><strong><i>- You have reported this comment.</i></strong></span>{% endif %}
             {% else %}
                 <p>To reply to a comment, you must be logged in. <a class='button blue' href="{% url 'main:user-login' %}?next={{post.pk}}">Click here to Login</a></p>

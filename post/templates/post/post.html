@@ -52,14 +52,14 @@
             <hr/>
             {% if user.is_authenticated %}
                 {% if logged_in_user_profile in post.postLikes.all %}
-                    <a class='comment-link' style='background:green' name='post-like-button' href='like/'>Like <i class="fas fa-thumbs-up"></i></a>
+                    <span class='link-spaces'><a class='comment-link' style='background:green' name='post-like-button' href='like/'>Like <i class="fas fa-thumbs-up"></i></a></span>
                 {% else %}
-                    <a class='comment-link' name='post-like-button' href='like/'>Like <i class="far fa-thumbs-up"></i></a>
+                    <span class='link-spaces'><a class='comment-link' name='post-like-button' href='like/'>Like <i class="far fa-thumbs-up"></i></a></span>
                 {% endif %}
                 {% if post.postClosed == False %}
-                    <a class='comment-link' href='add-comment/'>Comment <i class="far fa-comment"></i></a>
+                    <span class='link-spaces'><a class='comment-link' href='add-comment/'>Comment <i class="far fa-comment"></i></a></span>
                 {% endif %}
-                <button name='report-post' class='button danger' onclick="report('post', {{post.pk}})">Report <i class="fas fa-ban"></i></button>
+                <span class='button-spaces'><button name='report-post' class='button danger' onclick="report('post', {{post.pk}})">Report <i class="fas fa-ban"></i></button></span>
                 {% if logged_in_user_profile in post.postFlags.all %}<span style='color:#CB4335' name='reported-post'><strong><i>- You have reported this post.</i></strong></span>{% endif %}
             {% else %}
                 <p>To comment on a question, you must be logged in. <a class='button blue' href="{% url 'main:user-login' %}?next={{post.pk}}">Click here to Login</a></p>
