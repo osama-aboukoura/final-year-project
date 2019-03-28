@@ -22,7 +22,7 @@ function showLoaderIfFormValid() {
         loadingLayer.innerHTML = 
             "<div class='loadingDiv'>\
                 <div class='loader'></div>\
-                <h3>Classifying you post... This may take up to 1 minute.</h3>\
+                <h3>Classifying your post... This may take up to 1 minute.</h3>\
             </div>"
         document.body.appendChild(loadingLayer)
 
