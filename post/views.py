@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import render
 from .nmf import classify_post_topics
-from main.views import send_report_email_to_staff
+from main.views import send_report_email_to_staff, send_report_email_to_author
 
 
 # shows a post only if it's not disabled 
@@ -290,6 +290,11 @@ class Post_Report(RedirectView):
                     discussion = post.postContent, 
                     discussion_by = post.postedBy,
                     logged_in_user = logged_in_user
+                )
+                send_report_email_to_author(
+                    discussion_type = 'post',
+                    discussion = post.postContent, 
+                    discussion_by = post.postedBy,
                 )
                 
         else:

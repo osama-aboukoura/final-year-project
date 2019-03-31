@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
-from main.views import send_report_email_to_staff
+from main.views import send_report_email_to_staff, send_report_email_to_author
 
 
 # creates a reply and emails everyone who replied to the same comment and the comment and post author
@@ -193,6 +193,11 @@ class Reply_Report(RedirectView):
                     discussion = reply.replyContent, 
                     discussion_by = reply.replyBy,
                     logged_in_user = logged_in_user
+                )
+                send_report_email_to_author(
+                    discussion_type = 'reply',
+                    discussion = reply.replyContent, 
+                    discussion_by = reply.replyBy,
                 )
 
         else:
