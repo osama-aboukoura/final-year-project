@@ -496,7 +496,7 @@ def send_report_email_to_staff(discussion_type, discussion, discussion_by, logge
     email.attach_alternative(html, "text/html")
     email.send()
 
-# sends an email to staff members when a post/comment/reply is reported
+# sends an email to author when their post/comment/reply is reported
 def send_report_email_to_author(discussion_type, discussion, discussion_by):
     subject = 'Your ' + discussion_type.capitalize() + ' Has Been Reported! - Intelligent Q&A Forums'
     email_to = []
