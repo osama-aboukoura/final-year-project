@@ -100,7 +100,7 @@ class Post_Update(LoginRequiredMixin, UpdateView):
     login_url = '/login/'
     model = Post 
     template_name = 'post/post_edit_form.html'
-    fields = ['postTitle', 'postTopic', 'postContent', 'postImage']
+    fields = ['postTitle', 'postTopic', 'postTopicRelatedWords', 'postContent', 'postImage']
     def get(self, request, *args, **kwargs):
         try:
             post = get_object_or_404(Post, id=self.kwargs.get('pk'))
